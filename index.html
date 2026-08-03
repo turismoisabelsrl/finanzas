@@ -3,249 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Registro TI — Sistema Privado</title>
+<title>TI Registro — Privado</title>
 
-<!-- SDK Supabase -->
+<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- PWA Tags -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#071020">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Fuentes -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:wght@400;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --navy: #071020; --sky: #3a8fd1; --sky-bright: #55b3f5; --sky-glow: rgba(55,170,245,0.16);
-    --gold: #c8a85a; --green: #2cb87a; --green-bg: rgba(44,184,122,0.12);
-    --red: #e04444; --red-bg: rgba(224,68,68,0.12); --amber: #d9a63e;
-    --text-0: #ffffff; --text-1: rgba(255,255,255,0.85); --text-2: rgba(180,210,240,0.65);
-    --text-3: rgba(140,175,215,0.45); --border: rgba(255,255,255,0.08);
-    --border-hi: rgba(255,255,255,0.14); --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
-    --r-xl: 22px; --r-2xl: 28px; --font-num: 'Inter', sans-serif;
+    --navy: #071020; --sky: #3a8fd1; --sky-bright: #55b3f5;
+    --green: #2cb87a; --red: #e04444; --text-1: rgba(255,255,255,0.85);
+    --text-3: rgba(140,175,215,0.45); --border: rgba(255,255,255,0.1);
+    --r-lg: 16px; --r-xl: 24px;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; position: relative; }
-  body::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy); }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; }
   
-  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 100px; display: none; }
-  #login-screen { position: relative; z-index: 2; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; }
+  /* Layout */
+  #app { max-width: 480px; margin: 0 auto; padding: 20px 16px 100px; display: none; }
+  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 20px; backdrop-filter: blur(20px); margin-bottom: 15px; }
 
-  /* UI Components */
-  .vista { display: none; }
-  .vista.activa { display: block; animation: revealUp 0.35s ease-out; }
-  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-
-  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); margin-bottom: 15px; isolation: isolate; }
-  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); }
-  .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne'; font-weight: 700; text-transform: uppercase; font-size: 13px; }
-  .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.14)); border: 1.5px solid rgba(44,184,122,0.32); color: #5de09a; }
-  .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.30); color: #ff9090; }
-
-  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(10,20,38,0.72); backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 11px 0; background: none; border: none; color: var(--text-3); cursor: pointer; }
-  .nav-item.activo { color: var(--sky-bright); }
-  .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 22px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
-  .nav-item span { font-family: 'Syne'; font-size: 9px; font-weight: 600; text-transform: uppercase; }
-
+  /* Forms */
+  .lf-group { margin-bottom: 16px; }
+  .lf-label { display: block; font-family: 'Syne'; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 15px; outline: none; transition: 0.2s; }
+  .lf-input:focus, .lf-select:focus { border-color: var(--sky); background: rgba(255,255,255,0.1); }
+  
   /* Modales */
-  .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); }
+  .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
   .modal-overlay.activo { display: flex; }
-  .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-top-left-radius: var(--r-2xl); border-top-right-radius: var(--r-2xl); display: flex; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; }
+  .modal-sheet { width: 100%; max-width: 480px; max-height: 92vh; background: #0d1e38; border-radius: 28px 28px 0 0; display: flex; flex-direction: column; border-top: 1px solid var(--sky); animation: slideUp 0.3s ease-out; }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-body { padding: 25px; overflow-y: auto; flex: 1; }
+  .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
   
-  .lf-group { margin-bottom: 14px; }
-  .lf-label { display: block; font-family: 'Syne'; font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; margin-bottom: 7px; }
-  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.07); border: 1px solid var(--border-hi); border-radius: 12px; color: white; font-size: 15px; }
+  /* Buttons */
+  .btn-main { background: linear-gradient(135deg, var(--sky), #55b3f5); color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-weight: 800; font-family: 'Syne'; text-transform: uppercase; cursor: pointer; }
+  .btn-ghost { background: none; border: none; color: var(--text-3); font-family: 'Syne'; font-size: 12px; cursor: pointer; text-transform: uppercase; }
 
-  .item-fila { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 8px; cursor: pointer; }
-  .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(255,255,255,0.08); border-radius: 20px; font-size: 11px; margin: 2px; }
-  .color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .color-btn { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-  .color-btn.selected { border-color: white; }
+  /* Chips */
+  .chips-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { padding: 6px 12px; background: rgba(58,143,209,0.15); color: var(--sky-bright); border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(58,143,209,0.3); }
+
+  /* Login */
+  #login-screen { max-width: 400px; margin: 100px auto; padding: 20px; text-align: center; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- 1. PANTALLA LOGIN -->
 <div id="login-screen">
-    <h1 style="font-family:'Syne'; font-size: 32px; color: white;">Ti Registro</h1>
-    <p style="color: gray; margin-bottom: 30px;">Acceso Privado Empresa</p>
+    <h1 style="font-family:'Syne'; font-size: 40px; color: white;">Ti</h1>
+    <p style="color: gray; margin-bottom: 30px;">Registro Privado Empresa</p>
     <div class="card">
-        <input type="email" id="email" class="lf-input" placeholder="Email Corporativo">
-        <input type="password" id="password" class="lf-input" placeholder="Contraseña">
-        <button onclick="handleLogin()" class="btn-accion btn-ingreso" style="width: 100%; margin-top: 10px;">Entrar</button>
-        <p id="login-error" style="color: #ff9090; font-size: 12px; margin-top: 10px; display: none;"></p>
+        <input type="email" id="email" class="lf-input" placeholder="Usuario">
+        <input type="password" id="password" class="lf-input" placeholder="Contraseña" style="margin-top:10px;">
+        <button onclick="handleLogin()" class="btn-main" style="margin-top: 20px;">Entrar</button>
+        <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
     </div>
 </div>
 
-<!-- APP -->
+<!-- 2. APP PRINCIPAL -->
 <div id="app">
-  <header style="text-align:center; margin-bottom:20px;">
-    <div style="font-family:'Cormorant Garamond'; font-size:24px; font-style:italic;">Registro TI</div>
-    <div id="user-display" style="font-size:9px; color:gray; text-transform:uppercase; letter-spacing:2px;">Cargando...</div>
-  </header>
+    <header style="display:flex; justify-content:space-between; margin-bottom:20px;">
+        <h2 style="font-family:'Syne'; font-size:22px;">Mi Balance</h2>
+        <button onclick="logout()" class="btn-ghost">Salir</button>
+    </header>
 
-  <!-- VISTAS -->
-  <section class="vista activa" id="vista-inicio">
     <div class="card">
-      <div class="lf-label">Saldo Actual ARS</div>
-      <div class="saldo-valor" id="saldoValor">$ 0</div>
+        <span class="lf-label">Saldo Total ARS</span>
+        <div id="saldoValor" style="font-size:36px; font-weight:800; font-family:'Inter';">$ 0</div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-      <button class="btn-accion btn-ingreso" onclick="abrirModalMov('ingreso')">Ingreso</button>
-      <button class="btn-accion btn-egreso" onclick="abrirModalMov('egreso')">Egreso</button>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:30px;">
+        <button onclick="abrirFormMov('ingreso')" class="btn-main" style="background:var(--green)">+ Ingreso</button>
+        <button onclick="abrirFormMov('egreso')" class="btn-main" style="background:var(--red)">- Egreso</button>
     </div>
+
     <div id="movLista"></div>
-  </section>
-
-  <section class="vista" id="vista-cuentas">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <span class="lf-label">Cuentas Bancarias / Efectivo</span>
-        <button onclick="abrirModalCuenta()" style="background:var(--sky); border:none; color:white; padding:5px 12px; border-radius:8px; font-size:10px; font-family:'Syne';">+ NUEVA</button>
-    </div>
-    <div id="cuentasLista"></div>
-  </section>
-
-  <section class="vista" id="vista-categorias">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <span class="lf-label">Categorías de Gasto</span>
-        <button onclick="abrirModalCategoria()" style="background:var(--sky); border:none; color:white; padding:5px 12px; border-radius:8px; font-size:10px; font-family:'Syne';">+ NUEVA</button>
-    </div>
-    <div id="categoriasLista"></div>
-  </section>
-
-  <section class="vista" id="vista-etiquetas">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <span class="lf-label">Etiquetas Especiales</span>
-        <button onclick="abrirModalEtiqueta()" style="background:var(--sky); border:none; color:white; padding:5px 12px; border-radius:8px; font-size:10px; font-family:'Syne';">+ NUEVA</button>
-    </div>
-    <div id="etiquetasLista" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-  </section>
 </div>
 
-<!-- NAV INFERIOR -->
-<nav class="bottom-nav">
-  <button class="nav-item activo" onclick="cambiarVista('inicio', this)"><span>Inicio</span></button>
-  <button class="nav-item" onclick="cambiarVista('cuentas', this)"><span>Cuentas</span></button>
-  <button class="nav-item" onclick="cambiarVista('categorias', this)"><span>Categorías</span></button>
-  <button class="nav-item" onclick="cambiarVista('etiquetas', this)"><span>Etiquetas</span></button>
-</nav>
-
-<!-- MODALES -->
-
-<!-- 1. Modal Movimiento -->
+<!-- 3. MODAL: NUEVO MOVIMIENTO (EL CORAZÓN DEL SISTEMA) -->
 <div class="modal-overlay" id="modalMov">
-  <div class="modal-sheet">
-    <div class="modal-body">
-      <h2 id="modalMovTitulo" style="font-family:'Syne'; margin-bottom:20px;">Nuevo</h2>
-      <input type="text" id="movConcepto" class="lf-input" placeholder="Concepto">
-      <input type="text" id="movContraparte" class="lf-input" placeholder="De quién / A quién">
-      
-      <div style="display:flex; gap:10px;">
-        <input type="number" id="movMonto" class="lf-input" placeholder="Monto" oninput="updateARS()">
-        <select id="movMoneda" class="lf-select" style="width:100px;" onchange="toggleCotiz()">
-          <option value="ARS">ARS</option>
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-        </select>
-      </div>
-      
-      <div id="movCotizDiv" style="display:none; margin-top:10px;">
-        <label class="lf-label">Cotización 1 <span id="spanMoneda">USD</span> = ARS</label>
-        <input type="number" id="movCotizacion" class="lf-input" value="1000" oninput="updateARS()">
-        <p id="movEquiv" style="font-size:11px; color:var(--sky-bright); margin-top:5px;"></p>
-      </div>
-
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <select id="movCuenta" class="lf-select"></select>
-        <select id="movCategoria" class="lf-select"></select>
-      </div>
-
-      <div class="lf-group" style="margin-top:10px;">
-        <label class="lf-label">Etiquetas</label>
-        <select id="movEtiquetaSel" class="lf-select" onchange="addTagToMov()"></select>
-        <div id="movTagsList" style="margin-top:10px;"></div>
-      </div>
-
-      <button onclick="saveMovimiento()" class="btn-accion btn-ingreso" style="width:100%; margin-top:20px;">Confirmar</button>
-      <button onclick="closeModal('modalMov')" style="width:100%; background:none; border:none; color:gray; margin-top:15px; font-family:'Syne';">CANCELAR</button>
-    </div>
-  </div>
-</div>
-
-<!-- 2. Modal Cuenta -->
-<div class="modal-overlay" id="modalCuenta">
     <div class="modal-sheet">
-      <div class="modal-body">
-        <h2 style="font-family:'Syne';">Nueva Cuenta</h2>
-        <input type="text" id="accNombre" class="lf-input" placeholder="Nombre (Ej: Banco Galicia)">
-        <select id="accMoneda" class="lf-select">
-            <option value="ARS">ARS - Peso Argentino</option>
-            <option value="USD">USD - Dólar</option>
-        </select>
-        <label class="lf-label" style="margin-top:15px;">Elegir Color</label>
-        <div class="color-picker" id="accColorPicker"></div>
-        <button onclick="saveCuenta()" class="btn-accion btn-ingreso" style="width:100%; margin-top:25px;">Guardar Cuenta</button>
-        <button onclick="closeModal('modalCuenta')" style="width:100%; background:none; border:none; color:gray; margin-top:15px;">CANCELAR</button>
-      </div>
-    </div>
-</div>
+        <div class="modal-header">
+            <h2 id="movTitulo" style="font-family:'Syne'; font-size:18px;">Nuevo Movimiento</h2>
+            <button onclick="cerrarModal('modalMov')" class="btn-ghost">Cerrar</button>
+        </div>
+        <div class="modal-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="lf-group">
+                    <label class="lf-label">Fecha</label>
+                    <input type="date" id="movFecha" class="lf-input">
+                </div>
+                <div class="lf-group">
+                    <label class="lf-label">Hora</label>
+                    <input type="time" id="movHora" class="lf-input">
+                </div>
+            </div>
 
-<!-- 3. Modal Categoría -->
-<div class="modal-overlay" id="modalCategoria">
-    <div class="modal-sheet">
-      <div class="modal-body">
-        <h2 style="font-family:'Syne';">Nueva Categoría</h2>
-        <input type="text" id="catNombre" class="lf-input" placeholder="Ej: Publicidad o Sueldos">
-        <select id="catTipo" class="lf-select">
-            <option value="egreso">Tipo: Egreso</option>
-            <option value="ingreso">Tipo: Ingreso</option>
-            <option value="ambas">Tipo: Ambas</option>
-        </select>
-        <select id="catPadre" class="lf-select" style="margin-top:10px;">
-            <option value="">Es Categoría Principal</option>
-        </select>
-        <label class="lf-label" style="margin-top:15px;">Elegir Color</label>
-        <div class="color-picker" id="catColorPicker"></div>
-        <button onclick="saveCategoria()" class="btn-accion btn-ingreso" style="width:100%; margin-top:25px;">Guardar Categoría</button>
-        <button onclick="closeModal('modalCategoria')" style="width:100%; background:none; border:none; color:gray; margin-top:15px;">CANCELAR</button>
-      </div>
+            <div class="lf-group">
+                <label class="lf-label">Concepto / Detalle</label>
+                <input type="text" id="movConcepto" class="lf-input" placeholder="Ej: Venta de Pasajes">
+            </div>
+
+            <div class="lf-group">
+                <label class="lf-label">Cuenta</label>
+                <select id="movCuenta" class="lf-select" onchange="verificarNuevo(this, 'cuenta')"></select>
+            </div>
+
+            <div class="lf-group">
+                <label class="lf-label" id="labelContraparte">Contraparte</label>
+                <input type="text" id="movContraparte" class="lf-input" placeholder="Cliente o Proveedor">
+            </div>
+
+            <div class="lf-group">
+                <label class="lf-label">Categoría</label>
+                <select id="movCategoria" class="lf-select" onchange="verificarNuevo(this, 'categoria')"></select>
+            </div>
+
+            <div class="lf-group">
+                <label class="lf-label">Etiquetas (Multiselección)</label>
+                <select id="movEtiquetaSel" class="lf-select" onchange="addTag(this)"></select>
+                <div id="movTagsList" class="chips-container"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:10px;">
+                <div class="lf-group">
+                    <label class="lf-label">Monto</label>
+                    <input type="number" id="movMonto" class="lf-input" placeholder="0.00" oninput="calcARS()">
+                </div>
+                <div class="lf-group">
+                    <label class="lf-label">Moneda</label>
+                    <select id="movMoneda" class="lf-select" onchange="toggleCotiz()">
+                        <option value="ARS">ARS</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="divCotiz" style="display:none;" class="card">
+                <label class="lf-label">Cotización del día (1 USD/EUR = ARS)</label>
+                <input type="number" id="movCotiz" class="lf-input" value="1000" oninput="calcARS()">
+                <p id="txtEquiv" style="font-size:12px; color:var(--sky-bright); margin-top:10px; font-weight:700;"></p>
+            </div>
+
+            <div class="lf-group">
+                <label class="lf-label">Notas Adicionales</label>
+                <textarea id="movNotas" class="lf-input" rows="2"></textarea>
+            </div>
+
+            <button onclick="guardarMovimientoFinal()" class="btn-main" style="margin-top:10px;">Confirmar y Guardar</button>
+        </div>
     </div>
 </div>
 
-<!-- 4. Modal Etiqueta -->
-<div class="modal-overlay" id="modalEtiqueta">
-    <div class="modal-sheet">
-      <div class="modal-body">
-        <h2 style="font-family:'Syne';">Nueva Etiqueta</h2>
-        <input type="text" id="tagNombre" class="lf-input" placeholder="Ej: Urgente, Pendiente...">
-        <div class="color-picker" id="tagColorPicker"></div>
-        <button onclick="saveEtiqueta()" class="btn-accion btn-ingreso" style="width:100%; margin-top:25px;">Guardar Etiqueta</button>
-        <button onclick="closeModal('modalEtiqueta')" style="width:100%; background:none; border:none; color:gray; margin-top:15px;">CANCELAR</button>
-      </div>
+<!-- 4. MODAL: CREACIÓN RÁPIDA (HIJO) -->
+<div class="modal-overlay" id="modalRapido" style="z-index:200;">
+    <div class="modal-sheet" style="max-height:60vh; border-top: 2px solid var(--green);">
+        <div class="modal-header">
+            <h2 id="rapidoTitulo" style="font-family:'Syne'; font-size:16px;">Nuevo Registro</h2>
+            <button onclick="cerrarModal('modalRapido')" class="btn-ghost">Cancelar</button>
+        </div>
+        <div class="modal-body" id="rapidoBody">
+            <!-- El contenido cambia según si es categoría, cuenta o etiqueta -->
+        </div>
     </div>
 </div>
 
 <script>
-/* --- CONFIGURACIÓN SUPABASE --- */
+/* --- CONFIGURACIÓN --- */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
-
 let user = null;
-let movs = [], cuentas = [], categorias = [], etiquetas = [];
-let selectedTagsForMov = [];
-let selectedColor = COLORES[0];
-let currentTipo = 'ingreso';
+let db = { cuentas: [], categorias: [], etiquetas: [], movimientos: [] };
+let etiquetasEnMov = [];
+let tipoM = 'ingreso';
 
 /* --- AUTH --- */
 async function checkUser() {
@@ -254,8 +192,7 @@ async function checkUser() {
         user = session.user;
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app').style.display = 'block';
-        document.getElementById('user-display').innerText = user.email;
-        loadData();
+        fetchData();
     }
 }
 
@@ -264,156 +201,176 @@ async function handleLogin() {
     const password = document.getElementById('password').value;
     const { error } = await _supabase.auth.signInWithPassword({ email, password });
     if (error) {
-        document.getElementById('login-error').innerText = "Error: Datos incorrectos";
+        document.getElementById('login-error').innerText = "Datos incorrectos.";
         document.getElementById('login-error').style.display = 'block';
     } else {
         checkUser();
     }
 }
 
-/* --- CARGA Y RENDERS --- */
-async function loadData() {
-    const [rM, rC, rCat, rE] = await Promise.all([
-        _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false }),
+async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
+
+/* --- DATA FETCH --- */
+async function fetchData() {
+    const [rC, rCat, rE, rM] = await Promise.all([
         _supabase.from('cuentas').select('*'),
         _supabase.from('categorias').select('*'),
-        _supabase.from('etiquetas').select('*')
+        _supabase.from('etiquetas').select('*'),
+        _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false })
     ]);
-    
-    movs = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(e => e.etiqueta_id) }));
-    cuentas = rC.data || [];
-    categorias = rCat.data || [];
-    etiquetas = rE.data || [];
-    
-    renderEverything();
+    db.cuentas = rC.data || [];
+    db.categorias = rCat.data || [];
+    db.etiquetas = rE.data || [];
+    db.movimientos = (rM.data || []).map(m => ({ ...m, tags: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
+    renderAll();
 }
 
-function renderEverything() {
-    renderBalance();
-    renderMovimientos();
-    renderCuentas();
-    renderCategorias();
-    renderEtiquetas();
-    fillSelects();
-}
-
-function renderBalance() {
+function renderAll() {
+    // Lista Inicio
     let bal = 0;
-    movs.forEach(m => bal += (m.tipo === 'ingreso' ? m.monto_ars : -m.monto_ars));
-    document.getElementById('saldoValor').innerText = `$ ${bal.toLocaleString('es-AR')}`;
+    document.getElementById('movLista').innerHTML = db.movimientos.map(m => {
+        const esIng = m.tipo === 'ingreso';
+        bal += esIng ? m.monto_ars : -m.monto_ars;
+        return `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
+            <div><div style="font-weight:bold;">${m.concepto}</div><div style="font-size:10px; color:gray;">${new Date(m.fecha).toLocaleDateString()}</div></div>
+            <div style="color:${esIng ? 'var(--green)' : 'var(--red)'}; font-weight:700;">${esIng?'+':'-'} $${m.monto_ars.toLocaleString()}</div>
+        </div>`;
+    }).join('');
+    document.getElementById('saldoValor').innerText = `$ ${bal.toLocaleString()}`;
+
+    // Selects
+    poblarSelects();
 }
 
-function renderMovimientos() {
-    document.getElementById('movLista').innerHTML = movs.map(m => `
-        <div class="item-fila">
-            <div class="color-dot" style="background:${m.tipo === 'ingreso' ? 'var(--green)' : 'var(--red)'}"></div>
-            <div style="flex:1">
-                <div style="font-weight:600; font-size:14px;">${m.concepto}</div>
-                <div style="font-size:10px; color:gray;">${new Date(m.fecha).toLocaleDateString()} • ${m.contraparte || ''}</div>
-            </div>
-            <div style="font-family:var(--font-num); font-weight:700; color:${m.tipo === 'ingreso' ? '#5de09a' : '#ff9090'}">
-                ${m.tipo === 'ingreso' ? '+' : '-'} $${m.monto_ars.toLocaleString()}
-            </div>
-        </div>
-    `).join('');
+function poblarSelects() {
+    const sCuenta = document.getElementById('movCuenta');
+    const sCat = document.getElementById('movCategoria');
+    const sEt = document.getElementById('movEtiquetaSel');
+
+    sCuenta.innerHTML = '<option value="">Sin Cuenta</option>' + db.cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="__new__">+ CREAR NUEVA CUENTA...</option>';
+    
+    // Categorías con jerarquía visual
+    let catHtml = '<option value="">Sin Categoría</option>';
+    const padres = db.categorias.filter(c => !c.padre_id);
+    padres.forEach(p => {
+        catHtml += `<option value="${p.id}">${p.nombre}</option>`;
+        db.categorias.filter(c => c.padre_id === p.id).forEach(sub => {
+            catHtml += `<option value="${sub.id}">&nbsp;&nbsp;&nbsp;— ${sub.nombre}</option>`;
+        });
+    });
+    sCat.innerHTML = catHtml + '<option value="__new__">+ CREAR NUEVA CATEGORÍA...</option>';
+
+    sEt.innerHTML = '<option value="">Agregar Etiqueta</option>' + db.etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="__new__">+ NUEVA ETIQUETA...</option>';
 }
 
-function renderCuentas() {
-    document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `
-        <div class="item-fila">
-            <div class="color-dot" style="background:${c.color}"></div>
-            <div style="flex:1"><b>${c.nombre}</b></div>
-            <div style="font-size:12px;">${c.moneda}</div>
-        </div>
-    `).join('');
-}
-
-function renderCategorias() {
-    document.getElementById('categoriasLista').innerHTML = categorias.map(c => `
-        <div class="item-fila">
-            <div class="color-dot" style="background:${c.color}"></div>
-            <div style="flex:1">${c.nombre}</div>
-            <div style="font-size:9px; color:gray; text-transform:uppercase;">${c.tipo}</div>
-        </div>
-    `).join('');
-}
-
-function renderEtiquetas() {
-    document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `
-        <div class="chip">
-            <div class="color-dot" style="background:${e.color}"></div>
-            ${e.nombre}
-        </div>
-    `).join('');
-}
-
-function fillSelects() {
-    document.getElementById('movCuenta').innerHTML = '<option value="">Cuenta</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-    document.getElementById('movCategoria').innerHTML = '<option value="">Categoría</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-    document.getElementById('movEtiquetaSel').innerHTML = '<option value="">+ Etiqueta</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
-    document.getElementById('catPadre').innerHTML = '<option value="">Es Principal</option>' + categorias.filter(c => !c.padre_id).map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-}
-
-/* --- FUNCIONES UI --- */
-function cambiarVista(id, btn) {
-    document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
-    document.getElementById('vista-' + id).classList.add('activa');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('activo'));
-    btn.classList.add('activo');
-}
-
-function renderPickers() {
-    const html = COLORES.map(c => `<div class="color-btn ${c === selectedColor ? 'selected' : ''}" style="background:${c}" onclick="pickColor('${c}')"></div>`).join('');
-    document.getElementById('accColorPicker').innerHTML = html;
-    document.getElementById('catColorPicker').innerHTML = html;
-    document.getElementById('tagColorPicker').innerHTML = html;
-}
-
-function pickColor(c) { selectedColor = c; renderPickers(); }
-
-function closeModal(id) { document.getElementById(id).classList.remove('activo'); }
-
-/* --- GUARDADO (SUPABASE) --- */
-
-// Movimiento
-function abrirModalMov(tipo) {
-    currentTipo = tipo;
-    selectedTagsForMov = [];
-    document.getElementById('modalMovTitulo').innerText = tipo === 'ingreso' ? 'Registrar Ingreso' : 'Registrar Egreso';
-    document.getElementById('modalMovTitulo').style.color = tipo === 'ingreso' ? 'var(--green)' : 'var(--red)';
-    document.getElementById('movTagsList').innerHTML = "";
+/* --- LOGICA FORMULARIO --- */
+function abrirFormMov(tipo) {
+    tipoM = tipo;
+    etiquetasEnMov = [];
+    document.getElementById('movTitulo').innerText = tipo === 'ingreso' ? 'Registrar Ingreso' : 'Registrar Egreso';
+    document.getElementById('labelContraparte').innerText = tipo === 'ingreso' ? '¿Quién nos paga?' : '¿A quién pagamos?';
+    document.getElementById('movFecha').valueAsDate = new Date();
+    document.getElementById('movHora').value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    document.getElementById('movTagsList').innerHTML = '';
     document.getElementById('modalMov').classList.add('activo');
 }
 
 function toggleCotiz() {
-    const m = document.getElementById('movMoneda').value;
-    document.getElementById('movCotizDiv').style.display = m === 'ARS' ? 'none' : 'block';
-    document.getElementById('spanMoneda').innerText = m;
+    document.getElementById('divCotiz').style.display = document.getElementById('movMoneda').value === 'ARS' ? 'none' : 'block';
+    calcARS();
 }
 
-function updateARS() {
+function calcARS() {
     const m = parseFloat(document.getElementById('movMonto').value) || 0;
-    const c = parseFloat(document.getElementById('movCotizacion').value) || 1;
-    document.getElementById('movEquiv').innerText = m > 0 && c > 1 ? `Equivale a $ ${(m*c).toLocaleString()} ARS` : "";
+    const c = parseFloat(document.getElementById('movCotiz').value) || 1;
+    document.getElementById('txtEquiv').innerText = m > 0 && document.getElementById('movMoneda').value !== 'ARS' ? `EQUIVALE A $ ${(m * c).toLocaleString()} ARS` : '';
 }
 
-function addTagToMov() {
-    const id = document.getElementById('movEtiquetaSel').value;
-    if (id && !selectedTagsForMov.includes(id)) {
-        selectedTagsForMov.push(id);
-        const e = etiquetas.find(x => x.id === id);
-        document.getElementById('movTagsList').innerHTML += `<span class="chip">${e.nombre}</span>`;
+function addTag(sel) {
+    if (sel.value === "__new__") {
+        abrirRapido('etiqueta');
+        sel.value = "";
+        return;
+    }
+    if (sel.value && !etiquetasEnMov.includes(sel.value)) {
+        etiquetasEnMov.push(sel.value);
+        const tag = db.etiquetas.find(t => t.id === sel.value);
+        document.getElementById('movTagsList').innerHTML += `<div class="chip">${tag.nombre}</div>`;
+    }
+    sel.value = "";
+}
+
+/* --- CREACION ON-THE-FLY --- */
+function verificarNuevo(sel, tipo) {
+    if (sel.value === "__new__") {
+        abrirRapido(tipo);
+        sel.value = "";
     }
 }
 
-async function saveMovimiento() {
-    const monto = parseFloat(document.getElementById('movMonto').value);
-    const cotiz = parseFloat(document.getElementById('movCotizacion').value) || 1;
+function abrirRapido(tipo) {
+    const body = document.getElementById('rapidoBody');
+    const titulo = document.getElementById('rapidoTitulo');
     
+    if (tipo === 'cuenta') {
+        titulo.innerText = "Nueva Cuenta";
+        body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Nombre (Ej: Banco Nación)">
+                         <button onclick="guardarRapido('cuenta')" class="btn-main" style="margin-top:15px;">Crear y Seleccionar</button>`;
+    } else if (tipo === 'categoria') {
+        titulo.innerText = "Nueva Categoría";
+        body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Nombre (Ej: Alquiler)">
+                         <select id="rPadre" class="lf-select" style="margin-top:10px;">
+                            <option value="">Es Categoría Principal</option>
+                            ${db.categorias.filter(c => !c.padre_id).map(c => `<option value="${c.id}">Hija de: ${c.nombre}</option>`)}
+                         </select>
+                         <button onclick="guardarRapido('categoria')" class="btn-main" style="margin-top:15px;">Crear y Seleccionar</button>`;
+    } else if (tipo === 'etiqueta') {
+        titulo.innerText = "Nueva Etiqueta";
+        body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Ej: Urgente">
+                         <button onclick="guardarRapido('etiqueta')" class="btn-main" style="margin-top:15px;">Crear y Agregar</button>`;
+    }
+    document.getElementById('modalRapido').classList.add('activo');
+}
+
+async function guardarRapido(tipo) {
+    const nombre = document.getElementById('rNombre').value;
+    if (!nombre) return;
+
+    let res;
+    if (tipo === 'cuenta') {
+        res = await _supabase.from('cuentas').insert([{ user_id: user.id, nombre, moneda: 'ARS', color: '#55b3f5' }]).select();
+    } else if (tipo === 'categoria') {
+        const padre = document.getElementById('rPadre').value;
+        res = await _supabase.from('categorias').insert([{ user_id: user.id, nombre, tipo: 'ambas', padre_id: padre || null, color: '#c8a85a' }]).select();
+    } else if (tipo === 'etiqueta') {
+        res = await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre, color: '#3fc7c0' }]).select();
+    }
+
+    if (res.data) {
+        await fetchData(); // Refrescar base local
+        cerrarModal('modalRapido');
+        // Seleccionar automáticamente el nuevo
+        if (tipo === 'cuenta') document.getElementById('movCuenta').value = res.data[0].id;
+        if (tipo === 'categoria') document.getElementById('movCategoria').value = res.data[0].id;
+        if (tipo === 'etiqueta') {
+            etiquetasEnMov.push(res.data[0].id);
+            document.getElementById('movTagsList').innerHTML += `<div class="chip">${res.data[0].nombre}</div>`;
+        }
+    }
+}
+
+/* --- GUARDADO FINAL --- */
+async function guardarMovimientoFinal() {
+    const concepto = document.getElementById('movConcepto').value;
+    const monto = parseFloat(document.getElementById('movMonto').value);
+    const cotiz = parseFloat(document.getElementById('movCotiz').value) || 1;
+    
+    if (!concepto || !monto) return alert("Concepto y monto son obligatorios.");
+
     const { data: mov, error } = await _supabase.from('movimientos').insert([{
         user_id: user.id,
-        tipo: currentTipo,
-        concepto: document.getElementById('movConcepto').value,
+        tipo: tipoM,
+        concepto,
         contraparte: document.getElementById('movContraparte').value,
         monto,
         cotizacion: cotiz,
@@ -421,41 +378,24 @@ async function saveMovimiento() {
         moneda: document.getElementById('movMoneda').value,
         cuenta_id: document.getElementById('movCuenta').value || null,
         categoria_id: document.getElementById('movCategoria').value || null,
-        fecha: new Date().toISOString()
+        notas: document.getElementById('movNotas').value,
+        fecha: new Date(document.getElementById('movFecha').value + 'T' + document.getElementById('movHora').value).toISOString()
     }]).select().single();
 
     if (error) return alert(error.message);
-    
-    if (selectedTagsForMov.length > 0) {
-        const rels = selectedTagsForMov.map(t => ({ movimiento_id: mov.id, etiqueta_id: t }));
+
+    if (etiquetasEnMov.length > 0) {
+        const rels = etiquetasEnMov.map(id => ({ movimiento_id: mov.id, etiqueta_id: id }));
         await _supabase.from('movimiento_etiquetas').insert(rels);
     }
-    
-    closeModal('modalMov');
-    loadData();
+
+    cerrarModal('modalMov');
+    fetchData();
 }
 
-// Cuenta
-function abrirModalCuenta() { selectedColor = COLORES[0]; renderPickers(); document.getElementById('modalCuenta').classList.add('activo'); }
-async function saveCuenta() {
-    await _supabase.from('cuentas').insert([{ user_id: user.id, nombre: document.getElementById('accNombre').value, moneda: document.getElementById('accMoneda').value, color: selectedColor }]);
-    closeModal('modalCuenta'); loadData();
-}
+function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
 
-// Categoría
-function abrirModalCategoria() { selectedColor = COLORES[1]; renderPickers(); document.getElementById('modalCategoria').classList.add('activo'); }
-async function saveCategoria() {
-    await _supabase.from('categorias').insert([{ user_id: user.id, nombre: document.getElementById('catNombre').value, tipo: document.getElementById('catTipo').value, padre_id: document.getElementById('catPadre').value || null, color: selectedColor }]);
-    closeModal('modalCategoria'); loadData();
-}
-
-// Etiqueta
-function abrirModalEtiqueta() { selectedColor = COLORES[2]; renderPickers(); document.getElementById('modalEtiqueta').classList.add('activo'); }
-async function saveEtiqueta() {
-    await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre: document.getElementById('tagNombre').value, color: selectedColor }]);
-    closeModal('modalEtiqueta'); loadData();
-}
-
+// Init
 checkUser();
 </script>
 </body>
