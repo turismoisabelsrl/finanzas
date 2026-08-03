@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TI Registro — Sistema Privado</title>
+<title>Registro — Ingresos y Egresos</title>
 
+<!-- SDK Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,122 +33,199 @@
     --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 28px;
     --font-num: 'Inter', sans-serif;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; position: relative; }
-  body::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy); }
-  
-  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 100px; display: none; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text-1);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
+      radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%),
+      var(--navy);
+  }
+  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes orbPulse { 0%,100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 0.4; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   #login-screen { position: relative; z-index: 10; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 110px; min-height: 100vh; display: none; }
 
   header.topbar { text-align: center; margin-bottom: 20px; }
   .brand-orb { width: 64px; height: 64px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
-  .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; z-index: 1; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-  .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 25px; font-style: italic; color: var(--text-0); }
-  .brand-sub { font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase; color: var(--text-3); letter-spacing: 0.2em; }
+  .brand-orb::before {
+    content: ''; position: absolute; inset: -14px; border-radius: 50%;
+    background: radial-gradient(circle, var(--sky-glow) 0%, transparent 70%);
+    animation: orbPulse 3.5s ease-in-out infinite;
+  }
+  .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; z-index: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+  .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-style: italic; color: var(--text-0); }
+  .brand-sub { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-3); margin-top: 4px; }
 
-  .vista { display: none; }
-  .vista.activa { display: block; animation: revealUp 0.3s ease-out; }
-  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .vista { display: none; animation: revealUp 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+  .vista.activa { display: block; }
 
   .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); }
-  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); margin: 6px 0; }
-  
-  .resumen-fila { display: flex; gap: 10px; margin-top: 16px; }
-  .resumen-item { flex: 1; border-radius: var(--r-lg); padding: 12px 14px; border: 1px solid rgba(255,255,255,0.1); }
-  .resumen-item.ing { background: var(--green-bg); color: #5de09a; }
-  .resumen-item.egr { background: var(--red-bg); color: #ff9090; }
+  .saldo-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); }
+  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); margin-top: 6px; }
+  .saldo-valor.negativo { color: #ff9090; }
+  .saldo-moneda { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-3); margin-top: 2px; }
 
-  .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-  .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; border-radius: var(--r-xl); border: none; font-family: 'Syne'; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-  .btn-ingreso { background: rgba(44,184,122,0.2); color: #5de09a; border: 1px solid rgba(44,184,122,0.3); }
-  .btn-egreso { background: rgba(224,68,68,0.2); color: #ff9090; border: 1px solid rgba(224,68,68,0.3); }
+  .resumen-fila { display: flex; gap: 10px; margin-top: 16px; }
+  .resumen-item { flex: 1; border-radius: var(--r-lg); padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
+  .resumen-item.ing { background: var(--green-bg); border: 1px solid rgba(44,184,122,0.22); }
+  .resumen-item.egr { background: var(--red-bg); border: 1px solid rgba(224,68,68,0.22); }
+  .resumen-item-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .resumen-item.ing .resumen-item-label { color: rgba(100,220,160,0.85); }
+  .resumen-item.egr .resumen-item-label { color: rgba(255,140,140,0.85); }
+  .resumen-item-valor { font-family: var(--font-num); font-size: 15px; font-weight: 600; }
+  .resumen-item.ing .resumen-item-valor { color: #5de09a; }
+  .resumen-item.egr .resumen-item-valor { color: #ff9090; }
+
+  .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+  .btn-accion svg { width: 18px !important; height: 18px !important; flex-shrink: 0; }
+  .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.12)); border: 1.5px solid rgba(44,184,122,0.35); color: #5de09a; }
+  .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.32); color: #ff9090; }
+
+  .fila-titulo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .vista-titulo { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+  
+  .btn-nuevo, .btn-filtro { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: var(--r-lg); border: none; font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+  .btn-nuevo svg, .btn-filtro svg { width: 14px !important; height: 14px !important; flex-shrink: 0; }
+  .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
+  .btn-filtro { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--text-1); }
+  .btn-filtro.activo { background: rgba(85,179,245,0.15); border-color: rgba(85,179,245,0.4); color: var(--sky-bright); }
 
   .lista { display: flex; flex-direction: column; gap: 8px; }
-  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-lg); cursor: pointer; }
-  .item-fila.sub { margin-left: 20px; opacity: 0.8; }
-  .color-dot { width: 12px; height: 12px; border-radius: 50%; }
-  
-  .mov-dot { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; }
+  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
+  .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .mov-dot { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .mov-dot.ing { background: var(--green-bg); color: #5de09a; }
   .mov-dot.egr { background: var(--red-bg); color: #ff9090; }
+  .mov-body { flex: 1; min-width: 0; }
+  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mov-cat { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
+  .mov-right { text-align: right; flex-shrink: 0; }
+  .mov-monto { font-family: var(--font-num); font-size: 15px; font-weight: 700; }
+  .mov-monto.ing { color: #5de09a; }
+  .mov-monto.egr { color: #ff9090; }
 
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; max-width: 480px; margin: 0 auto; background: rgba(10,20,38,0.8); backdrop-filter: blur(15px); border-top: 1px solid var(--border); z-index: 100; }
-  .nav-item { flex: 1; padding: 12px 0; text-align: center; color: var(--text-3); background: none; border: none; cursor: pointer; }
-  .nav-item.activo { color: var(--sky-bright); border-top: 2px solid var(--sky-bright); }
-  .nav-item span { display: block; font-size: 9px; font-family: 'Syne'; text-transform: uppercase; }
+  .segmented { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-hi); border-radius: var(--r-md); padding: 4px; gap: 4px; margin-bottom: 16px; }
+  .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+  .segmented button.activo { background: rgba(85,179,245,0.18); color: var(--sky-bright); border: 1px solid rgba(85,179,245,0.35); }
 
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: flex-end; justify-content: center; z-index: 200; backdrop-filter: blur(4px); }
+  .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .etiqueta-tarjeta { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; }
+
+  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 0 10px; background: none; border: none; color: var(--text-3); cursor: pointer; position: relative; }
+  .nav-item svg { width: 22px !important; height: 22px !important; flex-shrink: 0; }
+  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .nav-item.activo { color: var(--sky-bright); }
+  .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
+
+  .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); }
   .modal-overlay.activo { display: flex; }
-  .modal-sheet { width: 100%; max-width: 480px; background: #0d1e38; border-radius: 24px 24px 0 0; padding: 24px; max-height: 90vh; overflow-y: auto; }
+  .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: 22px 20px 8px; flex-shrink: 0; }
+  .modal-titulo { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text-0); }
+  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
+  .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
-  .lf-group { margin-bottom: 16px; }
-  .lf-label { display: block; font-size: 10px; font-family: 'Syne'; color: var(--text-3); text-transform: uppercase; margin-bottom: 6px; }
-  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); border-radius: 12px; color: #fff; outline: none; }
+  .lf-group { margin-bottom: 14px; position: relative; }
   .lf-row { display: flex; gap: 10px; }
-  
-  .btn-guardar { width: 100%; padding: 14px; border-radius: 12px; border: none; color: #fff; font-family: 'Syne'; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-  .btn-guardar.ing { background: var(--green); }
-  .btn-guardar.egr { background: var(--red); }
-  .btn-guardar.neutro { background: var(--sky); }
+  .lf-row .lf-group { flex: 1; }
+  .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
+  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); border-radius: var(--r-md); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-0); outline: none; }
+  .lf-textarea { resize: vertical; min-height: 60px; }
+  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
+  .lf-select option { background: #0d1e38; color: var(--text-0); }
+  .lf-input:focus, .lf-select:focus, .lf-textarea:focus { border-color: var(--sky-bright); background: rgba(255,255,255,0.1); }
 
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255,255,255,0.08); border-radius: 20px; font-size: 12px; margin: 4px; }
-  .color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-  .color-dot-pick.selected { border-color: #fff; }
+  .color-picker { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
+  .color-dot-pick.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+  .chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(85,179,245,0.15); border: 1px solid rgba(85,179,245,0.3); border-radius: 20px; font-size: 12px; color: var(--sky-bright); }
+  
+  .modal-botones { display: flex; gap: 10px; width: 100%; }
+  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
+  .btn-guardar { flex: 1; padding: 14px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #fff; }
+  .btn-guardar.ing, .btn-guardar.principal { background: linear-gradient(135deg, #2cb87a, #1e8a5a); }
+  .btn-guardar.egr { background: linear-gradient(135deg, #e04444, #a52d2d); }
+  .btn-guardar.neutro { background: linear-gradient(135deg, var(--sky), #2a6ea8); }
+  
+  .btn-cancelar { flex: 1; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+  .btn-eliminar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.12); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+
+  .detalle-row { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
+  .detalle-valor { font-size: 15px; color: var(--text-1); }
+  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9px 14px; font-weight: 600; font-size: 13px; }
+
+  .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
+  .cargando { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; text-transform: uppercase; }
+  .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(85,179,245,0.15); border-top-color: var(--sky-bright); animation: spin 0.8s linear infinite; }
 </style>
 </head>
 <body>
 
+<!-- ===== PANTALLA LOGIN ===== -->
 <div id="login-screen">
-  <div class="brand-orb"><img src="data:image/png;base64,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" alt="Turismo Isabel"></div>
+  <div class="brand-orb">
+    <!-- REEMPLAZÁ "TU_LOGO_AQUI.png" POR LA RUTA O ENLACE HACIA TU LOGO -->
+    <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Turismo Isabel Logo">
+  </div>
   <div class="brand-title">Registro</div>
   <div class="brand-sub">Ingresos y Egresos</div>
   
-  <div class="card" style="width: 100%; margin-top: 30px; max-width: 340px;">
-    <div class="lf-group">
-      <label class="lf-label">Usuario / Email</label>
-      <input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com">
-    </div>
-    <div class="lf-group">
-      <label class="lf-label">Contraseña</label>
-      <input type="password" id="password" class="lf-input" placeholder="••••••••">
-    </div>
-    <button onclick="handleLogin()" class="btn-main">Entrar</button>
+  <div class="card" style="width: 100%; margin-top: 32px; max-width: 340px;">
+    <div class="lf-group"><label class="lf-label" style="text-align:left;">Usuario / Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
+    <div class="lf-group"><label class="lf-label" style="text-align:left;">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
+    <button onclick="handleLogin()" class="btn-main" style="margin-top: 10px;">Entrar</button>
     <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
   </div>
 </div>
 
+<!-- ===== APP PRINCIPAL ===== -->
 <div id="app">
   <header class="topbar">
-    <div class="brand-orb"><img src="data:image/png;base64,iVBORw0KGgoAAA..." alt="Logo"></div>
+    <div class="brand-orb">
+      <!-- REEMPLAZÁ "TU_LOGO_AQUI.png" POR LA RUTA O ENLACE HACIA TU LOGO -->
+      <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Turismo Isabel Logo">
+    </div>
     <div class="brand-title">Registro</div>
     <div class="brand-sub">Ingresos y Egresos</div>
   </header>
 
+  <!-- VISTA INICIO -->
   <section class="vista activa" id="vista-inicio">
     <div class="card">
       <div class="saldo-label">Saldo actual</div>
       <div class="saldo-valor" id="saldoValor">$ 0</div>
       <div class="saldo-moneda">Pesos argentinos (ARS)</div>
       <div class="resumen-fila">
-        <div class="resumen-item ing">
-          <div class="resumen-item-label">Ingresos</div>
-          <div class="resumen-item-valor" id="totalIngresos">$ 0</div>
-        </div>
-        <div class="resumen-item egr">
-          <div class="resumen-item-label">Egresos</div>
-          <div class="resumen-item-valor" id="totalEgresos">$ 0</div>
-        </div>
+        <div class="resumen-item ing"><div class="resumen-item-label">Ingresos</div><div class="resumen-item-valor" id="totalIngresos">$ 0</div></div>
+        <div class="resumen-item egr"><div class="resumen-item-label">Egresos</div><div class="resumen-item-valor" id="totalEgresos">$ 0</div></div>
       </div>
     </div>
 
     <div class="acciones">
       <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         Ingreso
       </button>
       <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
         Egreso
       </button>
     </div>
@@ -155,134 +233,196 @@
     <div class="fila-titulo">
       <div class="vista-titulo">Movimientos</div>
       <button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
         Filtrar
       </button>
     </div>
-    <div class="filtros-activos" id="filtrosActivos"></div>
-    <div class="lista" id="movLista">
-      <div class="cargando"><div class="spinner"></div><p>Cargando</p></div>
-    </div>
+    <div id="movLista"><div class="cargando"><div class="spinner"></div><p>Cargando</p></div></div>
   </section>
 
+  <!-- VISTA CUENTAS -->
   <section class="vista" id="vista-cuentas">
-    <div class="fila-titulo"><div class="vista-titulo">Cuentas</div><button class="btn-nuevo" onclick="abrirModalCuenta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Cuentas</div>
+      <button class="btn-nuevo" onclick="abrirModalCuenta()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
     <div class="lista" id="cuentasLista"></div>
   </section>
 
+  <!-- VISTA CATEGORÍAS -->
   <section class="vista" id="vista-categorias">
-    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-nuevo" onclick="abrirModalCategoria()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
-    <div class="segmented"><button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button><button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Categorías</div>
+      <button class="btn-nuevo" onclick="abrirModalCategoria()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
+    <div class="segmented">
+      <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
+      <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
+    </div>
     <div class="lista" id="categoriasLista"></div>
   </section>
 
+  <!-- VISTA ETIQUETAS -->
   <section class="vista" id="vista-etiquetas">
-    <div class="fila-titulo"><div class="vista-titulo">Etiquetas</div><button class="btn-nuevo" onclick="abrirModalEtiqueta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Etiquetas</div>
+      <button class="btn-nuevo" onclick="abrirModalEtiqueta()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
     <div class="etiquetas-grid" id="etiquetasLista"></div>
   </section>
 
+  <!-- NAVEGACIÓN INFERIOR -->
   <nav class="bottom-nav">
-    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg><span>Inicio</span></button>
-    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg><span>Cuentas</span></button>
-    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg><span>Cat</span></button>
-    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg><span>Tags</span></button>
-    <button class="nav-item" onclick="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Salir</span></button>
+    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <span>Cuentas</span>
+    </button>
+    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+      <span>Cat</span>
+    </button>
+    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+      <span>Tags</span>
+    </button>
+    <button class="nav-item" onclick="logout()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      <span>Salir</span>
+    </button>
   </nav>
 </div>
 
-<!-- MODAL: MOVIMIENTO -->
+<!-- ===== MODAL: MOVIMIENTO ===== -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="modalTitulo">Nuevo movimiento</div></div>
     <div class="modal-body">
       <div class="lf-row">
-        <div class="lf-group"><label class="lf-label">Fecha</label><input type="date" class="lf-input" id="inpFecha"></div>
+        <div class="lf-group"><label class="lf-label">Fecha *</label><input type="date" class="lf-input" id="inpFecha"></div>
         <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div>
       </div>
-      <div class="lf-group"><label class="lf-label">Concepto</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta de Pasajes"></div>
+      <div class="lf-group"><label class="lf-label">Monto (ARS) *</label><input type="number" step="any" class="lf-input" id="inpMonto" placeholder="0.00" style="font-size:18px; font-weight:700;"></div>
+      <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
-      <div class="lf-group"><label class="lf-label" id="labelContraparte">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Cliente o Proveedor"></div>
+      <div class="lf-group"><label class="lf-label" id="labelContraparte">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Cliente, Proveedor o Negocio"></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
       <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
-      <div class="lf-row">
-        <div class="lf-group">
-          <label class="lf-label">Moneda</label>
-          <select class="lf-select" id="inpMoneda" onchange="onCambioMoneda()">
-            <option value="ARS">ARS</option><option value="USD">USD</option><option value="EUR">EUR</option>
-          </select>
-        </div>
-        <div class="lf-group"><label class="lf-label">Monto</label><input type="number" step="any" class="lf-input" id="inpMonto" placeholder="0.00" oninput="actualizarPreviewARS()"></div>
-      </div>
-      <div class="lf-group" id="grupoCotizacion" style="display:none;"><label class="lf-label">Cotización</label><input type="number" step="any" class="lf-input" id="inpCotizacion" value="1000" oninput="actualizarPreviewARS()"><div class="lf-preview" id="previewARS"></div></div>
+      <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
       <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf"></div>
     </div>
-    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button><button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button></div></div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button>
+        <button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- MODAL: DETALLE -->
+<!-- ===== MODAL: DETALLE MOVIMIENTO ===== -->
 <div class="modal-overlay" id="detalleOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="detalleTitulo">Detalle</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="detalleTitulo">Detalle del Movimiento</div></div>
     <div class="modal-body" id="detalleBody"></div>
-    <div class="modal-foot"><button class="btn-cancelar" onclick="cerrarModal('detalleOverlay')">Cerrar</button></div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-guardar neutro" id="btnEditarMov">Editar</button>
+        <button class="btn-eliminar" id="btnEliminarMov" style="width: auto; flex:1;">Eliminar</button>
+      </div>
+      <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('detalleOverlay')">Cerrar</button>
+    </div>
   </div>
 </div>
 
-<!-- OTROS MODALES (CUENTA, CAT, TAG, FILTRO) ... -->
-<div class="modal-overlay" id="modalCuentaOverlay">
+<!-- ===== MODAL: CUENTA ===== -->
+<div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Cuenta</div></div>
     <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpCuentaNombre" class="lf-input"></div>
-      <div class="lf-group"><label class="lf-label">Moneda</label><select id="inpCuentaMoneda" class="lf-select"><option value="ARS">ARS</option><option value="USD">USD</option></select></div>
-      <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCuenta"></div></div>
+      <div class="lf-group"><label class="lf-label">Nombre de la Cuenta *</label><input type="text" id="inpCuentaNombre" class="lf-input" placeholder="Ej: Efectivo, Banco Nación..."></div>
+      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerCuenta"></div></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cerrar</button><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div>
-      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar</button>
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar cuenta</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalCategoriaOverlay">
+<!-- ===== MODAL: CATEGORÍA ===== -->
+<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Categoría</div></div>
     <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpCategoriaNombre" class="lf-input"></div>
-      <div class="lf-group"><label class="lf-label">Tipo</label><div class="segmented"><button id="btnTipoEgreso" onclick="setTipoCat('egreso')">Egreso</button><button id="btnTipoIngreso" onclick="setTipoCat('ingreso')">Ingreso</button><button id="btnTipoAmbas" onclick="setTipoCat('ambas')">Ambas</button></div></div>
-      <div class="lf-group"><label class="lf-label">Categoría Padre</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Nombre de Categoría *</label><input type="text" id="inpCategoriaNombre" class="lf-input" placeholder="Ej: Sueldos, Alquiler, Mercadería..."></div>
+      <div class="lf-group"><label class="lf-label">Tipo de Categoría</label>
+        <div class="segmented">
+          <button id="btnTipoEgreso" onclick="setTipoCat('egreso')">Egreso</button>
+          <button id="btnTipoIngreso" onclick="setTipoCat('ingreso')">Ingreso</button>
+          <button id="btnTipoAmbas" onclick="setTipoCat('ambas')">Ambas</button>
+        </div>
+      </div>
+      <div class="lf-group"><label class="lf-label">Categoría Padre (Opcional)</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCategoria"></div></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cerrar</button><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div>
-      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar</button>
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar categoría</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalEtiquetaOverlay">
+<!-- ===== MODAL: ETIQUETA ===== -->
+<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Etiqueta</div></div>
     <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpEtiquetaNombre" class="lf-input"></div>
+      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input" placeholder="Ej: Urgente, Pagado, Facturado..."></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerEtiqueta"></div></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cerrar</button><button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button></div>
-      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar</button>
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar etiqueta</button>
     </div>
   </div>
 </div>
 
+<!-- ===== MODAL: FILTROS ===== -->
 <div class="modal-overlay" id="filtroOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo">Filtros</div></div>
+    <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
     <div class="modal-body">
       <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
     </div>
-    <div class="modal-foot"><button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button></div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('filtroOverlay')">Cerrar</button>
+        <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -293,11 +433,11 @@ const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
-let user = null, cuentas = [], categorias = [], etiquetas = [], movimientos = [];
-let vistaActual = 'inicio', tipoActual = 'ingreso', modoRapido = false;
+let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [];
+let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
 let colorElegidoCuenta = COLORES[0], colorElegidoCategoria = COLORES[0], colorElegidoEtiqueta = COLORES[0];
-let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null;
-let etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
+let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null;
+let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '' };
 
 /* === AUTH === */
@@ -325,70 +465,108 @@ async function logout() { await _supabase.auth.signOut(); window.location.reload
 /* === DATA === */
 async function fetchData() {
   const [rC, rCat, rE, rM] = await Promise.all([
-    _supabase.from('cuentas').select('*'),
-    _supabase.from('categorias').select('*'),
-    _supabase.from('etiquetas').select('*'),
+    _supabase.from('cuentas').select('*').order('nombre'),
+    _supabase.from('categorias').select('*').order('nombre'),
+    _supabase.from('etiquetas').select('*').order('nombre'),
     _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false })
   ]);
   cuentas = rC.data || [];
   categorias = rCat.data || [];
   etiquetas = rE.data || [];
-  movimientos = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
+  movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
   renderTodaLaApp();
 }
 
 /* === RENDERERS === */
-function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0 }); }
+function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
 function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); }
 
 function renderInicio() {
-  let lista = movimientos.slice();
+  let lista = movements.slice();
   if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
   if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
 
-  const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars), 0);
-  const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars), 0);
+  const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
+  const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const saldo = ing - egr;
 
-  document.getElementById('saldoValor').textContent = fmtARS(saldo);
+  const saldoValEl = document.getElementById('saldoValor');
+  saldoValEl.textContent = fmtARS(saldo);
+  saldoValEl.classList.toggle('negativo', saldo < 0);
   document.getElementById('totalIngresos').textContent = fmtARS(ing);
   document.getElementById('totalEgresos').textContent = fmtARS(egr);
 
   const cont = document.getElementById('movLista');
-  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos</div>'; return; }
-  cont.innerHTML = lista.map(m => `
+  if (!lista.length) { cont.innerHTML = '<div class="vacio">Todavía no hay movimientos registrados en este filtro.</div>'; return; }
+  
+  cont.innerHTML = lista.map(m => {
+    const cta = cuentas.find(c => c.id === m.cuenta_id);
+    const cat = categorias.find(c => c.id === m.categoria_id);
+    const esIng = m.tipo === 'ingreso';
+    
+    // Armado de meta y títulos claros
+    const titulo = m.concepto && m.concepto.trim() !== '' ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
+    const clip = m.archivo_path ? ' 📎' : '';
+    const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
+    
+    let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
+    if (m.contraparte) subInfo += ` · De/Para: ${escapeHtml(m.contraparte)}`;
+
+    return `
     <div class="item-fila" onclick="verDetalle('${m.id}')">
-      <div class="mov-dot ${m.tipo === 'ingreso'?'ing':'egr'}">${m.tipo==='ingreso'?'↑':'↓'}</div>
-      <div class="mov-body">
-        <div class="mov-title">${escapeHtml(m.concepto)} ${m.archivo_path?'📎':''}</div>
-        <div class="mov-meta">${new Date(m.fecha).toLocaleDateString()}</div>
+      <div class="mov-dot ${esIng?'ing':'egr'}">
+        ${esIng ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>'}
       </div>
-      <div class="mov-right"><div class="mov-monto ${m.tipo==='ingreso'?'ing':'egr'}">${m.tipo==='ingreso'?'+':'−'}${fmtARS(m.monto_ars)}</div></div>
-    </div>`).join('');
+      <div class="mov-body">
+        <div class="mov-concepto">${titulo}${clip} ${catBadge}</div>
+        <div class="mov-meta">${subInfo}</div>
+      </div>
+      <div class="mov-right">
+        <div class="mov-monto ${esIng?'ing':'egr'}">${esIng?'+':'−'}${fmtARS(m.monto_ars || m.monto)}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderCuentas() {
-  document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `
+  const cont = document.getElementById('cuentasLista');
+  if (!cuentas.length) { cont.innerHTML = '<div class="vacio">No creaste cuentas todavía.</div>'; return; }
+  cont.innerHTML = cuentas.map(c => `
     <div class="item-fila" onclick="abrirModalCuenta('${c.id}')">
       <div class="color-dot" style="background:${c.color}"></div>
-      <div class="item-body">${escapeHtml(c.nombre)}</div>
+      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(c.nombre)}</div></div>
+      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
     </div>`).join('');
 }
 
 function renderCategorias() {
   const padres = categorias.filter(c => !c.padre_id && (c.tipo === segmentoCategoria || c.tipo === 'ambas'));
-  document.getElementById('categoriasLista').innerHTML = padres.map(p => `
-    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')"><div class="color-dot" style="background:${p.color}"></div>${escapeHtml(p.nombre)}</div>
-    ${categorias.filter(c => c.padre_id === p.id).map(s => `<div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')"><div class="color-dot" style="background:${s.color}"></div>${escapeHtml(s.nombre)}</div>`).join('')}
+  const cont = document.getElementById('categoriasLista');
+  if (!padres.length) { cont.innerHTML = '<div class="vacio">No hay categorías para este tipo.</div>'; return; }
+  cont.innerHTML = padres.map(p => `
+    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')">
+      <div class="color-dot" style="background:${p.color}"></div>
+      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(p.nombre)}</div></div>
+      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
+    </div>
+    ${categorias.filter(c => c.padre_id === p.id).map(s => `
+      <div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')">
+        <div class="color-dot" style="background:${s.color}"></div>
+        <div class="mov-body"><div style="font-size:14px; color:var(--text-2);">— ${escapeHtml(s.nombre)}</div></div>
+      </div>`).join('')}
   `).join('');
 }
 
 function renderEtiquetas() {
-  document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `
+  const cont = document.getElementById('etiquetasLista');
+  if (!etiquetas.length) { cont.innerHTML = '<div class="vacio">No creaste etiquetas todavía.</div>'; return; }
+  cont.innerHTML = etiquetas.map(e => `
     <div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')">
-      <div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}
+      <div class="color-dot" style="background:${e.color}"></div>
+      <strong style="color:white;">${escapeHtml(e.nombre)}</strong>
     </div>`).join('');
 }
 
@@ -401,21 +579,60 @@ function cambiarVista(v) {
 }
 
 function abrirModalMovimiento(t) {
-  tipoActual = t; etiquetasSeleccionadas = [];
+  tipoActual = t; etiquetasSeleccionadas = []; movEditandoId = null;
   document.getElementById('modalTitulo').textContent = t === 'ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
   document.getElementById('inpFecha').valueAsDate = new Date();
   document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5);
-  document.getElementById('inpMonto').value = ''; document.getElementById('inpConcepto').value = '';
-  document.getElementById('chipsEtiquetas').innerHTML = '';
+  document.getElementById('inpMonto').value = ''; 
+  document.getElementById('inpConcepto').value = '';
+  document.getElementById('inpContraparte').value = '';
+  document.getElementById('inpNotas').value = '';
+  document.getElementById('inpArchivo').value = '';
+  
+  const btn = document.getElementById('btnGuardar');
+  btn.textContent = "Guardar";
+  btn.className = "btn-guardar " + (t === 'ingreso' ? 'ing' : 'egr');
+
   poblarSelectsMov();
+  renderChipsEtiquetas();
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
-function poblarSelectsMov() {
-  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Cuenta</option>';
+function poblarSelectsMov(selCta, selCat) {
+  const ctaVal = selCta !== undefined ? selCta : document.getElementById('inpCuenta').value;
+  const catVal = selCat !== undefined ? selCat : document.getElementById('inpCategoria').value;
+  
+  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + 
+    cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CUENTA...</option>';
+  document.getElementById('inpCuenta').value = ctaVal || '';
+
   const cats = categorias.filter(c => c.tipo === tipoActual || c.tipo === 'ambas');
-  document.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría</option>' + cats.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Categoría</option>';
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Agregar Etiqueta</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Etiqueta</option>';
+  let catHtml = '<option value="">Sin categoría asignada</option>';
+  const padres = cats.filter(c => !c.padre_id);
+  padres.forEach(p => {
+    catHtml += `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`;
+    cats.filter(c => c.padre_id === p.id).forEach(sub => {
+      catHtml += `<option value="${sub.id}">&nbsp;&nbsp;&nbsp;— ${escapeHtml(sub.nombre)}</option>`;
+    });
+  });
+  catHtml += '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CATEGORÍA...</option>';
+  document.getElementById('inpCategoria').innerHTML = catHtml;
+  document.getElementById('inpCategoria').value = catVal || '';
+
+  const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">+ Agregar Etiqueta al movimiento</option>' + 
+    tagsDisp.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA ETIQUETA...</option>';
+}
+
+function renderChipsEtiquetas() {
+  document.getElementById('chipsEtiquetas').innerHTML = etiquetasSeleccionadas.map(id => {
+    const e = etiquetas.find(x => x.id === id);
+    if(!e) return '';
+    return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px; cursor:pointer;">×</strong></span>`;
+  }).join('');
+  poblarSelectsMov();
 }
 
 function onAddEtiqueta() {
@@ -423,76 +640,146 @@ function onAddEtiqueta() {
   if (s.value === 'NUEVA') { abrirModalEtiqueta(null, true); s.value = ''; return; }
   if (s.value && !etiquetasSeleccionadas.includes(s.value)) {
     etiquetasSeleccionadas.push(s.value);
-    const e = etiquetas.find(x => x.id === s.value);
-    document.getElementById('chipsEtiquetas').innerHTML += `<span class="chip">${e.nombre}</span>`;
+    renderChipsEtiquetas();
   }
   s.value = '';
 }
 
-/* === CRUD SUPABASE === */
+function quitarEtiqueta(id) {
+  etiquetasSeleccionadas = etiquetasSeleccionadas.filter(x => x !== id);
+  renderChipsEtiquetas();
+}
+
+/* === CRUD SUPABASE MOVIMIENTOS === */
 async function guardarMovimiento() {
   const monto = parseFloat(document.getElementById('inpMonto').value);
-  const concepto = document.getElementById('inpConcepto').value;
-  const fecha = document.getElementById('inpFecha').value, hora = document.getElementById('inpHora').value;
-  if (!monto || !concepto) return;
+  const fecha = document.getElementById('inpFecha').value;
+  const hora = document.getElementById('inpHora').value || '00:00';
+  
+  if (!monto || monto <= 0 || !fecha) { alert("Por favor completa al menos el Monto y la Fecha."); return; }
 
-  const moneda = document.getElementById('inpMoneda').value;
-  const cotiz = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 1);
-
-  const { data: mov, error } = await _supabase.from('movimientos').insert([{
-    user_id: user.id, tipo: tipoActual, concepto, contraparte: document.getElementById('inpContraparte').value,
-    monto, cotizacion: cotiz, moneda, cuenta_id: document.getElementById('inpCuenta').value || null,
+  const payload = {
+    user_id: user.id,
+    tipo: tipoActual,
+    concepto: document.getElementById('inpConcepto').value.trim() || null,
+    contraparte: document.getElementById('inpContraparte').value.trim() || null,
+    notas: document.getElementById('inpNotas').value.trim() || null,
+    monto: monto,
+    moneda: 'ARS',
+    cotizacion: 1,
+    cuenta_id: document.getElementById('inpCuenta').value || null,
     categoria_id: document.getElementById('inpCategoria').value || null,
     fecha: new Date(`${fecha}T${hora}`).toISOString()
-  }]).select().single();
+  };
 
-  if (error) { alert(error.message); return; }
+  let movId = movEditandoId;
+  if (movEditandoId) {
+    const { error } = await _supabase.from('movimientos').update(payload).eq('id', movEditandoId);
+    if (error) { alert(error.message); return; }
+    await _supabase.from('movimiento_etiquetas').delete().eq('movimiento_id', movEditandoId);
+  } else {
+    const { data: mov, error } = await _supabase.from('movimientos').insert([payload]).select().single();
+    if (error) { alert(error.message); return; }
+    movId = mov.id;
+  }
 
-  if (etiquetasSeleccionadas.length) {
-    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: mov.id, etiqueta_id: id })));
+  if (etiquetasSeleccionadas.length && movId) {
+    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
   }
 
   const fileInput = document.getElementById('inpArchivo');
-  if (fileInput.files[0]) {
-    const file = fileInput.files[0], path = `${user.id}/${mov.id}/${file.name}`;
-    await _supabase.storage.from('comprobantes').upload(path, file);
-    await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', mov.id);
+  if (fileInput.files[0] && movId) {
+    const file = fileInput.files[0], path = `${user.id}/${movId}/${Date.now()}_${file.name}`;
+    const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
+    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
   }
 
-  cerrarModal('modalOverlay'); fetchData();
+  cerrarModal('modalOverlay'); 
+  fetchData();
 }
 
 async function verDetalle(id) {
-  const m = movimientos.find(x => x.id === id);
+  const m = movements.find(x => x.id === id);
+  if (!m) return;
+  
+  const cta = cuentas.find(c => c.id === m.cuenta_id);
+  const cat = categorias.find(c => c.id === m.categoria_id);
+  
   let arch = '';
   if (m.archivo_path) {
     const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 60);
-    arch = `<div class="detalle-row"><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a></div>`;
+    arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data?.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
   }
+  
+  let tagsHtml = '';
+  if(m.etiquetaIds && m.etiquetaIds.length) {
+    tagsHtml = `<div class="detalle-row"><div class="detalle-label">Etiquetas</div><div class="chips-wrap">` + 
+      m.etiquetaIds.map(tid => {
+        const e = etiquetas.find(x => x.id === tid);
+        return e ? `<span class="chip"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)}</span>` : '';
+      }).join('') + `</div></div>`;
+  }
+
   document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor">${fmtARS(m.monto_ars)}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor">${escapeHtml(m.concepto)}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Fecha</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString()}</div></div>
-    ${arch}
-    <button class="btn-eliminar" onclick="borrarMov('${m.id}')" style="margin-top:15px;">Eliminar</button>`;
+    <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor" style="font-weight:600;">${m.concepto ? escapeHtml(m.concepto) : '<i>Sin concepto</i>'}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR')}</div></div>
+    ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
+    ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
+    ${m.contraparte ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(m.contraparte)}</div></div>` : ''}
+    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
+    ${tagsHtml}
+    ${arch}`;
+
+  document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
+  document.getElementById('btnEliminarMov').onclick = () => borrarMov(id);
   document.getElementById('detalleOverlay').classList.add('activo');
 }
 
-async function borrarMov(id) {
-  const m = movimientos.find(x => x.id === id);
-  if (m.archivo_path) await _supabase.storage.from('comprobantes').remove([m.archivo_path]);
-  await _supabase.from('movimientos').delete().eq('id', id);
-  cerrarModal('detalleOverlay'); fetchData();
+function editarMovimiento(id) {
+  const m = movements.find(x => x.id === id);
+  if (!m) return;
+  cerrarModal('detalleOverlay');
+  
+  movEditandoId = m.id;
+  tipoActual = m.tipo;
+  document.getElementById('modalTitulo').textContent = m.tipo === 'ingreso' ? 'Editar Ingreso' : 'Editar Egreso';
+  
+  const fObj = new Date(m.fecha);
+  const yyyy = fObj.getFullYear();
+  const mm = String(fObj.getMonth() + 1).padStart(2, '0');
+  const dd = String(fObj.getDate()).padStart(2, '0');
+  document.getElementById('inpFecha').value = `${yyyy}-${mm}-${dd}`;
+  document.getElementById('inpHora').value = fObj.toTimeString().slice(0, 5);
+  
+  document.getElementById('inpMonto').value = m.monto || '';
+  document.getElementById('inpConcepto').value = m.concepto || '';
+  document.getElementById('inpContraparte').value = m.contraparte || '';
+  document.getElementById('inpNotas').value = m.notas || '';
+  document.getElementById('inpArchivo').value = '';
+  
+  etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
+  poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '');
+  renderChipsEtiquetas();
+  
+  const btn = document.getElementById('btnGuardar');
+  btn.textContent = "Actualizar";
+  btn.className = "btn-guardar " + (m.tipo === 'ingreso' ? 'ing' : 'egr');
+  
+  document.getElementById('modalOverlay').classList.add('activo');
 }
 
-/* === HELPERS UI === */
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
-function onCambioMoneda() { document.getElementById('grupoCotizacion').style.display = document.getElementById('inpMoneda').value==='ARS'?'none':'block'; }
-function actualizarPreviewARS() { 
-  const m = parseFloat(document.getElementById('inpMonto').value) || 0;
-  const c = parseFloat(document.getElementById('inpCotizacion').value) || 1;
-  document.getElementById('previewARS').textContent = document.getElementById('inpMoneda').value==='ARS'?'': '≈ ' + fmtARS(m * c);
+async function borrarMov(id) {
+  if(!confirm("¿Seguro de eliminar este movimiento?")) return;
+  const m = movements.find(x => x.id === id);
+  if (m && m.archivo_path) await _supabase.storage.from('comprobantes').remove([m.archivo_path]);
+  await _supabase.from('movimientos').delete().eq('id', id);
+  cerrarModal('detalleOverlay'); 
+  fetchData();
 }
+
+/* === HELPERS UI & FILTROS === */
+function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
 
 function cambiarSegmentoCategoria(s) { 
   segmentoCategoria = s; 
@@ -501,8 +788,18 @@ function cambiarSegmentoCategoria(s) {
   renderCategorias(); 
 }
 
-function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
-function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(null, true); }
+function onCambioSelectCuenta() { 
+  if (document.getElementById('inpCuenta').value==='NUEVA') { 
+    abrirModalCuenta(null, true); 
+    document.getElementById('inpCuenta').value = ''; 
+  } 
+}
+function onCambioSelectCategoria() { 
+  if (document.getElementById('inpCategoria').value==='NUEVA') { 
+    abrirModalCategoria(null, true); 
+    document.getElementById('inpCategoria').value = ''; 
+  } 
+}
 
 function renderColorPick(id, sel, f) {
   document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
@@ -512,20 +809,39 @@ function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta',
 function pickCat(c) { colorElegidoCategoria = c; renderColorPick('colorPickerCategoria', c, 'pickCat'); }
 function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
 
-/* === CRUD AUXILIAR === */
-function abrirModalCuenta(id, r) {
-  cuentaEditandoId = id; modoRapido = r;
+/* === CRUD AUXILIAR (CUENTA, CATEGORÍA, ETIQUETA) === */
+function abrirModalCuenta(id, rapido = false) {
+  cuentaEditandoId = id; modoRapido = rapido;
   const c = id ? cuentas.find(x => x.id === id) : null;
+  document.getElementById('cuentaModalTitulo').textContent = c ? 'Editar Cuenta' : 'Nueva Cuenta';
   document.getElementById('inpCuentaNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarCuenta').style.display = c ? 'block' : 'none';
   pickC(c ? c.color : COLORES[0]);
   document.getElementById('modalCuentaOverlay').classList.add('activo');
 }
 
 async function guardarCuenta() {
-  const n = document.getElementById('inpCuentaNombre').value, m = document.getElementById('inpCuentaMoneda').value;
-  const p = { user_id: user.id, nombre: n, moneda: m, color: colorElegidoCuenta };
-  if (cuentaEditandoId) await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId);
-  else await _supabase.from('cuentas').insert([p]);
+  const n = document.getElementById('inpCuentaNombre').value.trim();
+  if(!n) { alert("Ponele un nombre a la cuenta."); return; }
+  const p = { user_id: user.id, nombre: n, moneda: 'ARS', color: colorElegidoCuenta };
+  
+  let res;
+  if (cuentaEditandoId) res = await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select();
+  else res = await _supabase.from('cuentas').insert([p]).select();
+  
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData();
+  cerrarModal('modalCuentaOverlay');
+  
+  if(modoRapido && res.data && res.data[0]) {
+    poblarSelectsMov(res.data[0].id, undefined);
+    modoRapido = false;
+  }
+}
+
+async function eliminarCuenta() {
+  if(!confirm("¿Eliminar cuenta? Sus movimientos quedarán desvinculados.")) return;
+  await _supabase.from('cuentas').delete().eq('id', cuentaEditandoId);
   cerrarModal('modalCuentaOverlay'); fetchData();
 }
 
@@ -536,45 +852,92 @@ function setTipoCat(t) {
   document.getElementById('btnTipoAmbas').classList.toggle('activo', t==='ambas');
 }
 
-function abrirModalCategoria(id, r) {
-  categoriaEditandoId = id; modoRapido = r;
+function abrirModalCategoria(id, rapido = false) {
+  categoriaEditandoId = id; modoRapido = rapido;
   const c = id ? categorias.find(x => x.id === id) : null;
+  document.getElementById('categoriaModalTitulo').textContent = c ? 'Editar Categoría' : 'Nueva Categoría';
   document.getElementById('inpCategoriaNombre').value = c ? c.nombre : '';
-  setTipoCat(c ? c.tipo : 'egreso');
+  document.getElementById('btnEliminarCategoria').style.display = c ? 'block' : 'none';
+  
+  setTipoCat(c ? c.tipo : (modoRapido ? tipoActual : 'egreso'));
   pickCat(c ? c.color : COLORES[0]);
+  
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
-  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Principal</option>' + padres.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + 
+    padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
   document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
+  
   document.getElementById('modalCategoriaOverlay').classList.add('activo');
 }
 
 async function guardarCategoria() {
-  const n = document.getElementById('inpCategoriaNombre').value;
+  const n = document.getElementById('inpCategoriaNombre').value.trim();
+  if(!n) { alert("Ponele un nombre a la categoría."); return; }
   const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorElegidoCategoria };
-  if (categoriaEditandoId) await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId);
-  else await _supabase.from('categorias').insert([p]);
+  
+  let res;
+  if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
+  else res = await _supabase.from('categorias').insert([p]).select();
+  
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData();
+  cerrarModal('modalCategoriaOverlay');
+  
+  if(modoRapido && res.data && res.data[0]) {
+    poblarSelectsMov(undefined, res.data[0].id);
+    modoRapido = false;
+  }
+}
+
+async function eliminarCategoria() {
+  if(!confirm("¿Eliminar categoría?")) return;
+  const subs = categorias.filter(c => c.padre_id === categoriaEditandoId).map(c => c.id);
+  if(subs.length) await _supabase.from('categorias').delete().in('id', subs);
+  await _supabase.from('categorias').delete().eq('id', categoriaEditandoId);
   cerrarModal('modalCategoriaOverlay'); fetchData();
 }
 
-function abrirModalEtiqueta(id, r) {
-  etiquetaEditandoId = id; modoRapido = r;
+function abrirModalEtiqueta(id, rapido = false) {
+  etiquetaEditandoId = id; modoRapido = rapido;
   const e = id ? etiquetas.find(x => x.id === id) : null;
+  document.getElementById('etiquetaModalTitulo').textContent = e ? 'Editar Etiqueta' : 'Nueva Etiqueta';
   document.getElementById('inpEtiquetaNombre').value = e ? e.nombre : '';
+  document.getElementById('btnEliminarEtiqueta').style.display = e ? 'block' : 'none';
   pickEt(e ? e.color : COLORES[0]);
   document.getElementById('modalEtiquetaOverlay').classList.add('activo');
 }
 
 async function guardarEtiqueta() {
-  const n = document.getElementById('inpEtiquetaNombre').value;
+  const n = document.getElementById('inpEtiquetaNombre').value.trim();
+  if(!n) { alert("Escribe un nombre para la etiqueta."); return; }
   const p = { user_id: user.id, nombre: n, color: colorElegidoEtiqueta };
-  if (etiquetaEditandoId) await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId);
-  else await _supabase.from('etiquetas').insert([p]);
+  
+  let res;
+  if (etiquetaEditandoId) res = await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select();
+  else res = await _supabase.from('etiquetas').insert([p]).select();
+  
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData();
+  cerrarModal('modalEtiquetaOverlay');
+  
+  if(modoRapido && res.data && res.data[0]) {
+    if(!etiquetasSeleccionadas.includes(res.data[0].id)) {
+      etiquetasSeleccionadas.push(res.data[0].id);
+      renderChipsEtiquetas();
+    }
+    modoRapido = false;
+  }
+}
+
+async function eliminarEtiqueta() {
+  if(!confirm("¿Eliminar etiqueta?")) return;
+  await _supabase.from('etiquetas').delete().eq('id', etiquetaEditandoId);
   cerrarModal('modalEtiquetaOverlay'); fetchData();
 }
 
 function abrirFiltro() {
-  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroOverlay').classList.add('activo');
 }
 
@@ -584,6 +947,12 @@ function aplicarFiltros() {
   cerrarModal('filtroOverlay'); renderInicio();
 }
 
+function limpiarFiltros() {
+  filtro = { cuenta_id: '', categoria_id: '' };
+  cerrarModal('filtroOverlay'); renderInicio();
+}
+
+// Inicializar la app al cargar
 checkUser();
 </script>
 </body>
