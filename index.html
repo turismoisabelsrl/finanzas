@@ -8,182 +8,318 @@
 <!-- SDK Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- PWA Tags -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#071020">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --navy: #071020; --sky: #3a8fd1; --sky-bright: #55b3f5; --sky-glow: rgba(55,170,245,0.16);
-    --gold: #c8a85a; --green: #2cb87a; --green-bg: rgba(44,184,122,0.12);
-    --red: #e04444; --red-bg: rgba(224,68,68,0.12); --amber: #d9a63e;
-    --text-0: #ffffff; --text-1: rgba(255,255,255,0.85); --text-2: rgba(180,210,240,0.65);
-    --text-3: rgba(140,175,215,0.45); --border: rgba(255,255,255,0.08);
-    --border-hi: rgba(255,255,255,0.14); --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
-    --r-xl: 22px; --r-2xl: 28px; --font-num: 'Inter', sans-serif;
+    --navy:        #071020;
+    --sky:         #3a8fd1;
+    --sky-bright:  #55b3f5;
+    --sky-glow:    rgba(55,170,245,0.16);
+    --gold:        #c8a85a;
+    --green:       #2cb87a;
+    --green-bg:    rgba(44,184,122,0.12);
+    --red:         #e04444;
+    --red-bg:      rgba(224,68,68,0.12);
+    --text-0:      #ffffff;
+    --text-1:      rgba(255,255,255,0.85);
+    --text-2:      rgba(180,210,240,0.65);
+    --text-3:      rgba(140,175,215,0.45);
+    --border:      rgba(255,255,255,0.08);
+    --border-hi:   rgba(255,255,255,0.14);
+    --r-2xl:       28px;
+    --font-num:    'Inter', sans-serif;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; position: relative; }
-  body::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy); }
   
-  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 20px 16px 100px; display: none; }
-  #login-screen { position: relative; z-index: 2; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text-1);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-  .vista { display: none; }
-  .vista.activa { display: block; animation: revealUp 0.35s ease-out; }
-  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  body::before {
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
+                radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy);
+  }
 
-  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); margin-bottom: 15px; isolation: isolate; }
-  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); }
-  .btn-main { background: linear-gradient(135deg, var(--sky), #55b3f5); color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-weight: 800; font-family: 'Syne'; text-transform: uppercase; cursor: pointer; }
-  .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne'; font-weight: 700; text-transform: uppercase; font-size: 13px; }
-  .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.14)); border: 1.5px solid rgba(44,184,122,0.32); color: #5de09a; }
-  .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.30); color: #ff9090; }
+  /* --- LOGIN SCREEN --- */
+  #login-screen {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 20px;
+  }
 
-  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(10,20,38,0.72); backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 0; background: none; border: none; color: var(--text-3); cursor: pointer; }
+  .brand-orb { width: 80px; height: 80px; margin-bottom: 20px; position: relative; }
+  .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; box-shadow: 0 0 30px var(--sky-glow); }
+
+  /* --- APP STRUCTURE --- */
+  #app { display: none; position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 100px; }
+
+  .vista { display: none; animation: revealUp 0.4s ease-out both; }
+  .vista.activa { display: block; }
+  @keyframes revealUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  header.topbar { text-align: center; margin-bottom: 25px; }
+  .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--text-0); }
+  
+  .card {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: var(--r-2xl); padding: 22px 20px;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    margin-bottom: 20px;
+  }
+
+  .saldo-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); }
+  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); margin-top: 5px; }
+
+  .acciones-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+  .btn-accion {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 16px; border-radius: 20px; border: none; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase;
+  }
+  .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.2), rgba(44,184,122,0.1)); border: 1px solid rgba(44,184,122,0.3); color: #5de09a; }
+  .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.2), rgba(224,68,68,0.1)); border: 1px solid rgba(224,68,68,0.3); color: #ff9090; }
+
+  /* --- LISTAS --- */
+  .item-fila {
+    display: flex; align-items: center; gap: 14px; padding: 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 18px; margin-bottom: 10px; cursor: pointer;
+  }
+  .mov-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mov-icon.ing { background: var(--green-bg); color: var(--green); }
+  .mov-icon.egr { background: var(--red-bg); color: var(--red); }
+  
+  .mov-info { flex: 1; overflow: hidden; }
+  .mov-title { font-weight: 600; color: var(--text-0); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mov-meta { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+  .mov-monto { font-family: var(--font-num); font-weight: 700; text-align: right; }
+
+  /* --- BOTTOM NAV --- */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(7, 16, 32, 0.8); backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+    padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+  }
+  .nav-item {
+    background: none; border: none; color: var(--text-3); display: flex; flex-direction: column;
+    align-items: center; gap: 5px; cursor: pointer; transition: 0.3s;
+  }
   .nav-item.activo { color: var(--sky-bright); }
-  .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 22px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
-  .nav-item span { font-family: 'Syne'; font-size: 9px; font-weight: 600; text-transform: uppercase; }
+  .nav-item span { font-family: 'Syne'; font-size: 9px; font-weight: 700; text-transform: uppercase; }
 
-  .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
+  /* --- MODALES --- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px); display: none; align-items: flex-end; justify-content: center;
+  }
   .modal-overlay.activo { display: flex; }
-  .modal-sheet { width: 100%; max-width: 480px; max-height: 92vh; background: #0d1e38; border-radius: 28px 28px 0 0; display: flex; flex-direction: column; border-top: 1px solid var(--sky); animation: slideUp 0.3s ease-out; }
+  .modal-sheet {
+    width: 100%; max-width: 500px; background: #0d1e38; border-top: 1px solid var(--border-hi);
+    border-radius: 30px 30px 0 0; padding: 25px; max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+  }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
-  
-  .lf-group { margin-bottom: 16px; }
-  .lf-label { display: block; font-family: 'Syne'; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 15px; outline: none; }
 
-  .item-fila { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 8px; cursor: pointer; }
+  .lf-group { margin-bottom: 18px; }
+  .lf-label { display: block; font-family: 'Syne'; font-size: 11px; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+  .lf-input, .lf-select, .lf-textarea {
+    width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    border-radius: 14px; color: white; font-size: 15px; outline: none; transition: 0.3s;
+  }
+  .lf-input:focus { border-color: var(--sky); background: rgba(255,255,255,0.1); }
+
+  .btn-main {
+    width: 100%; padding: 16px; border-radius: 16px; border: none;
+    background: linear-gradient(135deg, var(--sky), var(--sky-bright));
+    color: white; font-family: 'Syne'; font-weight: 800; text-transform: uppercase; cursor: pointer;
+  }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+    background: rgba(255,255,255,0.08); border-radius: 20px; font-size: 12px; margin: 4px;
+  }
+
   .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(58,143,209,0.15); color: var(--sky-bright); border-radius: 20px; font-size: 12px; margin: 2px; border: 1px solid rgba(58,143,209,0.3); }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- PANTALLA LOGIN -->
 <div id="login-screen">
-    <h1 style="font-family:'Syne'; font-size: 40px; color: white;">Ti</h1>
-    <p style="color: gray; margin-bottom: 30px;">Registro Privado Empresa</p>
-    <div class="card">
-        <input type="email" id="email" class="lf-input" placeholder="Usuario">
-        <input type="password" id="password" class="lf-input" placeholder="Contraseña" style="margin-top:10px;">
-        <button onclick="handleLogin()" class="btn-main" style="margin-top: 20px;">Entrar</button>
-        <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
+  <div class="brand-orb">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA... (tu base64)">
+  </div>
+  <h1 class="brand-title">Turismo Isabel</h1>
+  <p style="color: var(--text-3); font-size: 12px; margin-bottom: 30px; letter-spacing: 2px;">REGISTRO PRIVADO</p>
+  
+  <div class="card" style="width: 100%; max-width: 350px;">
+    <div class="lf-group">
+      <input type="email" id="email" class="lf-input" placeholder="Usuario / Email">
     </div>
+    <div class="lf-group">
+      <input type="password" id="password" class="lf-input" placeholder="Contraseña">
+    </div>
+    <button onclick="handleLogin()" class="btn-main">Entrar</button>
+    <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; text-align:center; display:none;"></p>
+  </div>
 </div>
 
-<!-- APP -->
+<!-- APP PRINCIPAL -->
 <div id="app">
-    <header style="display:flex; justify-content:space-between; margin-bottom:20px;">
-        <h2 style="font-family:'Syne'; font-size:22px;">Mi Balance</h2>
-        <button onclick="logout()" style="background:none; border:none; color:gray; cursor:pointer; font-family:'Syne'; font-size:10px;">SALIR</button>
-    </header>
+  <header class="topbar">
+    <div class="brand-title">Balance General</div>
+    <p style="font-family:'Syne'; font-size:9px; color:var(--text-3); letter-spacing:3px;">TI REGISTRO</p>
+  </header>
 
+  <!-- SECCIÓN INICIO -->
+  <div id="vista-inicio" class="vista activa">
     <div class="card">
-        <span class="lf-label">Saldo Total ARS</span>
-        <div id="saldoValor" style="font-size:36px; font-weight:800; font-family:'Inter';">$ 0</div>
+      <div class="saldo-label">Saldo Disponible (ARS)</div>
+      <div id="saldoValor" class="saldo-valor">$ 0</div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:30px;">
-        <button onclick="abrirFormMov('ingreso')" class="btn-accion btn-ingreso">+ Ingreso</button>
-        <button onclick="abrirFormMov('egreso')" class="btn-accion btn-egreso">- Egreso</button>
+    <div class="acciones-grid">
+      <button class="btn-accion btn-ingreso" onclick="abrirModalMov('ingreso')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Ingreso
+      </button>
+      <button class="btn-accion btn-egreso" onclick="abrirModalMov('egreso')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+        Egreso
+      </button>
     </div>
 
-    <div id="movLista"></div>
+    <div id="lista-movimientos">
+      <!-- Movimientos vía JS -->
+    </div>
+  </div>
+
+  <!-- SECCIÓN CUENTAS -->
+  <div id="vista-cuentas" class="vista">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h3 style="font-family:'Syne'">Cuentas</h3>
+      <button class="btn-accion btn-ingreso" style="padding:8px 15px; font-size:10px;" onclick="abrirModalNuevaCuenta()">+ Nueva</button>
+    </div>
+    <div id="lista-cuentas"></div>
+  </div>
+
+  <!-- SECCIÓN CATEGORÍAS -->
+  <div id="vista-categorias" class="vista">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h3 style="font-family:'Syne'">Categorías</h3>
+      <button class="btn-accion btn-ingreso" style="padding:8px 15px; font-size:10px;" onclick="abrirModalNuevaCat()">+ Nueva</button>
+    </div>
+    <div id="lista-categorias"></div>
+  </div>
+
+  <!-- SECCIÓN ETIQUETAS -->
+  <div id="vista-etiquetas" class="vista">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h3 style="font-family:'Syne'">Etiquetas</h3>
+      <button class="btn-accion btn-ingreso" style="padding:8px 15px; font-size:10px;" onclick="abrirModalNuevaTag()">+ Nueva</button>
+    </div>
+    <div id="lista-etiquetas" style="display:flex; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <nav class="bottom-nav">
+    <button class="nav-item activo" onclick="cambiarVista('inicio', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" onclick="cambiarVista('cuentas', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      <span>Cuentas</span>
+    </button>
+    <button class="nav-item" onclick="cambiarVista('categorias', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      <span>Cat</span>
+    </button>
+    <button class="nav-item" onclick="cambiarVista('etiquetas', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L13.41 6.24a2 2 0 00-2.83 0l-7.58 7.58a2 2 0 000 2.83l7.58 7.58a2 2 0 002.83 0l7.17-7.17a2 2 0 000-2.83z"/><circle cx="9.5" cy="9.5" r="1.5"/></svg>
+      <span>Tags</span>
+    </button>
+    <button class="nav-item" onclick="logout()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      <span>Salir</span>
+    </button>
+  </nav>
 </div>
 
 <!-- MODAL MOVIMIENTO -->
 <div class="modal-overlay" id="modalMov">
-    <div class="modal-sheet">
-        <div class="modal-header">
-            <h2 id="movTitulo" style="font-family:'Syne'; font-size:18px;">Nuevo Movimiento</h2>
-            <button onclick="cerrarModal('modalMov')" style="background:none; border:none; color:gray; cursor:pointer;">Cerrar</button>
-        </div>
-        <div class="modal-body">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div class="lf-group">
-                    <label class="lf-label">Fecha</label>
-                    <input type="date" id="movFecha" class="lf-input">
-                </div>
-                <div class="lf-group">
-                    <label class="lf-label">Hora</label>
-                    <input type="time" id="movHora" class="lf-input">
-                </div>
-            </div>
-
-            <div class="lf-group">
-                <label class="lf-label">Concepto / Detalle</label>
-                <input type="text" id="movConcepto" class="lf-input" placeholder="Ej: Venta de Pasajes">
-            </div>
-
-            <div class="lf-group">
-                <label class="lf-label">Cuenta</label>
-                <select id="movCuenta" class="lf-select" onchange="verificarNuevo(this, 'cuenta')"></select>
-            </div>
-
-            <div class="lf-group">
-                <label class="lf-label" id="labelContraparte">Contraparte</label>
-                <input type="text" id="movContraparte" class="lf-input" placeholder="Cliente o Proveedor">
-            </div>
-
-            <div class="lf-group">
-                <label class="lf-label">Categoría</label>
-                <select id="movCategoria" class="lf-select" onchange="verificarNuevo(this, 'categoria')"></select>
-            </div>
-
-            <div class="lf-group">
-                <label class="lf-label">Etiquetas</label>
-                <select id="movEtiquetaSel" class="lf-select" onchange="addTag(this)"></select>
-                <div id="movTagsList" class="chips-container" style="display:flex; flex-wrap:wrap; margin-top:8px;"></div>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:10px;">
-                <div class="lf-group">
-                    <label class="lf-label">Monto</label>
-                    <input type="number" id="movMonto" class="lf-input" placeholder="0.00" oninput="calcARS()">
-                </div>
-                <div class="lf-group">
-                    <label class="lf-label">Moneda</label>
-                    <select id="movMoneda" class="lf-select" onchange="toggleCotiz()">
-                        <option value="ARS">ARS</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="divCotiz" style="display:none;" class="card">
-                <label class="lf-label">Cotización 1 <span id="txtDivisa">USD</span> = ARS</label>
-                <input type="number" id="movCotiz" class="lf-input" value="1000" oninput="calcARS()">
-                <p id="txtEquiv" style="font-size:12px; color:var(--sky-bright); margin-top:10px; font-weight:700;"></p>
-            </div>
-
-            <button onclick="guardarMovimientoFinal()" class="btn-main" style="margin-top:10px;">Confirmar y Guardar</button>
-        </div>
+  <div class="modal-sheet">
+    <h2 id="movTitulo" style="font-family:'Syne'; margin-bottom:20px;">Nuevo Movimiento</h2>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+      <div class="lf-group">
+        <label class="lf-label">Fecha</label>
+        <input type="date" id="movFecha" class="lf-input">
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Hora</label>
+        <input type="time" id="movHora" class="lf-input">
+      </div>
     </div>
+
+    <div class="lf-group">
+      <label class="lf-label">Concepto</label>
+      <input type="text" id="movConcepto" class="lf-input" placeholder="Ej: Venta de Pasaje">
+    </div>
+
+    <div class="lf-group">
+      <label class="lf-label">Cuenta</label>
+      <select id="movCuenta" class="lf-select"></select>
+    </div>
+
+    <div class="lf-group">
+      <label class="lf-label">Categoría</label>
+      <select id="movCategoria" class="lf-select"></select>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+      <div class="lf-group">
+        <label class="lf-label">Monto</label>
+        <input type="number" id="movMonto" class="lf-input" placeholder="0.00">
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Moneda</label>
+        <select id="movMoneda" class="lf-select" onchange="checkMoneda()">
+          <option value="ARS">ARS</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="divCotizacion" class="lf-group" style="display:none; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px;">
+      <label class="lf-label">Cotización a ARS</label>
+      <input type="number" id="movCotiz" class="lf-input" value="1000">
+    </div>
+
+    <div class="lf-group">
+      <label class="lf-label">Comprobante (Imagen/PDF)</label>
+      <input type="file" id="movArchivo" class="lf-input" accept="image/*,application/pdf">
+    </div>
+
+    <button onclick="guardarMovimiento()" class="btn-main">Guardar Registro</button>
+    <button onclick="cerrarModal('modalMov')" style="width:100%; background:none; border:none; color:gray; margin-top:15px; font-family:'Syne'; cursor:pointer;">Cancelar</button>
+  </div>
 </div>
 
-<!-- MODAL RÁPIDO (HIJO) -->
-<div class="modal-overlay" id="modalRapido" style="z-index:200;">
-    <div class="modal-sheet" style="max-height:60vh; border-top: 2px solid var(--green);">
-        <div class="modal-header">
-            <h2 id="rapidoTitulo" style="font-family:'Syne'; font-size:16px;">Nuevo Registro</h2>
-            <button onclick="cerrarModal('modalRapido')" style="background:none; border:none; color:gray; cursor:pointer;">Cerrar</button>
-        </div>
-        <div class="modal-body" id="rapidoBody"></div>
-    </div>
-</div>
-
+<!-- SCRIPTS -->
 <script>
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
@@ -191,194 +327,177 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let user = null;
 let db = { cuentas: [], categorias: [], etiquetas: [], movimientos: [] };
-let etiquetasEnMov = [];
-let tipoM = 'ingreso';
+let currentTipo = 'ingreso';
 
-/* --- AUTH --- */
-async function checkUser() {
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (session) {
-        user = session.user;
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        fetchData();
-    }
-}
-
+// --- AUTH ---
 async function handleLogin() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const { error } = await _supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-        document.getElementById('login-error').innerText = "Datos incorrectos.";
-        document.getElementById('login-error').style.display = 'block';
-    } else {
-        checkUser();
-    }
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    const errEl = document.getElementById('login-error');
+    errEl.innerText = "Error: Usuario o contraseña incorrectos.";
+    errEl.style.display = 'block';
+  } else {
+    checkUser();
+  }
 }
 
-async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
-
-/* --- DATA --- */
-async function fetchData() {
-    const [rC, rCat, rE, rM] = await Promise.all([
-        _supabase.from('cuentas').select('*'),
-        _supabase.from('categorias').select('*'),
-        _supabase.from('etiquetas').select('*'),
-        _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false })
-    ]);
-    db.cuentas = rC.data || [];
-    db.categorias = rCat.data || [];
-    db.etiquetas = rE.data || [];
-    db.movimientos = (rM.data || []).map(m => ({ ...m, tags: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
-    renderAll();
+async function checkUser() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (session) {
+    user = session.user;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    cargarDatos();
+  }
 }
 
-function renderAll() {
-    let bal = 0;
-    document.getElementById('movLista').innerHTML = db.movimientos.map(m => {
-        const esIng = m.tipo === 'ingreso';
-        bal += esIng ? Number(m.monto_ars) : -Number(m.monto_ars);
-        return `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
-            <div><div style="font-weight:bold;">${m.concepto}</div><div style="font-size:10px; color:gray;">${new Date(m.fecha).toLocaleDateString()}</div></div>
-            <div style="color:${esIng ? 'var(--green)' : 'var(--red)'}; font-weight:700;">${esIng?'+':'-'} $${Number(m.monto_ars).toLocaleString('es-AR')}</div>
-        </div>`;
-    }).join('');
-    document.getElementById('saldoValor').innerText = `$ ${bal.toLocaleString('es-AR')}`;
-    poblarSelects();
+async function logout() { 
+  await _supabase.auth.signOut(); 
+  window.location.reload(); 
+}
+
+// --- DATA ---
+async function cargarDatos() {
+  const [rC, rCat, rE, rM] = await Promise.all([
+    _supabase.from('cuentas').select('*'),
+    _supabase.from('categorias').select('*'),
+    _supabase.from('etiquetas').select('*'),
+    _supabase.from('movimientos').select('*, cuentas(nombre), categorias(nombre)').order('fecha', { ascending: false })
+  ]);
+
+  db.cuentas = rC.data || [];
+  db.categorias = rCat.data || [];
+  db.etiquetas = rE.data || [];
+  db.movimientos = rM.data || [];
+
+  renderInicio();
+  renderCuentas();
+  renderCategorias();
+  renderEtiquetas();
+  poblarSelects();
+}
+
+function renderInicio() {
+  const lista = document.getElementById('lista-movimientos');
+  let totalARS = 0;
+
+  lista.innerHTML = db.movimientos.map(m => {
+    const esIng = m.tipo === 'ingreso';
+    totalARS += esIng ? Number(m.monto_ars) : -Number(m.monto_ars);
+    
+    return `
+      <div class="item-fila">
+        <div class="mov-icon ${esIng ? 'ing' : 'egr'}">
+          ${esIng ? '↑' : '↓'}
+        </div>
+        <div class="mov-info">
+          <div class="mov-title">${m.concepto || 'Sin concepto'}</div>
+          <div class="mov-meta">${new Date(m.fecha).toLocaleDateString()} · ${m.cuentas?.nombre || 'Efectivo'}</div>
+        </div>
+        <div class="mov-monto" style="color: ${esIng ? 'var(--green)' : 'var(--red)'}">
+          ${esIng ? '+' : '-'}$${Number(m.monto_ars).toLocaleString('es-AR')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('saldoValor').innerText = `$ ${totalARS.toLocaleString('es-AR')}`;
+}
+
+// --- MODALES & VISTAS ---
+function cambiarVista(vista, btn) {
+  document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+  document.getElementById('vista-' + vista).classList.add('activa');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('activo'));
+  btn.classList.add('activo');
+}
+
+function abrirModalMov(tipo) {
+  currentTipo = tipo;
+  document.getElementById('movTitulo').innerText = tipo === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Egreso';
+  document.getElementById('movFecha').valueAsDate = new Date();
+  document.getElementById('movHora').value = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+  document.getElementById('modalMov').classList.add('activo');
+}
+
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('activo');
+}
+
+function checkMoneda() {
+  const moneda = document.getElementById('movMoneda').value;
+  document.getElementById('divCotizacion').style.display = moneda === 'ARS' ? 'none' : 'block';
 }
 
 function poblarSelects() {
-    const sCuenta = document.getElementById('movCuenta');
-    const sCat = document.getElementById('movCategoria');
-    const sEt = document.getElementById('movEtiquetaSel');
-
-    sCuenta.innerHTML = '<option value="">Sin Cuenta</option>' + db.cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="__new__">+ CREAR NUEVA CUENTA...</option>';
-    
-    let catHtml = '<option value="">Sin Categoría</option>';
-    const padres = db.categorias.filter(c => !c.padre_id);
-    padres.forEach(p => {
-        catHtml += `<option value="${p.id}">${p.nombre}</option>`;
-        db.categorias.filter(c => c.padre_id === p.id).forEach(sub => {
-            catHtml += `<option value="${sub.id}">&nbsp;&nbsp;&nbsp;— ${sub.nombre}</option>`;
-        });
-    });
-    sCat.innerHTML = catHtml + '<option value="__new__">+ CREAR NUEVA CATEGORÍA...</option>';
-    sEt.innerHTML = '<option value="">Agregar Etiqueta</option>' + db.etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="__new__">+ NUEVA ETIQUETA...</option>';
+  const sCuenta = document.getElementById('movCuenta');
+  const sCat = document.getElementById('movCategoria');
+  
+  sCuenta.innerHTML = db.cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  sCat.innerHTML = db.categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
 }
 
-/* --- FORM --- */
-function abrirFormMov(tipo) {
-    tipoM = tipo;
-    etiquetasEnMov = [];
-    document.getElementById('movTitulo').innerText = tipo === 'ingreso' ? 'Registrar Ingreso' : 'Registrar Egreso';
-    document.getElementById('movFecha').valueAsDate = new Date();
-    document.getElementById('movHora').value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    document.getElementById('movTagsList').innerHTML = '';
-    document.getElementById('modalMov').classList.add('activo');
-}
+// --- GUARDAR MOVIMIENTO ---
+async function guardarMovimiento() {
+  const concepto = document.getElementById('movConcepto').value;
+  const monto = parseFloat(document.getElementById('movMonto').value);
+  const moneda = document.getElementById('movMoneda').value;
+  const cotiz = moneda === 'ARS' ? 1 : parseFloat(document.getElementById('movCotiz').value);
+  const fecha = document.getElementById('movFecha').value;
+  const hora = document.getElementById('movHora').value;
+  const fileInput = document.getElementById('movArchivo');
 
-function toggleCotiz() {
-    const divisa = document.getElementById('movMoneda').value;
-    document.getElementById('divCotiz').style.display = divisa === 'ARS' ? 'none' : 'block';
-    document.getElementById('txtDivisa').innerText = divisa;
-    calcARS();
-}
+  if (!concepto || !monto) return alert("Por favor completa concepto y monto.");
 
-function calcARS() {
-    const m = parseFloat(document.getElementById('movMonto').value) || 0;
-    const c = parseFloat(document.getElementById('movCotiz').value) || 1;
-    document.getElementById('txtEquiv').innerText = m > 0 && document.getElementById('movMoneda').value !== 'ARS' ? `EQUIVALE A $ ${(m * c).toLocaleString()} ARS` : '';
-}
+  let filePath = null;
+  if (fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+    const { data, error } = await _supabase.storage.from('comprobantes').upload(fileName, file);
+    if (!error) filePath = fileName;
+  }
 
-function addTag(sel) {
-    if (sel.value === "__new__") { abrirRapido('etiqueta'); sel.value = ""; return; }
-    if (sel.value && !etiquetasEnMov.includes(sel.value)) {
-        etiquetasEnMov.push(sel.value);
-        const tag = db.etiquetas.find(t => t.id === sel.value);
-        document.getElementById('movTagsList').innerHTML += `<div class="chip">${tag.nombre}</div>`;
-    }
-    sel.value = "";
-}
+  const { error } = await _supabase.from('movimientos').insert([{
+    user_id: user.id,
+    tipo: currentTipo,
+    fecha: `${fecha}T${hora}:00`,
+    concepto,
+    monto,
+    moneda,
+    cotizacion: cotiz,
+    cuenta_id: document.getElementById('movCuenta').value,
+    categoria_id: document.getElementById('movCategoria').value,
+    archivo_path: filePath
+  }]);
 
-function verificarNuevo(sel, tipo) { if (sel.value === "__new__") { abrirRapido(tipo); sel.value = ""; } }
-
-function abrirRapido(tipo) {
-    const body = document.getElementById('rapidoBody');
-    const titulo = document.getElementById('rapidoTitulo');
-    if (tipo === 'cuenta') {
-        titulo.innerText = "Nueva Cuenta";
-        body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Nombre (Ej: Banco Nación)">
-                         <button onclick="guardarRapido('cuenta')" class="btn-main" style="margin-top:15px;">Crear y Seleccionar</button>`;
-    } else if (tipo === 'categoria') {
-        titulo.innerText = "Nueva Categoría";
-        body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Nombre (Ej: Alquiler)">
-                         <select id="rPadre" class="lf-select" style="margin-top:10px;">
-                            <option value="">Es Categoría Principal</option>
-                            ${db.categorias.filter(c => !c.padre_id).map(c => `<option value="${c.id}">${c.nombre}</option>`)}
-                         </select>
-                         <button onclick="guardarRapido('categoria')" class="btn-main" style="margin-top:15px;">Crear y Seleccionar</button>`;
-    } else if (tipo === 'etiqueta') {
-        titulo.innerText = "Nueva Etiqueta";
-        body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Ej: Urgente">
-                         <button onclick="guardarRapido('etiqueta')" class="btn-main" style="margin-top:15px;">Crear y Agregar</button>`;
-    }
-    document.getElementById('modalRapido').classList.add('activo');
-}
-
-async function guardarRapido(tipo) {
-    const nombre = document.getElementById('rNombre').value;
-    if (!nombre) return;
-    let res;
-    if (tipo === 'cuenta') res = await _supabase.from('cuentas').insert([{ user_id: user.id, nombre, moneda: 'ARS', color: '#55b3f5' }]).select();
-    if (tipo === 'categoria') res = await _supabase.from('categorias').insert([{ user_id: user.id, nombre, tipo: 'ambas', padre_id: document.getElementById('rPadre').value || null, color: '#c8a85a' }]).select();
-    if (tipo === 'etiqueta') res = await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre, color: '#3fc7c0' }]).select();
-    
-    if (res.data) {
-        await fetchData();
-        cerrarModal('modalRapido');
-        if (tipo === 'cuenta') document.getElementById('movCuenta').value = res.data[0].id;
-        if (tipo === 'categoria') document.getElementById('movCategoria').value = res.data[0].id;
-        if (tipo === 'etiqueta') { etiquetasEnMov.push(res.data[0].id); document.getElementById('movTagsList').innerHTML += `<div class="chip">${res.data[0].nombre}</div>`; }
-    }
-}
-
-async function guardarMovimientoFinal() {
-    const concepto = document.getElementById('movConcepto').value;
-    const monto = parseFloat(document.getElementById('movMonto').value);
-    const cotiz = parseFloat(document.getElementById('movCotiz').value) || 1;
-    
-    if (!concepto || !monto) return alert("Completa concepto y monto.");
-
-    const { data: mov, error } = await _supabase.from('movimientos').insert([{
-        user_id: user.id,
-        tipo: tipoM,
-        concepto,
-        contraparte: document.getElementById('movContraparte').value,
-        monto,
-        cotizacion: cotiz,
-        // Eliminado monto_ars de aquí ya que es autogenerado por DB
-        moneda: document.getElementById('movMoneda').value,
-        cuenta_id: document.getElementById('movCuenta').value || null,
-        categoria_id: document.getElementById('movCategoria').value || null,
-        fecha: new Date(document.getElementById('movFecha').value + 'T' + document.getElementById('movHora').value).toISOString()
-    }]).select().single();
-
-    if (error) return alert(error.message);
-
-    if (etiquetasEnMov.length > 0) {
-        const rels = etiquetasEnMov.map(id => ({ movimiento_id: mov.id, etiqueta_id: id }));
-        await _supabase.from('movimiento_etiquetas').insert(rels);
-    }
-
+  if (error) {
+    alert("Error al guardar: " + error.message);
+  } else {
     cerrarModal('modalMov');
-    fetchData();
+    cargarDatos();
+  }
 }
 
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
-function cambiarVista(id, btn) { /* Lógica de cambio de vista simplificada */ fetchData(); }
-
+// Inicialización
 checkUser();
+
+// --- FUNCIONES PARA CUENTAS/CAT/TAGS (Stubs) ---
+function renderCuentas() {
+  const div = document.getElementById('lista-cuentas');
+  div.innerHTML = db.cuentas.map(c => `<div class="item-fila"><div class="color-dot" style="background:${c.color}"></div>${c.nombre}</div>`).join('');
+}
+function renderCategorias() {
+  const div = document.getElementById('lista-categorias');
+  div.innerHTML = db.categorias.map(c => `<div class="item-fila"><div class="color-dot" style="background:${c.color}"></div>${c.nombre}</div>`).join('');
+}
+function renderEtiquetas() {
+  const div = document.getElementById('lista-etiquetas');
+  div.innerHTML = db.etiquetas.map(e => `<div class="chip"><div class="color-dot" style="background:${e.color}"></div>${e.nombre}</div>`).join('');
+}
 </script>
+
 </body>
 </html>
