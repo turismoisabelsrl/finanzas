@@ -3,35 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TI Registro — Privado</title>
+<title>TI Registro — Sistema Privado</title>
 
-<!-- Supabase SDK -->
+<!-- SDK Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- Fuentes -->
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:wght@400;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<!-- PWA Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#071020">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --navy: #071020; --sky: #3a8fd1; --sky-bright: #55b3f5;
-    --green: #2cb87a; --red: #e04444; --text-1: rgba(255,255,255,0.85);
-    --text-3: rgba(140,175,215,0.45); --border: rgba(255,255,255,0.1);
-    --r-lg: 16px; --r-xl: 24px;
+    --navy: #071020; --sky: #3a8fd1; --sky-bright: #55b3f5; --sky-glow: rgba(55,170,245,0.16);
+    --gold: #c8a85a; --green: #2cb87a; --green-bg: rgba(44,184,122,0.12);
+    --red: #e04444; --red-bg: rgba(224,68,68,0.12); --amber: #d9a63e;
+    --text-0: #ffffff; --text-1: rgba(255,255,255,0.85); --text-2: rgba(180,210,240,0.65);
+    --text-3: rgba(140,175,215,0.45); --border: rgba(255,255,255,0.08);
+    --border-hi: rgba(255,255,255,0.14); --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
+    --r-xl: 22px; --r-2xl: 28px; --font-num: 'Inter', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy); }
   
-  /* Layout */
-  #app { max-width: 480px; margin: 0 auto; padding: 20px 16px 100px; display: none; }
-  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 20px; backdrop-filter: blur(20px); margin-bottom: 15px; }
+  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 20px 16px 100px; display: none; }
+  #login-screen { position: relative; z-index: 2; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; }
 
-  /* Forms */
-  .lf-group { margin-bottom: 16px; }
-  .lf-label { display: block; font-family: 'Syne'; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 15px; outline: none; transition: 0.2s; }
-  .lf-input:focus, .lf-select:focus { border-color: var(--sky); background: rgba(255,255,255,0.1); }
-  
-  /* Modales */
+  .vista { display: none; }
+  .vista.activa { display: block; animation: revealUp 0.35s ease-out; }
+  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); margin-bottom: 15px; isolation: isolate; }
+  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); }
+  .btn-main { background: linear-gradient(135deg, var(--sky), #55b3f5); color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-weight: 800; font-family: 'Syne'; text-transform: uppercase; cursor: pointer; }
+  .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne'; font-weight: 700; text-transform: uppercase; font-size: 13px; }
+  .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.14)); border: 1.5px solid rgba(44,184,122,0.32); color: #5de09a; }
+  .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.30); color: #ff9090; }
+
+  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(10,20,38,0.72); backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 0; background: none; border: none; color: var(--text-3); cursor: pointer; }
+  .nav-item.activo { color: var(--sky-bright); }
+  .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 22px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
+  .nav-item span { font-family: 'Syne'; font-size: 9px; font-weight: 600; text-transform: uppercase; }
+
   .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
   .modal-overlay.activo { display: flex; }
   .modal-sheet { width: 100%; max-width: 480px; max-height: 92vh; background: #0d1e38; border-radius: 28px 28px 0 0; display: flex; flex-direction: column; border-top: 1px solid var(--sky); animation: slideUp 0.3s ease-out; }
@@ -39,21 +59,18 @@
   .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
   
-  /* Buttons */
-  .btn-main { background: linear-gradient(135deg, var(--sky), #55b3f5); color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-weight: 800; font-family: 'Syne'; text-transform: uppercase; cursor: pointer; }
-  .btn-ghost { background: none; border: none; color: var(--text-3); font-family: 'Syne'; font-size: 12px; cursor: pointer; text-transform: uppercase; }
+  .lf-group { margin-bottom: 16px; }
+  .lf-label { display: block; font-family: 'Syne'; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 12px; color: white; font-size: 15px; outline: none; }
 
-  /* Chips */
-  .chips-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .chip { padding: 6px 12px; background: rgba(58,143,209,0.15); color: var(--sky-bright); border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(58,143,209,0.3); }
-
-  /* Login */
-  #login-screen { max-width: 400px; margin: 100px auto; padding: 20px; text-align: center; }
+  .item-fila { display: flex; align-items: center; gap: 12px; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 8px; cursor: pointer; }
+  .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(58,143,209,0.15); color: var(--sky-bright); border-radius: 20px; font-size: 12px; margin: 2px; border: 1px solid rgba(58,143,209,0.3); }
 </style>
 </head>
 <body>
 
-<!-- 1. PANTALLA LOGIN -->
+<!-- LOGIN -->
 <div id="login-screen">
     <h1 style="font-family:'Syne'; font-size: 40px; color: white;">Ti</h1>
     <p style="color: gray; margin-bottom: 30px;">Registro Privado Empresa</p>
@@ -65,11 +82,11 @@
     </div>
 </div>
 
-<!-- 2. APP PRINCIPAL -->
+<!-- APP -->
 <div id="app">
     <header style="display:flex; justify-content:space-between; margin-bottom:20px;">
         <h2 style="font-family:'Syne'; font-size:22px;">Mi Balance</h2>
-        <button onclick="logout()" class="btn-ghost">Salir</button>
+        <button onclick="logout()" style="background:none; border:none; color:gray; cursor:pointer; font-family:'Syne'; font-size:10px;">SALIR</button>
     </header>
 
     <div class="card">
@@ -78,19 +95,19 @@
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:30px;">
-        <button onclick="abrirFormMov('ingreso')" class="btn-main" style="background:var(--green)">+ Ingreso</button>
-        <button onclick="abrirFormMov('egreso')" class="btn-main" style="background:var(--red)">- Egreso</button>
+        <button onclick="abrirFormMov('ingreso')" class="btn-accion btn-ingreso">+ Ingreso</button>
+        <button onclick="abrirFormMov('egreso')" class="btn-accion btn-egreso">- Egreso</button>
     </div>
 
     <div id="movLista"></div>
 </div>
 
-<!-- 3. MODAL: NUEVO MOVIMIENTO (EL CORAZÓN DEL SISTEMA) -->
+<!-- MODAL MOVIMIENTO -->
 <div class="modal-overlay" id="modalMov">
     <div class="modal-sheet">
         <div class="modal-header">
             <h2 id="movTitulo" style="font-family:'Syne'; font-size:18px;">Nuevo Movimiento</h2>
-            <button onclick="cerrarModal('modalMov')" class="btn-ghost">Cerrar</button>
+            <button onclick="cerrarModal('modalMov')" style="background:none; border:none; color:gray; cursor:pointer;">Cerrar</button>
         </div>
         <div class="modal-body">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -125,9 +142,9 @@
             </div>
 
             <div class="lf-group">
-                <label class="lf-label">Etiquetas (Multiselección)</label>
+                <label class="lf-label">Etiquetas</label>
                 <select id="movEtiquetaSel" class="lf-select" onchange="addTag(this)"></select>
-                <div id="movTagsList" class="chips-container"></div>
+                <div id="movTagsList" class="chips-container" style="display:flex; flex-wrap:wrap; margin-top:8px;"></div>
             </div>
 
             <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:10px;">
@@ -146,14 +163,9 @@
             </div>
 
             <div id="divCotiz" style="display:none;" class="card">
-                <label class="lf-label">Cotización del día (1 USD/EUR = ARS)</label>
+                <label class="lf-label">Cotización 1 <span id="txtDivisa">USD</span> = ARS</label>
                 <input type="number" id="movCotiz" class="lf-input" value="1000" oninput="calcARS()">
                 <p id="txtEquiv" style="font-size:12px; color:var(--sky-bright); margin-top:10px; font-weight:700;"></p>
-            </div>
-
-            <div class="lf-group">
-                <label class="lf-label">Notas Adicionales</label>
-                <textarea id="movNotas" class="lf-input" rows="2"></textarea>
             </div>
 
             <button onclick="guardarMovimientoFinal()" class="btn-main" style="margin-top:10px;">Confirmar y Guardar</button>
@@ -161,21 +173,18 @@
     </div>
 </div>
 
-<!-- 4. MODAL: CREACIÓN RÁPIDA (HIJO) -->
+<!-- MODAL RÁPIDO (HIJO) -->
 <div class="modal-overlay" id="modalRapido" style="z-index:200;">
     <div class="modal-sheet" style="max-height:60vh; border-top: 2px solid var(--green);">
         <div class="modal-header">
             <h2 id="rapidoTitulo" style="font-family:'Syne'; font-size:16px;">Nuevo Registro</h2>
-            <button onclick="cerrarModal('modalRapido')" class="btn-ghost">Cancelar</button>
+            <button onclick="cerrarModal('modalRapido')" style="background:none; border:none; color:gray; cursor:pointer;">Cerrar</button>
         </div>
-        <div class="modal-body" id="rapidoBody">
-            <!-- El contenido cambia según si es categoría, cuenta o etiqueta -->
-        </div>
+        <div class="modal-body" id="rapidoBody"></div>
     </div>
 </div>
 
 <script>
-/* --- CONFIGURACIÓN --- */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -210,7 +219,7 @@ async function handleLogin() {
 
 async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
 
-/* --- DATA FETCH --- */
+/* --- DATA --- */
 async function fetchData() {
     const [rC, rCat, rE, rM] = await Promise.all([
         _supabase.from('cuentas').select('*'),
@@ -226,19 +235,16 @@ async function fetchData() {
 }
 
 function renderAll() {
-    // Lista Inicio
     let bal = 0;
     document.getElementById('movLista').innerHTML = db.movimientos.map(m => {
         const esIng = m.tipo === 'ingreso';
-        bal += esIng ? m.monto_ars : -m.monto_ars;
+        bal += esIng ? Number(m.monto_ars) : -Number(m.monto_ars);
         return `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;">
             <div><div style="font-weight:bold;">${m.concepto}</div><div style="font-size:10px; color:gray;">${new Date(m.fecha).toLocaleDateString()}</div></div>
-            <div style="color:${esIng ? 'var(--green)' : 'var(--red)'}; font-weight:700;">${esIng?'+':'-'} $${m.monto_ars.toLocaleString()}</div>
+            <div style="color:${esIng ? 'var(--green)' : 'var(--red)'}; font-weight:700;">${esIng?'+':'-'} $${Number(m.monto_ars).toLocaleString('es-AR')}</div>
         </div>`;
     }).join('');
-    document.getElementById('saldoValor').innerText = `$ ${bal.toLocaleString()}`;
-
-    // Selects
+    document.getElementById('saldoValor').innerText = `$ ${bal.toLocaleString('es-AR')}`;
     poblarSelects();
 }
 
@@ -249,7 +255,6 @@ function poblarSelects() {
 
     sCuenta.innerHTML = '<option value="">Sin Cuenta</option>' + db.cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="__new__">+ CREAR NUEVA CUENTA...</option>';
     
-    // Categorías con jerarquía visual
     let catHtml = '<option value="">Sin Categoría</option>';
     const padres = db.categorias.filter(c => !c.padre_id);
     padres.forEach(p => {
@@ -259,16 +264,14 @@ function poblarSelects() {
         });
     });
     sCat.innerHTML = catHtml + '<option value="__new__">+ CREAR NUEVA CATEGORÍA...</option>';
-
     sEt.innerHTML = '<option value="">Agregar Etiqueta</option>' + db.etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="__new__">+ NUEVA ETIQUETA...</option>';
 }
 
-/* --- LOGICA FORMULARIO --- */
+/* --- FORM --- */
 function abrirFormMov(tipo) {
     tipoM = tipo;
     etiquetasEnMov = [];
     document.getElementById('movTitulo').innerText = tipo === 'ingreso' ? 'Registrar Ingreso' : 'Registrar Egreso';
-    document.getElementById('labelContraparte').innerText = tipo === 'ingreso' ? '¿Quién nos paga?' : '¿A quién pagamos?';
     document.getElementById('movFecha').valueAsDate = new Date();
     document.getElementById('movHora').value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
     document.getElementById('movTagsList').innerHTML = '';
@@ -276,7 +279,9 @@ function abrirFormMov(tipo) {
 }
 
 function toggleCotiz() {
-    document.getElementById('divCotiz').style.display = document.getElementById('movMoneda').value === 'ARS' ? 'none' : 'block';
+    const divisa = document.getElementById('movMoneda').value;
+    document.getElementById('divCotiz').style.display = divisa === 'ARS' ? 'none' : 'block';
+    document.getElementById('txtDivisa').innerText = divisa;
     calcARS();
 }
 
@@ -287,11 +292,7 @@ function calcARS() {
 }
 
 function addTag(sel) {
-    if (sel.value === "__new__") {
-        abrirRapido('etiqueta');
-        sel.value = "";
-        return;
-    }
+    if (sel.value === "__new__") { abrirRapido('etiqueta'); sel.value = ""; return; }
     if (sel.value && !etiquetasEnMov.includes(sel.value)) {
         etiquetasEnMov.push(sel.value);
         const tag = db.etiquetas.find(t => t.id === sel.value);
@@ -300,18 +301,11 @@ function addTag(sel) {
     sel.value = "";
 }
 
-/* --- CREACION ON-THE-FLY --- */
-function verificarNuevo(sel, tipo) {
-    if (sel.value === "__new__") {
-        abrirRapido(tipo);
-        sel.value = "";
-    }
-}
+function verificarNuevo(sel, tipo) { if (sel.value === "__new__") { abrirRapido(tipo); sel.value = ""; } }
 
 function abrirRapido(tipo) {
     const body = document.getElementById('rapidoBody');
     const titulo = document.getElementById('rapidoTitulo');
-    
     if (tipo === 'cuenta') {
         titulo.innerText = "Nueva Cuenta";
         body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Nombre (Ej: Banco Nación)">
@@ -321,7 +315,7 @@ function abrirRapido(tipo) {
         body.innerHTML = `<input type="text" id="rNombre" class="lf-input" placeholder="Nombre (Ej: Alquiler)">
                          <select id="rPadre" class="lf-select" style="margin-top:10px;">
                             <option value="">Es Categoría Principal</option>
-                            ${db.categorias.filter(c => !c.padre_id).map(c => `<option value="${c.id}">Hija de: ${c.nombre}</option>`)}
+                            ${db.categorias.filter(c => !c.padre_id).map(c => `<option value="${c.id}">${c.nombre}</option>`)}
                          </select>
                          <button onclick="guardarRapido('categoria')" class="btn-main" style="margin-top:15px;">Crear y Seleccionar</button>`;
     } else if (tipo === 'etiqueta') {
@@ -335,37 +329,26 @@ function abrirRapido(tipo) {
 async function guardarRapido(tipo) {
     const nombre = document.getElementById('rNombre').value;
     if (!nombre) return;
-
     let res;
-    if (tipo === 'cuenta') {
-        res = await _supabase.from('cuentas').insert([{ user_id: user.id, nombre, moneda: 'ARS', color: '#55b3f5' }]).select();
-    } else if (tipo === 'categoria') {
-        const padre = document.getElementById('rPadre').value;
-        res = await _supabase.from('categorias').insert([{ user_id: user.id, nombre, tipo: 'ambas', padre_id: padre || null, color: '#c8a85a' }]).select();
-    } else if (tipo === 'etiqueta') {
-        res = await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre, color: '#3fc7c0' }]).select();
-    }
-
+    if (tipo === 'cuenta') res = await _supabase.from('cuentas').insert([{ user_id: user.id, nombre, moneda: 'ARS', color: '#55b3f5' }]).select();
+    if (tipo === 'categoria') res = await _supabase.from('categorias').insert([{ user_id: user.id, nombre, tipo: 'ambas', padre_id: document.getElementById('rPadre').value || null, color: '#c8a85a' }]).select();
+    if (tipo === 'etiqueta') res = await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre, color: '#3fc7c0' }]).select();
+    
     if (res.data) {
-        await fetchData(); // Refrescar base local
+        await fetchData();
         cerrarModal('modalRapido');
-        // Seleccionar automáticamente el nuevo
         if (tipo === 'cuenta') document.getElementById('movCuenta').value = res.data[0].id;
         if (tipo === 'categoria') document.getElementById('movCategoria').value = res.data[0].id;
-        if (tipo === 'etiqueta') {
-            etiquetasEnMov.push(res.data[0].id);
-            document.getElementById('movTagsList').innerHTML += `<div class="chip">${res.data[0].nombre}</div>`;
-        }
+        if (tipo === 'etiqueta') { etiquetasEnMov.push(res.data[0].id); document.getElementById('movTagsList').innerHTML += `<div class="chip">${res.data[0].nombre}</div>`; }
     }
 }
 
-/* --- GUARDADO FINAL --- */
 async function guardarMovimientoFinal() {
     const concepto = document.getElementById('movConcepto').value;
     const monto = parseFloat(document.getElementById('movMonto').value);
     const cotiz = parseFloat(document.getElementById('movCotiz').value) || 1;
     
-    if (!concepto || !monto) return alert("Concepto y monto son obligatorios.");
+    if (!concepto || !monto) return alert("Completa concepto y monto.");
 
     const { data: mov, error } = await _supabase.from('movimientos').insert([{
         user_id: user.id,
@@ -374,11 +357,10 @@ async function guardarMovimientoFinal() {
         contraparte: document.getElementById('movContraparte').value,
         monto,
         cotizacion: cotiz,
-        monto_ars: monto * cotiz,
+        // Eliminado monto_ars de aquí ya que es autogenerado por DB
         moneda: document.getElementById('movMoneda').value,
         cuenta_id: document.getElementById('movCuenta').value || null,
         categoria_id: document.getElementById('movCategoria').value || null,
-        notas: document.getElementById('movNotas').value,
         fecha: new Date(document.getElementById('movFecha').value + 'T' + document.getElementById('movHora').value).toISOString()
     }]).select().single();
 
@@ -394,8 +376,8 @@ async function guardarMovimientoFinal() {
 }
 
 function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
+function cambiarVista(id, btn) { /* Lógica de cambio de vista simplificada */ fetchData(); }
 
-// Init
 checkUser();
 </script>
 </body>
