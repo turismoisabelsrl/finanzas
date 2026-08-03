@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Registro — Ingresos y Egresos</title>
+    <title>Ti Registro — Privado</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#071020">
@@ -12,55 +12,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Sans:wght@400;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --navy: #071020; --sky: #3a8fd1; --border: rgba(255,255,255,0.1); --green: #2cb87a; --red: #e04444; }
-        body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: white; margin: 0; padding-bottom: 100px; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: white; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 24px; padding: 20px; backdrop-filter: blur(20px); margin-bottom: 15px; }
+        .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 24px; padding: 25px; backdrop-filter: blur(20px); margin-bottom: 15px; }
         
-        .btn-principal { background: linear-gradient(135deg, var(--sky), #55b3f5); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-family: 'Syne'; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        .lf-input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--border); background: #1a2a40; color: white; box-sizing: border-box; font-size: 16px; }
+        .btn-principal { background: linear-gradient(135deg, var(--sky), #55b3f5); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-family: 'Syne'; text-transform: uppercase; margin-top: 10px; }
+        .btn-secundario { background: transparent; color: var(--sky); border: 1px solid var(--sky); padding: 12px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-family: 'Syne'; text-transform: uppercase; margin-top: 10px; font-size: 12px; }
 
-        /* Estilos del Modal */
+        .lf-input { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--border); background: #1a2a40; color: white; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        .lf-input:focus { border-color: var(--sky); outline: none; background: #1e314d; }
+
+        /* Pantalla Login mejorada */
+        #login-screen { max-width: 400px; margin: 60px auto; padding: 20px; text-align: center; }
+        .logo-login { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px; border: 2px solid var(--sky); box-shadow: 0 0 20px rgba(58, 143, 209, 0.3); }
+
+        /* Estilos App */
+        #app { max-width: 480px; margin: 0 auto; padding: 20px; display: none; }
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; z-index: 1000; }
-        .modal-content { background: #0d1e38; width: 100%; padding: 30px 20px; border-radius: 24px 24px 0 0; border-top: 1px solid var(--sky); animation: slideUp 0.3s ease-out; }
-        
+        .modal-content { background: #0d1e38; width: 100%; padding: 30px 20px; border-radius: 24px 24px 0 0; border-top: 1px solid var(--sky); animation: slideUp 0.3s ease-out; box-sizing: border-box; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         .mov-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); }
         .mov-info { display: flex; flex-direction: column; }
         .mov-monto { font-family: 'Inter'; font-weight: 700; }
-
-        .logo-login { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 2px solid var(--sky); }
+        
+        .error-msg { color: #ff9090; font-size: 13px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
-<!-- PANTALLA LOGIN -->
-<div id="login-screen" style="display:none; text-align: center; padding: 80px 20px;">
-    <img src="icons/icon-512.png" class="logo-login" alt="Logo">
-    <h1 style="font-family:'Syne'; font-size: 32px; margin: 0;">Ti Registro</h1>
-    <p style="color: gray; margin-bottom: 40px;">Tu billetera en la nube</p>
+<!-- PANTALLA LOGIN CON CONTRASEÑA -->
+<div id="login-screen">
+    <img src="icons/icon-512.png" class="logo-login" alt="Logo" onerror="this.src='https://via.placeholder.com/100/071020/FFFFFF?text=Ti'">
+    <h1 style="font-family:'Syne'; font-size: 28px; margin: 0;">Ti Registro</h1>
+    <p style="color: gray; margin-bottom: 30px; font-size: 14px;">Acceso Privado Corporativo</p>
     
     <div class="card">
-        <input type="email" id="login-email" class="lf-input" placeholder="tu@email.com">
-        <button onclick="enviarMagicLink()" class="btn-principal">Entrar con Email</button>
-        <p id="login-msg" style="font-size:12px; color:var(--sky); margin-top:15px;"></p>
+        <div id="auth-title" style="margin-bottom: 15px; font-family: 'Syne'; font-weight: bold;">INICIAR SESIÓN</div>
+        <input type="email" id="email" class="lf-input" placeholder="Usuario / Email">
+        <input type="password" id="password" class="lf-input" placeholder="Contraseña">
+        
+        <button id="btn-auth" onclick="handleAuth()" class="btn-principal">Entrar</button>
+        <div id="error-msg" class="error-msg"></div>
+        
     </div>
 </div>
 
-<!-- APP PRINCIPAL -->
-<div id="app" style="display:none; max-width:480px; margin:0 auto; padding:20px;">
+<!-- APP PRINCIPAL (OCULTA HASTA LOGIN) -->
+<div id="app">
     <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="icons/icon-192.png" style="width: 40px; height: 40px; border-radius: 50%;" alt="Ti">
-            <h2 style="font-family:'Syne'; margin: 0; font-size: 20px;">Mi Balance</h2>
+            <div style="width: 35px; height: 35px; background: var(--sky); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne'; font-weight: bold;">Ti</div>
+            <h2 style="font-family:'Syne'; margin: 0; font-size: 18px;">Balance Empresa</h2>
         </div>
-        <button onclick="cerrarSesion()" style="background:none; border:none; color:gray; cursor:pointer; font-size: 12px;">Cerrar Sesión</button>
+        <button onclick="cerrarSesion()" style="background:none; border:none; color:gray; cursor:pointer; font-size: 11px; text-transform: uppercase;">Salir</button>
     </header>
 
     <div class="card">
-        <div style="font-size:11px; color:gray; letter-spacing: 1px;">TOTAL DISPONIBLE</div>
-        <div id="saldo-total" style="font-size:42px; font-weight:800; font-family: 'Inter'; margin: 5px 0;">$ 0</div>
+        <div style="font-size:11px; color:gray; letter-spacing: 1px;">DISPONIBLE TOTAL</div>
+        <div id="saldo-total" style="font-size:38px; font-weight:800; font-family: 'Inter'; margin: 5px 0;">$ 0</div>
     </div>
     
     <div style="display:flex; gap:10px; margin-bottom:30px;">
@@ -68,31 +78,72 @@
         <button onclick="abrirModal('egreso')" class="btn-principal" style="background:var(--red)">- Egreso</button>
     </div>
 
-    <h3 style="font-family:'Syne'; font-size: 14px; color: gray; margin-bottom: 15px;">MOVIMIENTOS RECIENTES</h3>
+    <h3 style="font-family:'Syne'; font-size: 13px; color: gray; margin-bottom: 15px; letter-spacing: 1px;">ÚLTIMOS MOVIMIENTOS</h3>
     <div id="lista-movimientos">Cargando...</div>
 </div>
 
-<!-- MODAL PARA CARGAR GASTO/INGRESO -->
+<!-- MODAL CARGA -->
 <div id="modal-carga" class="modal">
     <div class="modal-content">
         <h2 id="modal-titulo" style="font-family:'Syne'; margin-top:0;">Nuevo Movimiento</h2>
-        <input type="text" id="mov-concepto" class="lf-input" placeholder="Concepto (ej: Alquiler)">
-        <input type="number" id="mov-monto" class="lf-input" placeholder="Monto (ej: 5000)">
-        <button onclick="guardarMovimiento()" class="btn-principal">Confirmar Registro</button>
-        <button onclick="cerrarModal()" style="background:none; border:none; color:gray; width:100%; margin-top:20px; cursor:pointer;">Cancelar</button>
+        <input type="text" id="mov-concepto" class="lf-input" placeholder="Concepto / Detalle">
+        <input type="number" id="mov-monto" class="lf-input" placeholder="Monto $">
+        <button onclick="guardarMovimiento()" class="btn-principal">Guardar en Nube</button>
+        <button onclick="cerrarModal()" style="background:none; border:none; color:gray; width:100%; margin-top:20px; cursor:pointer; font-family: 'Syne';">CANCELAR</button>
     </div>
 </div>
 
 <script>
-// CONFIGURACIÓN
+// CONFIGURACIÓN SUPABASE
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co'; 
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let usuarioActual = null;
 let tipoSeleccionado = 'ingreso';
+let isSignUp = false;
 
-// AUTENTICACIÓN
+// MANEJO DE INTERFAZ DE AUTH
+function toggleAuthMode() {
+    isSignUp = !isSignUp;
+    document.getElementById('auth-title').innerText = isSignUp ? 'REGISTRAR EMPRESA' : 'INICIAR SESIÓN';
+    document.getElementById('btn-auth').innerText = isSignUp ? 'Crear Cuenta' : 'Entrar';
+    document.getElementById('btn-toggle').innerText = isSignUp ? 'Ya tengo cuenta' : 'Crear cuenta de empresa';
+    document.getElementById('error-msg').style.display = 'none';
+}
+
+// LOGICA DE AUTENTICACION
+async function handleAuth() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorBox = document.getElementById('error-msg');
+    
+    if(!email || !password) return alert("Completa todos los campos");
+
+    errorBox.style.display = 'none';
+
+    if (isSignUp) {
+        // REGISTRO
+        const { data, error } = await _supabase.auth.signUp({ email, password });
+        if(error) {
+            errorBox.innerText = error.message;
+            errorBox.style.display = 'block';
+        } else {
+            alert("Cuenta creada con éxito.");
+            verificarSesion();
+        }
+    } else {
+        // LOGIN
+        const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+        if(error) {
+            errorBox.innerText = "Credenciales incorrectas";
+            errorBox.style.display = 'block';
+        } else {
+            verificarSesion();
+        }
+    }
+}
+
 async function verificarSesion() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (session) {
@@ -106,13 +157,6 @@ async function verificarSesion() {
     }
 }
 
-async function enviarMagicLink() {
-    const email = document.getElementById('login-email').value;
-    if(!email) return alert("Escribe tu correo");
-    const { error } = await _supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href } });
-    document.getElementById('login-msg').innerText = error ? error.message : "¡Enviado! Revisa tu email para entrar.";
-}
-
 async function cerrarSesion() {
     await _supabase.auth.signOut();
     window.location.reload();
@@ -124,50 +168,33 @@ function abrirModal(tipo) {
     document.getElementById('modal-titulo').innerText = tipo === 'ingreso' ? 'Registrar Ingreso' : 'Registrar Egreso';
     document.getElementById('modal-titulo').style.color = tipo === 'ingreso' ? 'var(--green)' : 'var(--red)';
     document.getElementById('modal-carga').style.display = 'flex';
-    document.getElementById('mov-concepto').focus();
 }
 
-function cerrarModal() { 
-    document.getElementById('modal-carga').style.display = 'none'; 
-    document.getElementById('mov-concepto').value = '';
-    document.getElementById('mov-monto').value = '';
-}
+function cerrarModal() { document.getElementById('modal-carga').style.display = 'none'; }
 
 async function guardarMovimiento() {
     const concepto = document.getElementById('mov-concepto').value;
     const monto = parseFloat(document.getElementById('mov-monto').value);
     
-    if(!concepto || !monto) return alert("Por favor completa los datos");
+    if(!concepto || !monto) return alert("Completa los datos");
 
     const { error } = await _supabase.from('movimientos').insert([
-        { 
-            user_id: usuarioActual.id, 
-            tipo: tipoSeleccionado, 
-            monto: monto, 
-            monto_ars: monto, 
-            concepto: concepto, 
-            fecha: new Date().toISOString() 
-        }
+        { user_id: usuarioActual.id, tipo: tipoSeleccionado, monto, monto_ars: monto, concepto, fecha: new Date().toISOString() }
     ]);
 
-    if(error) {
-        alert("Error: " + error.message);
-    } else { 
-        cerrarModal(); 
-        cargarDatos(); 
-    }
+    if(error) alert(error.message);
+    else { cerrarModal(); cargarDatos(); }
 }
 
 async function cargarDatos() {
     const { data: movs, error } = await _supabase.from('movimientos').select('*').order('fecha', { ascending: false });
-    
-    if(error) return console.log(error);
+    if(error) return;
 
     let balance = 0;
     const lista = document.getElementById('lista-movimientos');
     
     if(movs.length === 0) {
-        lista.innerHTML = '<p style="color:gray; text-align:center;">No hay movimientos</p>';
+        lista.innerHTML = '<p style="color:gray; text-align:center; font-size:12px;">Sin movimientos registrados</p>';
     } else {
         lista.innerHTML = movs.map(m => {
             const esIngreso = m.tipo === 'ingreso';
@@ -175,7 +202,7 @@ async function cargarDatos() {
             return `
                 <div class="mov-item">
                     <div class="mov-info">
-                        <span style="font-weight:500;">${m.concepto}</span>
+                        <span style="font-weight:500; font-size:14px;">${m.concepto}</span>
                         <span style="font-size:10px; color:gray;">${new Date(m.fecha).toLocaleDateString()}</span>
                     </div>
                     <span class="mov-monto" style="color:${esIngreso ? 'var(--green)' : 'var(--red)'}">
@@ -187,13 +214,7 @@ async function cargarDatos() {
     document.getElementById('saldo-total').innerText = `$ ${balance.toLocaleString()}`;
 }
 
-// INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', verificarSesion);
-_supabase.auth.onAuthStateChange((event) => { if (event === 'SIGNED_IN') verificarSesion(); });
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js').catch(err => console.log(err));
-}
 </script>
 </body>
 </html>
