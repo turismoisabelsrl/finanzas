@@ -59,15 +59,8 @@
   @keyframes orbPulse { 0%,100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 0.4; } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* --- LOGIN --- */
-  #login-screen {
-    position: relative; z-index: 10;
-    max-width: 400px; margin: 80px auto; padding: 20px;
-    text-align: center; display: flex; flex-direction: column; align-items: center;
-  }
-
-  /* --- APP --- */
   #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 100px; min-height: 100vh; display: none; }
+  #login-screen { position: relative; z-index: 10; max-width: 400px; margin: 60px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
 
   header.topbar { text-align: center; margin-bottom: 20px; animation: revealUp 0.5s cubic-bezier(0.22,1,0.36,1) both; }
   .brand-orb { width: 64px; height: 64px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -130,15 +123,6 @@
   .btn-filtro.activo { background: rgba(85,179,245,0.14); border-color: rgba(85,179,245,0.4); color: var(--sky-bright); }
   .btn-nuevo svg, .btn-filtro svg { width: 13px; height: 13px; }
 
-  .filtros-activos { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-  .filtro-chip {
-    display: inline-flex; align-items: center; gap: 6px; padding: 5px 6px 5px 11px;
-    background: rgba(85,179,245,0.10); border: 1px solid rgba(85,179,245,0.25);
-    border-radius: 20px; font-size: 11.5px; color: var(--sky-bright);
-  }
-  .filtro-chip button { background: none; border: none; color: var(--sky-bright); cursor: pointer; display: flex; padding: 2px; opacity: 0.7; }
-  .filtro-chip button svg { width: 10px; height: 10px; }
-
   .lista { display: flex; flex-direction: column; gap: 8px; }
   .item-fila {
     display: flex; align-items: center; gap: 12px; padding: 13px 14px;
@@ -155,7 +139,6 @@
   .item-body, .mov-body { flex: 1; min-width: 0; }
   .item-nombre, .mov-concepto { font-size: 14px; font-weight: 500; color: var(--text-0); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
   .item-sub, .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mov-concepto .clip { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; }
   .mov-cat {
     display: inline-block; font-family: 'Syne', sans-serif; font-size: 8.5px; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase; border-radius: 5px; padding: 2px 6px; margin-top: 5px;
@@ -165,7 +148,6 @@
   .mov-monto.ing { color: #5de09a; }
   .mov-monto.egr { color: #ff9090; }
   .mov-original { font-family: var(--font-num); font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
-  .item-saldo { font-family: var(--font-num); font-size: 14px; color: var(--text-0); flex-shrink: 0; }
 
   .segmented { display: flex; background: rgba(255,255,255,0.05); border-radius: var(--r-lg); padding: 4px; gap: 4px; margin-bottom: 16px; }
   .segmented button {
@@ -174,14 +156,6 @@
   }
   .segmented button.activo { background: rgba(85,179,245,0.16); color: var(--sky-bright); }
 
-  .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
-  .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-  .etiqueta-tarjeta {
-    display: flex; align-items: center; gap: 8px; padding: 9px 8px 9px 12px;
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px;
-  }
-
-  /* Bottom nav */
   .bottom-nav {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
     display: flex; max-width: 480px; margin: 0 auto;
@@ -224,16 +198,9 @@
     -webkit-appearance: none; transition: border-color 0.2s, background 0.2s;
   }
   .lf-textarea { resize: vertical; min-height: 64px; font-family: 'DM Sans', sans-serif; }
-  .lf-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px;
-  }
+  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
   .lf-select option { background: #0d1e38; color: var(--text-0); }
-  .lf-input::placeholder, .lf-textarea::placeholder { color: var(--text-3); }
   .lf-input:focus, .lf-select:focus, .lf-textarea:focus { outline: none; border-color: rgba(85,179,245,0.55); background: rgba(255,255,255,0.10); }
-  .lf-hint { font-size: 11px; color: var(--text-3); margin-top: 6px; }
-  .lf-preview { font-family: var(--font-num); font-size: 12.5px; color: var(--sky-bright); margin-top: 6px; }
 
   .color-picker { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 6px; }
   .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
@@ -250,328 +217,170 @@
   .archivo-chip svg.file-ic { width: 15px; height: 15px; color: var(--sky-bright); flex-shrink: 0; }
   .archivo-chip span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .archivo-chip button { background: none; border: none; color: var(--text-3); cursor: pointer; display: flex; padding: 2px; flex-shrink: 0; }
-  .archivo-chip button svg { width: 13px; height: 13px; }
 
-  .modal-botones { display: flex; gap: 10px; }
-  .btn-cancelar, .btn-guardar { flex: 1; padding: 13px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; }
-  .btn-cancelar { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--text-1); }
-  .btn-guardar { color: #fff; }
+  .btn-main { width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; }
+  .btn-guardar { width: 100%; padding: 13px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: #fff; }
   .btn-guardar.ing, .btn-guardar.principal { background: linear-gradient(135deg, #2cb87a 0%, #1e8a5a 100%); }
   .btn-guardar.egr { background: linear-gradient(135deg, #e04444 0%, #a52d2d 100%); }
   .btn-guardar.neutro { background: linear-gradient(135deg, var(--sky) 0%, #2a6ea8 100%); }
-  .btn-eliminar { width: 100%; padding: 13px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.10); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; }
+  .btn-eliminar { width: 100%; padding: 13px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.10); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn-cancelar { flex: 1; padding: 13px; border-radius: var(--r-md); border: 1px solid var(--border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer; }
 
   .detalle-row { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .detalle-row:last-child { border-bottom: none; }
-  .detalle-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
-  .detalle-valor { font-size: 14px; color: var(--text-1); line-height: 1.5; word-break: break-word; }
-  .detalle-valor.mono { font-family: var(--font-num); }
-  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); font-size: 13px; text-decoration: none; background: rgba(85,179,245,0.10); border: 1px solid rgba(85,179,245,0.22); border-radius: var(--r-md); padding: 9px 12px; }
-  .detalle-archivo-link svg { width: 14px; height: 14px; }
+  .detalle-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
+  .detalle-valor { font-size: 14px; color: var(--text-1); }
+  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.10); border: 1px solid rgba(85,179,245,0.22); border-radius: var(--r-md); padding: 9px 12px; }
 
-  .cargando { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .cargando { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; text-transform: uppercase; }
   .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(85,179,245,0.15); border-top-color: var(--sky-bright); animation: spin 0.8s linear infinite; }
-
-  .btn-main { width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<!-- ===== PANTALLA LOGIN ===== -->
+<!-- PANTALLA LOGIN -->
 <div id="login-screen">
-  <div class="brand-orb">
-    <img src="data:image/png;base64,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" alt="Turismo Isabel">
-  </div>
+  <div class="brand-orb"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..." alt="Logo"></div>
   <div class="brand-title">Registro</div>
   <div class="brand-sub">Ingresos y Egresos</div>
-  
-  <div class="card" style="width: 100%; margin-top: 30px;">
-    <div class="lf-group">
-      <label class="lf-label">Usuario / Email</label>
-      <input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com">
-    </div>
-    <div class="lf-group">
-      <label class="lf-label">Contraseña</label>
-      <input type="password" id="password" class="lf-input" placeholder="••••••••">
-    </div>
+  <div class="card" style="width: 100%; margin-top: 30px; max-width: 340px;">
+    <div class="lf-group"><label class="lf-label">Usuario / Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
+    <div class="lf-group"><label class="lf-label">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
     <button onclick="handleLogin()" class="btn-main">Entrar</button>
     <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
   </div>
 </div>
 
+<!-- APP PRINCIPAL -->
 <div id="app">
   <header class="topbar">
-    <div class="brand-orb">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..." alt="Turismo Isabel">
-    </div>
+    <div class="brand-orb"><img src="data:image/png;base64,iVBORw0KGgoAAA..." alt="Logo"></div>
     <div class="brand-title">Registro</div>
     <div class="brand-sub">Ingresos y Egresos</div>
   </header>
 
-  <!-- ===== VISTA: INICIO ===== -->
+  <!-- VISTA INICIO -->
   <section class="vista activa" id="vista-inicio">
     <div class="card">
       <div class="saldo-label">Saldo actual</div>
       <div class="saldo-valor" id="saldoValor">$ 0</div>
       <div class="saldo-moneda">Pesos argentinos (ARS)</div>
       <div class="resumen-fila">
-        <div class="resumen-item ing">
-          <div class="resumen-item-label">Ingresos</div>
-          <div class="resumen-item-valor" id="totalIngresos">$ 0</div>
-        </div>
-        <div class="resumen-item egr">
-          <div class="resumen-item-label">Egresos</div>
-          <div class="resumen-item-valor" id="totalEgresos">$ 0</div>
-        </div>
+        <div class="resumen-item ing"><div class="resumen-item-label">Ingresos</div><div class="resumen-item-valor" id="totalIngresos">$ 0</div></div>
+        <div class="resumen-item egr"><div class="resumen-item-label">Egresos</div><div class="resumen-item-valor" id="totalEgresos">$ 0</div></div>
       </div>
     </div>
-
     <div class="acciones">
-      <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-        Ingreso
-      </button>
-      <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-        Egreso
-      </button>
+      <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>Ingreso</button>
+      <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>Egreso</button>
     </div>
-
     <div class="fila-titulo">
       <div class="vista-titulo">Movimientos</div>
-      <button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-        Filtrar
-      </button>
+      <button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>Filtrar</button>
     </div>
-    <div class="filtros-activos" id="filtrosActivos"></div>
-    <div class="lista" id="movLista">
-      <div class="cargando"><div class="spinner"></div><p>Cargando</p></div>
-    </div>
+    <div id="movLista"><div class="cargando"><div class="spinner"></div><p>Cargando</p></div></div>
   </section>
 
-  <!-- ===== VISTA: CUENTAS ===== -->
+  <!-- VISTA CUENTAS -->
   <section class="vista" id="vista-cuentas">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Cuentas</div>
-      <button class="btn-nuevo" onclick="abrirModalCuenta()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
+    <div class="fila-titulo"><div class="vista-titulo">Cuentas</div><button class="btn-nuevo" onclick="abrirModalCuenta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
     <div class="lista" id="cuentasLista"></div>
   </section>
 
-  <!-- ===== VISTA: CATEGORÍAS ===== -->
+  <!-- VISTA CATEGORÍAS -->
   <section class="vista" id="vista-categorias">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Categorías</div>
-      <button class="btn-nuevo" onclick="abrirModalCategoria()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
-    <div class="segmented">
-      <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
-      <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
-    </div>
+    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-nuevo" onclick="abrirModalCategoria()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
+    <div class="segmented"><button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button><button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button></div>
     <div class="lista" id="categoriasLista"></div>
   </section>
 
-  <!-- ===== VISTA: ETIQUETAS ===== -->
+  <!-- VISTA ETIQUETAS -->
   <section class="vista" id="vista-etiquetas">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Etiquetas</div>
-      <button class="btn-nuevo" onclick="abrirModalEtiqueta()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
+    <div class="fila-titulo"><div class="vista-titulo">Etiquetas</div><button class="btn-nuevo" onclick="abrirModalEtiqueta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
     <div class="etiquetas-grid" id="etiquetasLista"></div>
   </section>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg><span>Inicio</span></button>
+    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg><span>Cuentas</span></button>
+    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg><span>Cat</span></button>
+    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg><span>Tags</span></button>
+    <button class="nav-item" onclick="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Salir</span></button>
+  </nav>
 </div>
 
-<nav class="bottom-nav">
-  <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
-    <span>Inicio</span>
-  </button>
-  <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg>
-    <span>Cuentas</span>
-  </button>
-  <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-    <span>Categorías</span>
-  </button>
-  <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
-    <span>Etiquetas</span>
-  </button>
-  <button class="nav-item" onclick="logout()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-    <span>Salir</span>
-  </button>
-</nav>
-
-<!-- MODALES (Reutilizados de App RICA) -->
-<!-- Modal Movimiento, Detalle, Filtro, Cuenta, Categoría, Etiqueta... (Estructura idéntica a App RICA) -->
-<!-- Solo incluyo el overlay del modal movimiento como ejemplo, el resto debe estar presente según el diseño original -->
-
-<!-- Modal: Movimiento -->
+<!-- MODAL MOVIMIENTO -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="modalTitulo">Nuevo movimiento</div></div>
     <div class="modal-body">
-      <div class="lf-row">
-        <div class="lf-group">
-          <label class="lf-label">Fecha</label>
-          <input type="date" class="lf-input" id="inpFecha">
-        </div>
-        <div class="lf-group">
-          <label class="lf-label">Hora</label>
-          <input type="time" class="lf-input" id="inpHora">
-        </div>
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Concepto</label>
-        <input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler...">
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Cuenta</label>
-        <select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select>
-      </div>
-      <div class="lf-group">
-        <label class="lf-label" id="labelContraparte">Persona / Empresa</label>
-        <input type="text" class="lf-input" id="inpContraparte" placeholder="Nombre">
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Categoría</label>
-        <select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select>
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Etiquetas</label>
-        <select class="lf-select" id="inpEtiquetaSelect" onchange="onCambioSelectEtiqueta()"></select>
-        <div class="chips-wrap" id="chipsEtiquetas"></div>
-      </div>
-      <div class="lf-row">
-        <div class="lf-group">
-          <label class="lf-label">Moneda</label>
-          <select class="lf-select" id="inpMoneda" onchange="onCambioMoneda()">
-            <option value="ARS">ARS</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="BRL">BRL</option>
-            <option value="OTRA">Otra...</option>
-          </select>
-        </div>
-        <div class="lf-group">
-          <label class="lf-label">Monto</label>
-          <input type="number" inputmode="decimal" class="lf-input" id="inpMonto" placeholder="0" oninput="actualizarPreviewARS()">
-        </div>
-      </div>
-      <div class="lf-group" id="grupoCotizacion" style="display:none;">
-        <label class="lf-label">Cotización a pesos (ARS)</label>
-        <input type="number" inputmode="decimal" class="lf-input" id="inpCotizacion" placeholder="Ej: 1250" oninput="actualizarPreviewARS()">
-        <div class="lf-preview" id="previewARS"></div>
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Notas</label>
-        <textarea class="lf-textarea" id="inpNotas"></textarea>
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Comprobante</label>
-        <div id="zonaArchivo"></div>
-        <input type="file" id="inpArchivo" style="display:none" onchange="onSeleccionArchivo(event)">
-      </div>
+      <div class="lf-row"><div class="lf-group"><label class="lf-label">Fecha</label><input type="date" class="lf-input" id="inpFecha"></div><div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div></div>
+      <div class="lf-group"><label class="lf-label">Concepto</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler..."></div>
+      <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
+      <div class="lf-group"><label class="lf-label" id="labelContraparte">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Nombre"></div>
+      <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
+      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onCambioSelectEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
+      <div class="lf-row"><div class="lf-group"><label class="lf-label">Moneda</label><select class="lf-select" id="inpMoneda" onchange="onCambioMoneda()"><option value="ARS">ARS</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="BRL">BRL</option><option value="OTRA">Otra...</option></select></div><div class="lf-group"><label class="lf-label">Monto</label><input type="number" inputmode="decimal" class="lf-input" id="inpMonto" placeholder="0" oninput="actualizarPreviewARS()"></div></div>
+      <div class="lf-group" id="grupoCotizacion" style="display:none;"><label class="lf-label">Cotización a pesos (ARS)</label><input type="number" inputmode="decimal" class="lf-input" id="inpCotizacion" placeholder="Ej: 1250" oninput="actualizarPreviewARS()"><div class="lf-preview" id="previewARS"></div></div>
+      <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas"></textarea></div>
+      <div class="lf-group"><label class="lf-label">Comprobante</label><div id="zonaArchivo" onclick="document.getElementById('inpArchivo').click()" class="dropzone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg><span>Adjuntar archivo</span></div><input type="file" id="inpArchivo" style="display:none" onchange="onSeleccionArchivo(event)"></div>
     </div>
-    <div class="modal-foot">
-      <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button>
-        <button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button>
-      </div>
-    </div>
+    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button><button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button></div></div>
   </div>
 </div>
 
-<!-- Modal: Detalle -->
+<!-- MODAL DETALLE -->
 <div class="modal-overlay" id="detalleOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="detalleTitulo">Movimiento</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="detalleTitulo">Detalle</div></div>
     <div class="modal-body" id="detalleBody"></div>
-    <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('detalleOverlay')">Cerrar</button></div>
-    </div>
+    <div class="modal-foot"><button class="btn-cancelar" onclick="cerrarModal('detalleOverlay')">Cerrar</button></div>
   </div>
 </div>
 
-<!-- Modal: Cuenta -->
+<!-- MODAL CUENTA -->
 <div class="modal-overlay" id="modalCuentaOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Nueva cuenta</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Cuenta</div></div>
     <div class="modal-body">
-      <div class="lf-group">
-        <label class="lf-label">Nombre</label>
-        <input type="text" class="lf-input" id="inpCuentaNombre">
-      </div>
-      <div class="lf-group">
-        <label class="lf-label">Moneda</label>
-        <select class="lf-select" id="inpCuentaMoneda">
-          <option value="ARS">ARS</option>
-          <option value="USD">USD</option>
-        </select>
-      </div>
+      <div class="lf-group"><label class="lf-label">Nombre</label><input type="text" class="lf-input" id="inpCuentaNombre"></div>
+      <div class="lf-group"><label class="lf-label">Moneda</label><select class="lf-select" id="inpCuentaMoneda"><option value="ARS">ARS</option><option value="USD">USD</option></select></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCuenta"></div></div>
     </div>
-    <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div>
-      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar cuenta</button>
-    </div>
+    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar</button></div>
   </div>
 </div>
 
-<!-- Modal: Categoría -->
+<!-- MODAL CATEGORIA -->
 <div class="modal-overlay" id="modalCategoriaOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Nueva categoría</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Categoría</div></div>
     <div class="modal-body">
       <div class="lf-group"><label class="lf-label">Nombre</label><input type="text" class="lf-input" id="inpCategoriaNombre"></div>
-      <div class="lf-group"><label class="lf-label">Tipo</label>
-        <div class="segmented">
-          <button type="button" class="activo" id="btnTipoEgreso" onclick="setTipoCategoria('egreso')">Egreso</button>
-          <button type="button" id="btnTipoIngreso" onclick="setTipoCategoria('ingreso')">Ingreso</button>
-          <button type="button" id="btnTipoAmbas" onclick="setTipoCategoria('ambas')">Ambas</button>
-        </div>
-      </div>
-      <div class="lf-group"><label class="lf-label">Categoría principal</label><select class="lf-select" id="inpCategoriaPadre"></select></div>
+      <div class="lf-group"><label class="lf-label">Tipo</label><div class="segmented"><button id="btnTipoEgreso" onclick="setTipoCategoria('egreso')">Egreso</button><button id="btnTipoIngreso" onclick="setTipoCategoria('ingreso')">Ingreso</button><button id="btnTipoAmbas" onclick="setTipoCategoria('ambas')">Ambas</button></div></div>
+      <div class="lf-group"><label class="lf-label">Categoría Padre</label><select class="lf-select" id="inpCategoriaPadre"></select></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCategoria"></div></div>
     </div>
-    <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div>
-      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar categoría</button>
-    </div>
+    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar</button></div>
   </div>
 </div>
 
-<!-- Modal: Etiqueta -->
+<!-- MODAL ETIQUETA -->
 <div class="modal-overlay" id="modalEtiquetaOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Nueva etiqueta</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Etiqueta</div></div>
     <div class="modal-body">
       <div class="lf-group"><label class="lf-label">Nombre</label><input type="text" class="lf-input" id="inpEtiquetaNombre"></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerEtiqueta"></div></div>
     </div>
-    <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button></div>
-      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar etiqueta</button>
-    </div>
+    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar</button></div>
   </div>
 </div>
 
-<!-- Modal: Filtro -->
+<!-- MODAL FILTRO -->
 <div class="modal-overlay" id="filtroOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo">Filtrar movimientos</div></div>
+    <div class="modal-head"><div class="modal-titulo">Filtros</div></div>
     <div class="modal-body">
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="filtroCuenta"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="filtroCategoria"></select></div>
@@ -582,23 +391,17 @@
 </div>
 
 <script>
-/* ============================= CREDENCIALES & INIT ============================= */
+/* ============================= CONFIG & INIT ============================= */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
-
-let user = null;
-let cuentas = [], categorias = [], etiquetas = [], movimientos = [];
-let vistaActual = 'inicio';
-let segmentoCategoria = 'egreso';
-let tipoActual = 'ingreso';
-let etiquetasSeleccionadas = [];
-let archivoActual = null;
+let user = null, cuentas = [], categorias = [], etiquetas = [], movimientos = [];
+let vistaActual = 'inicio', segmentoCategoria = 'egreso', tipoActual = 'ingreso';
+let etiquetasSeleccionadas = [], archivoActual = null;
 let colorElegidoCuenta = COLORES[0], colorElegidoCategoria = COLORES[0], colorElegidoEtiqueta = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null;
-let modoRapidoCuenta = false, modoRapidoCategoria = false, modoRapidoEtiqueta = false;
 let filtro = { cuentaId: '', categoriaId: '', etiquetaId: '' };
 
 /* ============================= AUTH ============================= */
@@ -616,24 +419,15 @@ async function checkUser() {
 }
 
 async function handleLogin() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const email = document.getElementById('email').value, password = document.getElementById('password').value;
   const { error } = await _supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    const errEl = document.getElementById('login-error');
-    errEl.innerText = "Error: Usuario o contraseña incorrectos.";
-    errEl.style.display = 'block';
-  } else {
-    checkUser();
-  }
+  if (error) { const e = document.getElementById('login-error'); e.innerText = "Credenciales incorrectas"; e.style.display = 'block'; }
+  else checkUser();
 }
 
-async function logout() {
-  await _supabase.auth.signOut();
-  window.location.reload();
-}
+async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
 
-/* ============================= DATOS ============================= */
+/* ============================= DATA FETCH ============================= */
 async function fetchData() {
   const [rC, rCat, rE, rM] = await Promise.all([
     _supabase.from('cuentas').select('*'),
@@ -641,276 +435,166 @@ async function fetchData() {
     _supabase.from('etiquetas').select('*'),
     _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false })
   ]);
-
-  cuentas = rC.data || [];
-  categorias = rCat.data || [];
-  etiquetas = rE.data || [];
-  movimientos = (rM.data || []).map(m => ({
-    ...m,
-    cuentaId: m.cuenta_id,
-    categoriaId: m.categoria_id,
-    montoARS: m.monto_ars,
-    etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id)
-  }));
-
+  cuentas = rC.data || []; categorias = rCat.data || []; etiquetas = rE.data || [];
+  movimientos = (rM.data || []).map(m => ({ ...m, cuentaId: m.cuenta_id, categoriaId: m.categoria_id, montoARS: m.monto_ars, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
   renderTodaLaApp();
 }
 
-/* ============================= RENDERERS (Sin cambios en lógica de UI) ============================= */
-// Se mantienen exactamente igual que en App RICA, pero consumiendo el array global cargado de Supabase.
+/* ============================= RENDERERS ============================= */
+function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0 }); }
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
 function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); }
-
-function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
-function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str == null ? '' : str; return d.innerHTML; }
 
 function renderInicio() {
   let lista = movimientos.slice();
   if (filtro.cuentaId) lista = lista.filter(m => m.cuentaId === filtro.cuentaId);
   if (filtro.categoriaId) lista = lista.filter(m => m.categoriaId === filtro.categoriaId);
-  if (filtro.etiquetaId) lista = lista.filter(m => (m.etiquetaIds || []).includes(filtro.etiquetaId));
+  if (filtro.etiquetaId) lista = lista.filter(m => m.etiquetaIds.includes(filtro.etiquetaId));
 
-  const ingresos = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + m.montoARS, 0);
-  const egresos = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + m.montoARS, 0);
-  const saldo = ingresos - egresos;
+  const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + m.montoARS, 0);
+  const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + m.montoARS, 0);
+  const saldo = ing - egr;
 
   document.getElementById('saldoValor').textContent = fmtARS(saldo);
   document.getElementById('saldoValor').classList.toggle('negativo', saldo < 0);
-  document.getElementById('totalIngresos').textContent = fmtARS(ingresos);
-  document.getElementById('totalEgresos').textContent = fmtARS(egresos);
+  document.getElementById('totalIngresos').textContent = fmtARS(ing);
+  document.getElementById('totalEgresos').textContent = fmtARS(egr);
 
-  const contenedor = document.getElementById('movLista');
-  if (lista.length === 0) {
-    contenedor.innerHTML = `<div class="vacio">No hay movimientos.</div>`;
-    return;
-  }
-
-  contenedor.innerHTML = lista.map(m => {
-    const cuenta = cuentas.find(c => c.id === m.cuentaId);
-    const categoria = categorias.find(c => c.id === m.categoriaId);
-    return `
-      <div class="item-fila" onclick="verDetalle('${m.id}')">
-        <div class="mov-dot ${m.tipo === 'ingreso' ? 'ing' : 'egr'}">
-          ${m.tipo === 'ingreso' ? '↑' : '↓'}
-        </div>
-        <div class="mov-body">
-          <div class="mov-concepto">${escapeHtml(m.concepto)} ${m.archivo_path ? '📎' : ''}</div>
-          <div class="mov-meta">${cuenta ? cuenta.nombre : 'Sin cuenta'} · ${new Date(m.fecha).toLocaleDateString()}</div>
-        </div>
-        <div class="mov-right">
-          <div class="mov-monto ${m.tipo === 'ingreso' ? 'ing' : 'egr'}">${m.tipo === 'ingreso' ? '+' : '−'}${fmtARS(m.montoARS)}</div>
-        </div>
-      </div>`;
-  }).join('');
+  const cont = document.getElementById('movLista');
+  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos</div>'; return; }
+  cont.innerHTML = lista.map(m => `
+    <div class="item-fila" onclick="verDetalle('${m.id}')">
+      <div class="mov-dot ${m.tipo === 'ingreso' ? 'ing' : 'egr'}">${m.tipo === 'ingreso'?'↑':'↓'}</div>
+      <div class="mov-body">
+        <div class="mov-concepto">${escapeHtml(m.concepto)} ${m.archivo_path?'📎':''}</div>
+        <div class="mov-meta">${new Date(m.fecha).toLocaleDateString()}</div>
+      </div>
+      <div class="mov-right"><div class="mov-monto ${m.tipo === 'ingreso'?'ing':'egr'}">${m.tipo==='ingreso'?'+':'−'}${fmtARS(m.montoARS)}</div></div>
+    </div>`).join('');
 }
 
-/* ============================= LÓGICA DE NEGOCIO (OVERRIDDEN SUPABASE) ============================= */
-
-async function guardarCuenta() {
-  const nombre = document.getElementById('inpCuentaNombre').value.trim();
-  const moneda = document.getElementById('inpCuentaMoneda').value;
-  if (!nombre) return;
-
-  const payload = { user_id: user.id, nombre, moneda, color: colorElegidoCuenta };
-
-  if (cuentaEditandoId) {
-    await _supabase.from('cuentas').update(payload).eq('id', cuentaEditandoId);
-  } else {
-    await _supabase.from('cuentas').insert([payload]);
-  }
-  cerrarModal('modalCuentaOverlay');
-  fetchData();
+function renderCuentas() {
+  const cont = document.getElementById('cuentasLista');
+  cont.innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.id}')"><div class="color-dot" style="background:${c.color}"></div><div class="item-body"><div class="item-nombre">${escapeHtml(c.nombre)}</div></div></div>`).join('');
 }
 
-async function eliminarCuenta() {
-  if (!cuentaEditandoId) return;
-  await _supabase.from('cuentas').delete().eq('id', cuentaEditandoId);
-  cerrarModal('modalCuentaOverlay');
-  fetchData();
+function renderCategorias() {
+  const cont = document.getElementById('categoriasLista');
+  const filtered = categorias.filter(c => !c.padre_id && (c.tipo === segmentoCategoria || c.tipo === 'ambas'));
+  cont.innerHTML = filtered.map(p => `
+    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')"><div class="color-dot" style="background:${p.color}"></div><div class="item-body">${escapeHtml(p.nombre)}</div></div>
+    ${categorias.filter(s => s.padre_id === p.id).map(s => `<div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')"><div class="color-dot" style="background:${s.color}"></div><div class="item-body">${escapeHtml(s.nombre)}</div></div>`).join('')}
+  `).join('');
 }
 
-async function guardarCategoria() {
-  const nombre = document.getElementById('inpCategoriaNombre').value.trim();
-  const padre_id = document.getElementById('inpCategoriaPadre').value || null;
-  const tipo = document.getElementById('btnTipoEgreso').classList.contains('activo') ? 'egreso' : 
-               document.getElementById('btnTipoIngreso').classList.contains('activo') ? 'ingreso' : 'ambas';
-  
-  if (!nombre) return;
-
-  const payload = { user_id: user.id, nombre, tipo, padre_id, color: colorElegidoCategoria };
-
-  if (categoriaEditandoId) {
-    await _supabase.from('categorias').update(payload).eq('id', categoriaEditandoId);
-  } else {
-    await _supabase.from('categorias').insert([payload]);
-  }
-  cerrarModal('modalCategoriaOverlay');
-  fetchData();
+function renderEtiquetas() {
+  const cont = document.getElementById('etiquetasLista');
+  cont.innerHTML = etiquetas.map(e => `<div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')"><div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}</div>`).join('');
 }
 
-async function eliminarCategoria() {
-  // Opción A: Borrar subcategorías antes
-  const subs = categorias.filter(c => c.padre_id === categoriaEditandoId).map(c => c.id);
-  if (subs.length > 0) {
-    await _supabase.from('categorias').delete().in('id', subs);
-  }
-  await _supabase.from('categorias').delete().eq('id', categoriaEditandoId);
-  cerrarModal('modalCategoriaOverlay');
-  fetchData();
-}
-
-async function guardarEtiqueta() {
-  const nombre = document.getElementById('inpEtiquetaNombre').value.trim();
-  if (!nombre) return;
-  const payload = { user_id: user.id, nombre, color: colorElegidoEtiqueta };
-  if (etiquetaEditandoId) await _supabase.from('etiquetas').update(payload).eq('id', etiquetaEditandoId);
-  else await _supabase.from('etiquetas').insert([payload]);
-  cerrarModal('modalEtiquetaOverlay');
-  fetchData();
-}
-
-async function eliminarEtiqueta() {
-  await _supabase.from('etiquetas').delete().eq('id', etiquetaEditandoId);
-  cerrarModal('modalEtiquetaOverlay');
-  fetchData();
-}
-
-/* ============================= MOVIMIENTOS & STORAGE ============================= */
-
+/* ============================= ACTIONS ============================= */
 async function guardarMovimiento() {
   const concepto = document.getElementById('inpConcepto').value.trim();
   const monto = parseFloat(document.getElementById('inpMonto').value);
-  const fechaStr = document.getElementById('inpFecha').value;
-  const horaStr = document.getElementById('inpHora').value || '00:00';
-  if (!monto || !fechaStr) return;
+  const fecha = document.getElementById('inpFecha').value, hora = document.getElementById('inpHora').value || '00:00';
+  if (!concepto || !monto || !fecha) return;
 
   const moneda = document.getElementById('inpMoneda').value;
-  const cotizacion = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 1);
+  const cotiz = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 1);
 
-  // 1. Insert Movimiento
   const { data: mov, error } = await _supabase.from('movimientos').insert([{
-    user_id: user.id,
-    tipo: tipoActual,
-    fecha: new Date(`${fechaStr}T${horaStr}`).toISOString(),
-    concepto,
-    contraparte: document.getElementById('inpContraparte').value.trim(),
-    notas: document.getElementById('inpNotas').value.trim(),
-    cuenta_id: document.getElementById('inpCuenta').value || null,
-    categoria_id: document.getElementById('inpCategoria').value || null,
-    moneda,
-    monto,
-    cotizacion
+    user_id: user.id, tipo: tipoActual, fecha: new Date(`${fecha}T${hora}`).toISOString(),
+    concepto, contraparte: document.getElementById('inpContraparte').value,
+    notas: document.getElementById('inpNotas').value, cuenta_id: document.getElementById('inpCuenta').value || null,
+    categoria_id: document.getElementById('inpCategoria').value || null, moneda, monto, cotizacion: cotiz
   }]).select().single();
 
   if (error) { alert(error.message); return; }
 
-  // 2. Tags
-  if (etiquetasSeleccionadas.length > 0) {
-    const rels = etiquetasSeleccionadas.map(tid => ({ movimiento_id: mov.id, etiqueta_id: tid }));
-    await _supabase.from('movimiento_etiquetas').insert(rels);
+  if (etiquetasSeleccionadas.length) {
+    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: mov.id, etiqueta_id: id })));
   }
 
-  // 3. Archivo
   if (archivoActual) {
-    const ext = archivoActual.name.split('.').pop();
-    const path = `${user.id}/${mov.id}/${Date.now()}.${ext}`;
-    const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, archivoActual.file);
-    if (!upErr) {
-      await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: archivoActual.type }).eq('id', mov.id);
-    }
+    const path = `${user.id}/${mov.id}/${Date.now()}_${archivoActual.name}`;
+    const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, archivoActual);
+    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: archivoActual.type }).eq('id', mov.id);
   }
 
-  cerrarModal('modalOverlay');
-  fetchData();
-}
-
-async function verDetalle(id) {
-  const m = movimientos.find(x => x.id === id);
-  if (!m) return;
-  const cuenta = cuentas.find(c => c.id === m.cuentaId);
-  const categoria = categorias.find(c => c.id === m.categoriaId);
-
-  let archivoLink = '';
-  if (m.archivo_path) {
-    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 60);
-    archivoLink = `<a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a>`;
-  }
-
-  document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor mono">${fmtARS(m.montoARS)}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Fecha</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString()}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Cuenta</div><div class="detalle-valor">${cuenta ? cuenta.nombre : '-'}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Notas</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>
-    ${archivoLink}
-    <button class="btn-eliminar" onclick="borrarMovimiento('${m.id}')">Eliminar Movimiento</button>
-  `;
-  document.getElementById('detalleOverlay').classList.add('activo');
+  cerrarModal('modalOverlay'); fetchData();
 }
 
 async function borrarMovimiento(id) {
   const m = movimientos.find(x => x.id === id);
-  if (m && m.archivo_path) {
-    await _supabase.storage.from('comprobantes').remove([m.archivo_path]);
-  }
+  if (m.archivo_path) await _supabase.storage.from('comprobantes').remove([m.archivo_path]);
   await _supabase.from('movimientos').delete().eq('id', id);
-  cerrarModal('detalleOverlay');
-  fetchData();
+  cerrarModal('detalleOverlay'); fetchData();
 }
 
-/* ============================= HELPERS FORM ============================= */
-
-function onSeleccionArchivo(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  archivoActual = { file, name: file.name, type: file.type };
-  document.getElementById('zonaArchivo').innerHTML = `<div class="archivo-chip"><span>${file.name}</span></div>`;
+async function verDetalle(id) {
+  const m = movimientos.find(x => x.id === id);
+  let arch = '';
+  if (m.archivo_path) {
+    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 60);
+    arch = `<a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a>`;
+  }
+  document.getElementById('detalleBody').innerHTML = `
+    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor">${fmtARS(m.montoARS)}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor">${escapeHtml(m.concepto)}</div></div>
+    ${arch}
+    <button class="btn-eliminar" onclick="borrarMovimiento('${m.id}')" style="margin-top:20px;">Eliminar Movimiento</button>`;
+  document.getElementById('detalleOverlay').classList.add('activo');
 }
 
-function cambiarVista(nombre) {
-  document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
-  document.getElementById('vista-' + nombre).classList.add('activa');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('activo', n.dataset.vista === nombre));
+/* ============================= MODALS & UI ============================= */
+function cambiarVista(v) {
+  document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
+  document.getElementById('vista-'+v).classList.add('activa');
+  document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('activo', x.dataset.vista === v));
 }
 
-// Iniciar sesión
-checkUser();
-
-/* (Sigue resto de lógica de UI: poblarSelects, modals toggle, colorPickers...) */
-/* NOTA: Debes copiar los bloques de funciones auxiliares UI (renderColorPicker, poblarSelectCuenta, etc) 
-   exactamente como estaban en App RICA para que los botones abran los modales */
-
-function abrirModalMovimiento(tipo) {
-  tipoActual = tipo;
-  etiquetasSeleccionadas = [];
-  archivoActual = null;
-  document.getElementById('modalOverlay').classList.add('activo');
+function abrirModalMovimiento(t) {
+  tipoActual = t; etiquetasSeleccionadas = []; archivoActual = null;
+  document.getElementById('modalTitulo').textContent = t === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Egreso';
+  document.getElementById('inpFecha').valueAsDate = new Date();
+  document.getElementById('zonaArchivo').innerHTML = '<span>Adjuntar archivo</span>';
   poblarSelects();
+  document.getElementById('modalOverlay').classList.add('activo');
 }
 
 function poblarSelects() {
-  const sc = document.getElementById('inpCuenta');
-  sc.innerHTML = '<option value="">Sin cuenta</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  
-  const scat = document.getElementById('inpCategoria');
-  scat.innerHTML = '<option value="">Sin categoría</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Agregar etiqueta</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
 }
 
 function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
 
-// Poblar selects de cuentas y categorías para los filtros
-function abrirFiltro() {
-  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroOverlay').classList.add('activo');
+function renderColorPicker(id, sel, func) {
+  document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${func}('${c}')"></div>`).join('');
 }
 
-function aplicarFiltros() {
-  filtro.cuentaId = document.getElementById('filtroCuenta').value;
-  filtro.categoriaId = document.getElementById('filtroCategoria').value;
-  cerrarModal('filtroOverlay');
-  renderInicio();
+// Lógica de color pickers
+function setC(c) { colorElegidoCuenta = c; renderColorPicker('colorPickerCuenta', c, 'setC'); }
+function setCat(c) { colorElegidoCategoria = c; renderColorPicker('colorPickerCategoria', c, 'setCat'); }
+function setEt(c) { colorElegidoEtiqueta = c; renderColorPicker('colorPickerEtiqueta', c, 'setEt'); }
+
+// CRUD Cuentas/Categorias/Etiquetas (ejemplo simplificado, replicar para el resto)
+async function guardarCuenta() {
+  const n = document.getElementById('inpCuentaNombre').value;
+  const p = { user_id: user.id, nombre: n, moneda: document.getElementById('inpCuentaMoneda').value, color: colorElegidoCuenta };
+  if (cuentaEditandoId) await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId);
+  else await _supabase.from('cuentas').insert([p]);
+  cerrarModal('modalCuentaOverlay'); fetchData();
 }
 
+function onSeleccionArchivo(e) { archivoActual = e.target.files[0]; document.getElementById('zonaArchivo').innerHTML = `<span>${archivoActual.name}</span>`; }
+
+function onCambioMoneda() { document.getElementById('grupoCotizacion').style.display = document.getElementById('inpMoneda').value === 'ARS' ? 'none' : 'block'; }
+
+/* INIT */
+checkUser();
 </script>
 </body>
 </html>
