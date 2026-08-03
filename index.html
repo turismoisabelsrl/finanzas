@@ -44,25 +44,15 @@
   }
   body::before {
     content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
-      radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%),
-      var(--navy);
+    background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
+                radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy);
   }
-  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes orbPulse { 0%,100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 0.4; } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
+  
   #login-screen { position: relative; z-index: 10; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
   #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 110px; min-height: 100vh; display: none; }
 
   header.topbar { text-align: center; margin-bottom: 20px; }
   .brand-orb { width: 64px; height: 64px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
-  .brand-orb::before {
-    content: ''; position: absolute; inset: -14px; border-radius: 50%;
-    background: radial-gradient(circle, var(--sky-glow) 0%, transparent 70%);
-    animation: orbPulse 3.5s ease-in-out infinite;
-  }
   .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; z-index: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
   .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-style: italic; color: var(--text-0); }
   .brand-sub { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-3); margin-top: 4px; }
@@ -71,25 +61,19 @@
   .vista.activa { display: block; }
 
   .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); }
-  .saldo-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); }
   .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); margin-top: 6px; }
   .saldo-valor.negativo { color: #ff9090; }
-  .saldo-moneda { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-3); margin-top: 2px; }
 
   .resumen-fila { display: flex; gap: 10px; margin-top: 16px; }
   .resumen-item { flex: 1; border-radius: var(--r-lg); padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
   .resumen-item.ing { background: var(--green-bg); border: 1px solid rgba(44,184,122,0.22); }
   .resumen-item.egr { background: var(--red-bg); border: 1px solid rgba(224,68,68,0.22); }
-  .resumen-item-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
-  .resumen-item.ing .resumen-item-label { color: rgba(100,220,160,0.85); }
-  .resumen-item.egr .resumen-item-label { color: rgba(255,140,140,0.85); }
   .resumen-item-valor { font-family: var(--font-num); font-size: 15px; font-weight: 600; }
   .resumen-item.ing .resumen-item-valor { color: #5de09a; }
   .resumen-item.egr .resumen-item-valor { color: #ff9090; }
 
   .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
   .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
-  .btn-accion svg { width: 18px !important; height: 18px !important; flex-shrink: 0; }
   .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.12)); border: 1.5px solid rgba(44,184,122,0.35); color: #5de09a; }
   .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.32); color: #ff9090; }
 
@@ -97,40 +81,38 @@
   .vista-titulo { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
   
   .btn-nuevo, .btn-filtro { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: var(--r-lg); border: none; font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; cursor: pointer; }
-  .btn-nuevo svg, .btn-filtro svg { width: 14px !important; height: 14px !important; flex-shrink: 0; }
-  .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
+  .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; }
   .btn-filtro { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--text-1); }
   .btn-filtro.activo { background: rgba(85,179,245,0.15); border-color: rgba(85,179,245,0.4); color: var(--sky-bright); }
 
-  .lista { display: flex; flex-direction: column; gap: 8px; }
-  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; }
-  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
-  .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; margin-bottom: 8px; }
+  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); }
   .mov-dot { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .mov-dot.ing { background: var(--green-bg); color: #5de09a; }
   .mov-dot.egr { background: var(--red-bg); color: #ff9090; }
   .mov-body { flex: 1; min-width: 0; }
-  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mov-cat { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
-  .mov-right { text-align: right; flex-shrink: 0; }
-  .mov-monto { font-family: var(--font-num); font-size: 15px; font-weight: 700; }
+  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); display: flex; align-items: center; gap: 6px; }
+  .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mov-monto { font-family: var(--font-num); font-size: 15px; font-weight: 700; text-align: right; flex-shrink: 0; }
   .mov-monto.ing { color: #5de09a; }
   .mov-monto.egr { color: #ff9090; }
 
+  /* SEGMENTED BUTTONS COLORS */
   .segmented { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-hi); border-radius: var(--r-md); padding: 4px; gap: 4px; margin-bottom: 16px; }
-  .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-  .segmented button.activo { background: rgba(85,179,245,0.18); color: var(--sky-bright); border: 1px solid rgba(85,179,245,0.35); }
+  .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+  
+  /* Lógica de colores según el tipo solicitado */
+  #segEgreso.activo, #btnTipoEgreso.activo { background: rgba(224, 68, 68, 0.2); color: #ff9090; border: 1px solid rgba(224, 68, 68, 0.4); }
+  #segIngreso.activo, #btnTipoIngreso.activo { background: rgba(44, 184, 122, 0.2); color: #5de09a; border: 1px solid rgba(44, 184, 122, 0.4); }
+  #btnTipoAmbas.activo { background: rgba(85, 179, 245, 0.2); color: var(--sky-bright); border: 1px solid rgba(85, 179, 245, 0.4); }
 
-  .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
   .etiqueta-tarjeta { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; }
 
-  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 0 10px; background: none; border: none; color: var(--text-3); cursor: pointer; position: relative; }
-  .nav-item svg { width: 22px !important; height: 22px !important; flex-shrink: 0; }
-  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
   .nav-item.activo { color: var(--sky-bright); }
   .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
+  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; }
 
   .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); }
   .modal-overlay.activo { display: flex; }
@@ -140,41 +122,24 @@
   .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
   .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
-  .lf-group { margin-bottom: 14px; position: relative; }
-  .lf-row { display: flex; gap: 10px; }
-  .lf-row .lf-group { flex: 1; }
-  .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
+  .lf-group { margin-bottom: 14px; }
+  .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
   .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); border-radius: var(--r-md); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-0); outline: none; }
-  .lf-textarea { resize: vertical; min-height: 60px; }
-  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
-  .lf-select option { background: #0d1e38; color: var(--text-0); }
-  .lf-input:focus, .lf-select:focus, .lf-textarea:focus { border-color: var(--sky-bright); background: rgba(255,255,255,0.1); }
+  .lf-row { display: flex; gap: 10px; }
 
-  .color-picker { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
-  .color-dot-pick.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
-
-  .chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(85,179,245,0.15); border: 1px solid rgba(85,179,245,0.3); border-radius: 20px; font-size: 12px; color: var(--sky-bright); }
-  
-  .modal-botones { display: flex; gap: 10px; width: 100%; }
-  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
+  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; }
   .btn-guardar { flex: 1; padding: 14px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #fff; }
-  .btn-guardar.ing, .btn-guardar.principal { background: linear-gradient(135deg, #2cb87a, #1e8a5a); }
-  .btn-guardar.egr { background: linear-gradient(135deg, #e04444, #a52d2d); }
   .btn-guardar.neutro { background: linear-gradient(135deg, var(--sky), #2a6ea8); }
-  
   .btn-cancelar { flex: 1; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
   .btn-eliminar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.12); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
 
   .detalle-row { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
   .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
   .detalle-valor { font-size: 15px; color: var(--text-1); }
-  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9px 14px; font-weight: 600; font-size: 13px; }
 
-  .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
-  .cargando { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; text-transform: uppercase; }
-  .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(85,179,245,0.15); border-top-color: var(--sky-bright); animation: spin 0.8s linear infinite; }
+  .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+  .color-dot-pick.selected { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
 </style>
 </head>
 <body>
@@ -182,16 +147,15 @@
 <!-- ===== PANTALLA LOGIN ===== -->
 <div id="login-screen">
   <div class="brand-orb">
-    <!-- REEMPLAZÁ "TU_LOGO_AQUI.png" POR LA RUTA O ENLACE HACIA TU LOGO -->
-    <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Turismo Isabel Logo">
+    <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Logo">
   </div>
   <div class="brand-title">Registro</div>
   <div class="brand-sub">Ingresos y Egresos</div>
   
   <div class="card" style="width: 100%; margin-top: 32px; max-width: 340px;">
-    <div class="lf-group"><label class="lf-label" style="text-align:left;">Usuario / Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
+    <div class="lf-group"><label class="lf-label" style="text-align:left;">Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
     <div class="lf-group"><label class="lf-label" style="text-align:left;">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
-    <button onclick="handleLogin()" class="btn-main" style="margin-top: 10px;">Entrar</button>
+    <button onclick="handleLogin()" class="btn-main">Entrar</button>
     <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
   </div>
 </div>
@@ -200,8 +164,7 @@
 <div id="app">
   <header class="topbar">
     <div class="brand-orb">
-      <!-- REEMPLAZÁ "TU_LOGO_AQUI.png" POR LA RUTA O ENLACE HACIA TU LOGO -->
-      <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Turismo Isabel Logo">
+      <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Logo">
     </div>
     <div class="brand-title">Registro</div>
     <div class="brand-sub">Ingresos y Egresos</div>
@@ -221,11 +184,11 @@
 
     <div class="acciones">
       <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         Ingreso
       </button>
       <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
         Egreso
       </button>
     </div>
@@ -233,79 +196,45 @@
     <div class="fila-titulo">
       <div class="vista-titulo">Movimientos</div>
       <button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
         Filtrar
       </button>
     </div>
-    <div id="movLista"><div class="cargando"><div class="spinner"></div><p>Cargando</p></div></div>
+    <div id="movLista"></div>
   </section>
 
   <!-- VISTA CUENTAS -->
   <section class="vista" id="vista-cuentas">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Cuentas</div>
-      <button class="btn-nuevo" onclick="abrirModalCuenta()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
+    <div class="fila-titulo"><div class="vista-titulo">Cuentas</div><button class="btn-nuevo" onclick="abrirModalCuenta()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
     <div class="lista" id="cuentasLista"></div>
   </section>
 
   <!-- VISTA CATEGORÍAS -->
   <section class="vista" id="vista-categorias">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Categorías</div>
-      <button class="btn-nuevo" onclick="abrirModalCategoria()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
+    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-nuevo" onclick="abrirModalCategoria()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
     <div class="segmented">
-      <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
-      <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
+        <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
+        <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
     </div>
     <div class="lista" id="categoriasLista"></div>
   </section>
 
   <!-- VISTA ETIQUETAS -->
   <section class="vista" id="vista-etiquetas">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Etiquetas</div>
-      <button class="btn-nuevo" onclick="abrirModalEtiqueta()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
-    <div class="etiquetas-grid" id="etiquetasLista"></div>
+    <div class="fila-titulo"><div class="vista-titulo">Etiquetas</div><button class="btn-nuevo" onclick="abrirModalEtiqueta()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nueva</button></div>
+    <div class="etiquetas-grid" id="etiquetasLista" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
   </section>
 
-  <!-- NAVEGACIÓN INFERIOR -->
   <nav class="bottom-nav">
-    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
-      <span>Inicio</span>
-    </button>
-    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg>
-      <span>Cuentas</span>
-    </button>
-    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-      <span>Cat</span>
-    </button>
-    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
-      <span>Tags</span>
-    </button>
-    <button class="nav-item" onclick="logout()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-      <span>Salir</span>
-    </button>
+    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')"><svg width="24" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg><span>Inicio</span></button>
+    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')"><svg width="24" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg><span>Cuentas</span></button>
+    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')"><svg width="24" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg><span>Cat</span></button>
+    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')"><svg width="24" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg><span>Tags</span></button>
+    <button class="nav-item" onclick="logout()"><svg width="24" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Salir</span></button>
   </nav>
 </div>
 
-<!-- ===== MODAL: MOVIMIENTO ===== -->
+<!-- MODAL: MOVIMIENTO -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="modalTitulo">Nuevo movimiento</div></div>
@@ -315,119 +244,109 @@
         <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div>
       </div>
       <div class="lf-group"><label class="lf-label">Monto (ARS) *</label><input type="number" step="any" class="lf-input" id="inpMonto" placeholder="0.00" style="font-size:18px; font-weight:700;"></div>
-      <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
+      <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler..."></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
-      <div class="lf-group"><label class="lf-label" id="labelContraparte">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Cliente, Proveedor o Negocio"></div>
+      <div class="lf-group"><label class="lf-label">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Nombre"></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
-      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
-      <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
+      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:8px;"></div></div>
+      <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas"></textarea></div>
       <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf"></div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button>
+        <button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cerrar</button>
         <button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL: DETALLE MOVIMIENTO ===== -->
+<!-- MODAL: DETALLE -->
 <div class="modal-overlay" id="detalleOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="detalleTitulo">Detalle del Movimiento</div></div>
+    <div class="modal-head"><div class="modal-titulo">Detalle</div></div>
     <div class="modal-body" id="detalleBody"></div>
     <div class="modal-foot">
-      <div class="modal-botones">
-        <button class="btn-guardar neutro" id="btnEditarMov">Editar</button>
-        <button class="btn-eliminar" id="btnEliminarMov" style="width: auto; flex:1;">Eliminar</button>
-      </div>
-      <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('detalleOverlay')">Cerrar</button>
+        <div class="modal-botones">
+            <button class="btn-guardar neutro" id="btnEditarMov">Editar</button>
+            <button class="btn-eliminar" id="btnEliminarMov" style="width: auto; flex:1;">Eliminar</button>
+        </div>
+        <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('detalleOverlay')">Cerrar</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL: CUENTA ===== -->
+<!-- MODAL: CUENTA -->
 <div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Cuenta</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Nueva Cuenta</div></div>
     <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Nombre de la Cuenta *</label><input type="text" id="inpCuentaNombre" class="lf-input" placeholder="Ej: Efectivo, Banco Nación..."></div>
-      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerCuenta"></div></div>
+      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCuentaNombre" class="lf-input"></div>
+      <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCuenta"></div></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button>
-        <button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button>
-      </div>
-      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar cuenta</button>
+      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cerrar</button><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div>
+      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL: CATEGORÍA ===== -->
+<!-- MODAL: CATEGORIA -->
 <div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Categoría</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Nueva Categoría</div></div>
     <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Nombre de Categoría *</label><input type="text" id="inpCategoriaNombre" class="lf-input" placeholder="Ej: Sueldos, Alquiler, Mercadería..."></div>
-      <div class="lf-group"><label class="lf-label">Tipo de Categoría</label>
+      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCategoriaNombre" class="lf-input"></div>
+      <div class="lf-group"><label class="lf-label">Tipo</label>
         <div class="segmented">
           <button id="btnTipoEgreso" onclick="setTipoCat('egreso')">Egreso</button>
           <button id="btnTipoIngreso" onclick="setTipoCat('ingreso')">Ingreso</button>
           <button id="btnTipoAmbas" onclick="setTipoCat('ambas')">Ambas</button>
         </div>
       </div>
-      <div class="lf-group"><label class="lf-label">Categoría Padre (Opcional)</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Categoría Padre</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCategoria"></div></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button>
-        <button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button>
-      </div>
-      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar categoría</button>
+      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cerrar</button><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div>
+      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL: ETIQUETA ===== -->
+<!-- MODAL: ETIQUETA -->
 <div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Etiqueta</div></div>
+    <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Nueva Etiqueta</div></div>
     <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input" placeholder="Ej: Urgente, Pagado, Facturado..."></div>
+      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input"></div>
       <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerEtiqueta"></div></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button>
-        <button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button>
-      </div>
-      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar etiqueta</button>
+      <div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cerrar</button><button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button></div>
+      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL: FILTROS ===== -->
+<!-- MODAL: FILTRO -->
 <div class="modal-overlay" id="filtroOverlay">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
+    <div class="modal-head"><div class="modal-titulo">Filtros</div></div>
     <div class="modal-body">
       <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
     </div>
     <div class="modal-foot">
-      <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('filtroOverlay')">Cerrar</button>
-        <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button>
-      </div>
+        <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar Filtros</button>
+        <button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar Todo</button>
     </div>
   </div>
 </div>
 
 <script>
-/* === CREDENCIALES SUPABASE === */
+/* === CONFIG SUPABASE === */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -438,7 +357,7 @@ let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso'
 let colorElegidoCuenta = COLORES[0], colorElegidoCategoria = COLORES[0], colorElegidoEtiqueta = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null;
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
-let filtro = { cuenta_id: '', categoria_id: '' };
+let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
 
 /* === AUTH === */
 async function checkUser() {
@@ -450,6 +369,7 @@ async function checkUser() {
     fetchData();
   } else {
     document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
   }
 }
 
@@ -462,7 +382,7 @@ async function handleLogin() {
 
 async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
 
-/* === DATA === */
+/* === DATA FETCH === */
 async function fetchData() {
   const [rC, rCat, rE, rM] = await Promise.all([
     _supabase.from('cuentas').select('*').order('nombre'),
@@ -487,42 +407,35 @@ function renderInicio() {
   let lista = movements.slice();
   if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
   if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
+  if (filtro.etiqueta_id) lista = lista.filter(m => m.etiquetaIds.includes(filtro.etiqueta_id));
 
   const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const saldo = ing - egr;
 
-  const saldoValEl = document.getElementById('saldoValor');
-  saldoValEl.textContent = fmtARS(saldo);
-  saldoValEl.classList.toggle('negativo', saldo < 0);
+  document.getElementById('saldoValor').textContent = fmtARS(saldo);
+  document.getElementById('saldoValor').classList.toggle('negativo', saldo < 0);
   document.getElementById('totalIngresos').textContent = fmtARS(ing);
   document.getElementById('totalEgresos').textContent = fmtARS(egr);
 
   const cont = document.getElementById('movLista');
-  if (!lista.length) { cont.innerHTML = '<div class="vacio">Todavía no hay movimientos registrados en este filtro.</div>'; return; }
+  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos registrados.</div>'; return; }
   
   cont.innerHTML = lista.map(m => {
     const cta = cuentas.find(c => c.id === m.cuenta_id);
     const cat = categorias.find(c => c.id === m.categoria_id);
     const esIng = m.tipo === 'ingreso';
-    
-    // Armado de meta y títulos claros
-    const titulo = m.concepto && m.concepto.trim() !== '' ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
-    const clip = m.archivo_path ? ' 📎' : '';
+    const conceptoStr = m.concepto ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
     const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
     
-    let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-    if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
-    if (m.contraparte) subInfo += ` · De/Para: ${escapeHtml(m.contraparte)}`;
-
     return `
     <div class="item-fila" onclick="verDetalle('${m.id}')">
       <div class="mov-dot ${esIng?'ing':'egr'}">
-        ${esIng ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>'}
+        ${esIng ? '↑' : '↓'}
       </div>
       <div class="mov-body">
-        <div class="mov-concepto">${titulo}${clip} ${catBadge}</div>
-        <div class="mov-meta">${subInfo}</div>
+        <div class="mov-concepto">${conceptoStr}${catBadge}</div>
+        <div class="mov-meta">${new Date(m.fecha).toLocaleString('es-AR', {hour12: false})} · ${cta ? escapeHtml(cta.nombre) : 'Sin cuenta'}</div>
       </div>
       <div class="mov-right">
         <div class="mov-monto ${esIng?'ing':'egr'}">${esIng?'+':'−'}${fmtARS(m.monto_ars || m.monto)}</div>
@@ -532,45 +445,22 @@ function renderInicio() {
 }
 
 function renderCuentas() {
-  const cont = document.getElementById('cuentasLista');
-  if (!cuentas.length) { cont.innerHTML = '<div class="vacio">No creaste cuentas todavía.</div>'; return; }
-  cont.innerHTML = cuentas.map(c => `
-    <div class="item-fila" onclick="abrirModalCuenta('${c.id}')">
-      <div class="color-dot" style="background:${c.color}"></div>
-      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(c.nombre)}</div></div>
-      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
-    </div>`).join('');
+  document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.id}')"><div class="color-dot" style="background:${c.color}"></div><div class="item-body">${escapeHtml(c.nombre)}</div></div>`).join('');
 }
 
 function renderCategorias() {
-  const padres = categorias.filter(c => !c.padre_id && (c.tipo === segmentoCategoria || c.tipo === 'ambas'));
-  const cont = document.getElementById('categoriasLista');
-  if (!padres.length) { cont.innerHTML = '<div class="vacio">No hay categorías para este tipo.</div>'; return; }
-  cont.innerHTML = padres.map(p => `
-    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')">
-      <div class="color-dot" style="background:${p.color}"></div>
-      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(p.nombre)}</div></div>
-      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
-    </div>
-    ${categorias.filter(c => c.padre_id === p.id).map(s => `
-      <div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')">
-        <div class="color-dot" style="background:${s.color}"></div>
-        <div class="mov-body"><div style="font-size:14px; color:var(--text-2);">— ${escapeHtml(s.nombre)}</div></div>
-      </div>`).join('')}
+  const filtered = categorias.filter(c => !c.padre_id && (c.tipo === segmentoCategoria || c.tipo === 'ambas'));
+  document.getElementById('categoriasLista').innerHTML = filtered.map(p => `
+    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')"><div class="color-dot" style="background:${p.color}"></div><div class="item-body">${escapeHtml(p.nombre)}</div></div>
+    ${categorias.filter(s => s.padre_id === p.id).map(s => `<div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')"><div class="color-dot" style="background:${s.color}"></div><div class="item-body">— ${escapeHtml(s.nombre)}</div></div>`).join('')}
   `).join('');
 }
 
 function renderEtiquetas() {
-  const cont = document.getElementById('etiquetasLista');
-  if (!etiquetas.length) { cont.innerHTML = '<div class="vacio">No creaste etiquetas todavía.</div>'; return; }
-  cont.innerHTML = etiquetas.map(e => `
-    <div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')">
-      <div class="color-dot" style="background:${e.color}"></div>
-      <strong style="color:white;">${escapeHtml(e.nombre)}</strong>
-    </div>`).join('');
+  document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `<div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')"><div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}</div>`).join('');
 }
 
-/* === MODALS LOGIC === */
+/* === MODALS & UI === */
 function cambiarVista(v) {
   document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
   document.getElementById('vista-'+v).classList.add('activa');
@@ -578,61 +468,34 @@ function cambiarVista(v) {
   vistaActual = v;
 }
 
+function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
+
+// Cierre al tocar fuera del modal
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            cerrarModal(overlay.id);
+        }
+    });
+});
+
 function abrirModalMovimiento(t) {
   tipoActual = t; etiquetasSeleccionadas = []; movEditandoId = null;
   document.getElementById('modalTitulo').textContent = t === 'ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
   document.getElementById('inpFecha').valueAsDate = new Date();
   document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5);
-  document.getElementById('inpMonto').value = ''; 
-  document.getElementById('inpConcepto').value = '';
-  document.getElementById('inpContraparte').value = '';
-  document.getElementById('inpNotas').value = '';
-  document.getElementById('inpArchivo').value = '';
-  
-  const btn = document.getElementById('btnGuardar');
-  btn.textContent = "Guardar";
-  btn.className = "btn-guardar " + (t === 'ingreso' ? 'ing' : 'egr');
-
+  document.getElementById('inpMonto').value = ''; document.getElementById('inpConcepto').value = '';
+  document.getElementById('inpContraparte').value = ''; document.getElementById('inpNotas').value = '';
+  document.getElementById('chipsEtiquetas').innerHTML = '';
   poblarSelectsMov();
-  renderChipsEtiquetas();
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
 function poblarSelectsMov(selCta, selCat) {
-  const ctaVal = selCta !== undefined ? selCta : document.getElementById('inpCuenta').value;
-  const catVal = selCat !== undefined ? selCat : document.getElementById('inpCategoria').value;
-  
-  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + 
-    cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
-    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CUENTA...</option>';
-  document.getElementById('inpCuenta').value = ctaVal || '';
-
+  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Cuenta</option>';
   const cats = categorias.filter(c => c.tipo === tipoActual || c.tipo === 'ambas');
-  let catHtml = '<option value="">Sin categoría asignada</option>';
-  const padres = cats.filter(c => !c.padre_id);
-  padres.forEach(p => {
-    catHtml += `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`;
-    cats.filter(c => c.padre_id === p.id).forEach(sub => {
-      catHtml += `<option value="${sub.id}">&nbsp;&nbsp;&nbsp;— ${escapeHtml(sub.nombre)}</option>`;
-    });
-  });
-  catHtml += '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CATEGORÍA...</option>';
-  document.getElementById('inpCategoria').innerHTML = catHtml;
-  document.getElementById('inpCategoria').value = catVal || '';
-
-  const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">+ Agregar Etiqueta al movimiento</option>' + 
-    tagsDisp.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + 
-    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA ETIQUETA...</option>';
-}
-
-function renderChipsEtiquetas() {
-  document.getElementById('chipsEtiquetas').innerHTML = etiquetasSeleccionadas.map(id => {
-    const e = etiquetas.find(x => x.id === id);
-    if(!e) return '';
-    return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px; cursor:pointer;">×</strong></span>`;
-  }).join('');
-  poblarSelectsMov();
+  document.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría</option>' + cats.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Categoría</option>';
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Agregar Etiqueta</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Etiqueta</option>';
 }
 
 function onAddEtiqueta() {
@@ -640,33 +503,32 @@ function onAddEtiqueta() {
   if (s.value === 'NUEVA') { abrirModalEtiqueta(null, true); s.value = ''; return; }
   if (s.value && !etiquetasSeleccionadas.includes(s.value)) {
     etiquetasSeleccionadas.push(s.value);
-    renderChipsEtiquetas();
+    const e = etiquetas.find(x => x.id === s.value);
+    document.getElementById('chipsEtiquetas').innerHTML += `<span class="chip">${e.nombre} <strong onclick="quitarEtiqueta('${e.id}', event)">×</strong></span>`;
   }
   s.value = '';
 }
 
-function quitarEtiqueta(id) {
-  etiquetasSeleccionadas = etiquetasSeleccionadas.filter(x => x !== id);
-  renderChipsEtiquetas();
+function quitarEtiqueta(id, e) {
+    e.stopPropagation();
+    etiquetasSeleccionadas = etiquetasSeleccionadas.filter(x => x !== id);
+    document.getElementById('chipsEtiquetas').innerHTML = etiquetasSeleccionadas.map(tid => {
+        const tag = etiquetas.find(x => x.id === tid);
+        return `<span class="chip">${tag.nombre} <strong onclick="quitarEtiqueta('${tag.id}', event)">×</strong></span>`;
+    }).join('');
 }
 
-/* === CRUD SUPABASE MOVIMIENTOS === */
+/* === CRUD SUPABASE === */
 async function guardarMovimiento() {
   const monto = parseFloat(document.getElementById('inpMonto').value);
-  const fecha = document.getElementById('inpFecha').value;
-  const hora = document.getElementById('inpHora').value || '00:00';
-  
-  if (!monto || monto <= 0 || !fecha) { alert("Por favor completa al menos el Monto y la Fecha."); return; }
+  const fecha = document.getElementById('inpFecha').value, hora = document.getElementById('inpHora').value;
+  if (!monto || !fecha) { alert("Completa monto y fecha."); return; }
 
   const payload = {
-    user_id: user.id,
-    tipo: tipoActual,
-    concepto: document.getElementById('inpConcepto').value.trim() || null,
-    contraparte: document.getElementById('inpContraparte').value.trim() || null,
-    notas: document.getElementById('inpNotas').value.trim() || null,
-    monto: monto,
-    moneda: 'ARS',
-    cotizacion: 1,
+    user_id: user.id, tipo: tipoActual, monto: monto, moneda: 'ARS', cotizacion: 1,
+    concepto: document.getElementById('inpConcepto').value || null,
+    contraparte: document.getElementById('inpContraparte').value || null,
+    notas: document.getElementById('inpNotas').value || null,
     cuenta_id: document.getElementById('inpCuenta').value || null,
     categoria_id: document.getElementById('inpCategoria').value || null,
     fecha: new Date(`${fecha}T${hora}`).toISOString()
@@ -674,61 +536,38 @@ async function guardarMovimiento() {
 
   let movId = movEditandoId;
   if (movEditandoId) {
-    const { error } = await _supabase.from('movimientos').update(payload).eq('id', movEditandoId);
-    if (error) { alert(error.message); return; }
+    await _supabase.from('movimientos').update(payload).eq('id', movEditandoId);
     await _supabase.from('movimiento_etiquetas').delete().eq('movimiento_id', movEditandoId);
   } else {
-    const { data: mov, error } = await _supabase.from('movimientos').insert([payload]).select().single();
-    if (error) { alert(error.message); return; }
+    const { data: mov } = await _supabase.from('movimientos').insert([payload]).select().single();
     movId = mov.id;
   }
 
-  if (etiquetasSeleccionadas.length && movId) {
+  if (etiquetasSeleccionadas.length) {
     await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
   }
 
   const fileInput = document.getElementById('inpArchivo');
-  if (fileInput.files[0] && movId) {
-    const file = fileInput.files[0], path = `${user.id}/${movId}/${Date.now()}_${file.name}`;
-    const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
-    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
+  if (fileInput.files[0]) {
+    const file = fileInput.files[0], path = `${user.id}/${movId}/${file.name}`;
+    await _supabase.storage.from('comprobantes').upload(path, file);
+    await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
   }
 
-  cerrarModal('modalOverlay'); 
-  fetchData();
+  cerrarModal('modalOverlay'); fetchData();
 }
 
 async function verDetalle(id) {
   const m = movements.find(x => x.id === id);
-  if (!m) return;
-  
-  const cta = cuentas.find(c => c.id === m.cuenta_id);
-  const cat = categorias.find(c => c.id === m.categoria_id);
-  
   let arch = '';
   if (m.archivo_path) {
     const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 60);
-    arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data?.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
+    arch = `<div class="detalle-row"><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Abrir Comprobante</a></div>`;
   }
-  
-  let tagsHtml = '';
-  if(m.etiquetaIds && m.etiquetaIds.length) {
-    tagsHtml = `<div class="detalle-row"><div class="detalle-label">Etiquetas</div><div class="chips-wrap">` + 
-      m.etiquetaIds.map(tid => {
-        const e = etiquetas.find(x => x.id === tid);
-        return e ? `<span class="chip"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)}</span>` : '';
-      }).join('') + `</div></div>`;
-  }
-
   document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor" style="font-weight:600;">${m.concepto ? escapeHtml(m.concepto) : '<i>Sin concepto</i>'}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR')}</div></div>
-    ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
-    ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
-    ${m.contraparte ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(m.contraparte)}</div></div>` : ''}
-    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
-    ${tagsHtml}
+    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor" style="font-weight:700; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'};">${fmtARS(m.monto_ars || m.monto)}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor">${escapeHtml(m.concepto) || 'Sin concepto'}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Fecha</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR', {hour12: false})}</div></div>
     ${arch}`;
 
   document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
@@ -738,221 +577,128 @@ async function verDetalle(id) {
 
 function editarMovimiento(id) {
   const m = movements.find(x => x.id === id);
-  if (!m) return;
   cerrarModal('detalleOverlay');
-  
   movEditandoId = m.id;
   tipoActual = m.tipo;
-  document.getElementById('modalTitulo').textContent = m.tipo === 'ingreso' ? 'Editar Ingreso' : 'Editar Egreso';
-  
-  const fObj = new Date(m.fecha);
-  const yyyy = fObj.getFullYear();
-  const mm = String(fObj.getMonth() + 1).padStart(2, '0');
-  const dd = String(fObj.getDate()).padStart(2, '0');
-  document.getElementById('inpFecha').value = `${yyyy}-${mm}-${dd}`;
-  document.getElementById('inpHora').value = fObj.toTimeString().slice(0, 5);
-  
-  document.getElementById('inpMonto').value = m.monto || '';
+  document.getElementById('inpMonto').value = m.monto;
   document.getElementById('inpConcepto').value = m.concepto || '';
   document.getElementById('inpContraparte').value = m.contraparte || '';
   document.getElementById('inpNotas').value = m.notas || '';
-  document.getElementById('inpArchivo').value = '';
-  
-  etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
-  poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '');
-  renderChipsEtiquetas();
-  
-  const btn = document.getElementById('btnGuardar');
-  btn.textContent = "Actualizar";
-  btn.className = "btn-guardar " + (m.tipo === 'ingreso' ? 'ing' : 'egr');
-  
+  document.getElementById('inpFecha').value = m.fecha.split('T')[0];
+  document.getElementById('inpHora').value = new Date(m.fecha).toTimeString().slice(0, 5);
+  etiquetasSeleccionadas = [...m.etiquetaIds];
+  poblarSelectsMov(m.cuenta_id, m.categoria_id);
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
 async function borrarMov(id) {
-  if(!confirm("¿Seguro de eliminar este movimiento?")) return;
-  const m = movements.find(x => x.id === id);
-  if (m && m.archivo_path) await _supabase.storage.from('comprobantes').remove([m.archivo_path]);
+  if(!confirm("¿Eliminar movimiento?")) return;
   await _supabase.from('movimientos').delete().eq('id', id);
-  cerrarModal('detalleOverlay'); 
-  fetchData();
+  cerrarModal('detalleOverlay'); fetchData();
 }
 
-/* === HELPERS UI & FILTROS === */
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
-
-function cambiarSegmentoCategoria(s) { 
-  segmentoCategoria = s; 
-  document.getElementById('segEgreso').classList.toggle('activo', s==='egreso');
-  document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso');
-  renderCategorias(); 
-}
-
-function onCambioSelectCuenta() { 
-  if (document.getElementById('inpCuenta').value==='NUEVA') { 
-    abrirModalCuenta(null, true); 
-    document.getElementById('inpCuenta').value = ''; 
-  } 
-}
-function onCambioSelectCategoria() { 
-  if (document.getElementById('inpCategoria').value==='NUEVA') { 
-    abrirModalCategoria(null, true); 
-    document.getElementById('inpCategoria').value = ''; 
-  } 
-}
+/* === CRUD AUXILIAR === */
+function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
+function pickCat(c) { colorElegidoCategoria = c; renderColorPick('colorPickerCategoria', c, 'pickCat'); }
+function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
 
 function renderColorPick(id, sel, f) {
   document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
 }
 
-function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
-function pickCat(c) { colorElegidoCategoria = c; renderColorPick('colorPickerCategoria', c, 'pickCat'); }
-function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
+function setTipoCat(t) {
+  tipoCatForm = t;
+  document.getElementById('btnTipoEgreso').className = t==='egreso'?'activo':'';
+  document.getElementById('btnTipoIngreso').className = t==='ingreso'?'activo':'';
+  document.getElementById('btnTipoAmbas').className = t==='ambas'?'activo':'';
+}
 
-/* === CRUD AUXILIAR (CUENTA, CATEGORÍA, ETIQUETA) === */
-function abrirModalCuenta(id, rapido = false) {
-  cuentaEditandoId = id; modoRapido = rapido;
+function cambiarSegmentoCategoria(s) { 
+  segmentoCategoria = s; 
+  document.getElementById('segEgreso').className = s==='egreso'?'activo':'';
+  document.getElementById('segIngreso').className = s==='ingreso'?'activo':'';
+  renderCategorias(); 
+}
+
+function abrirModalCuenta(id, r) {
+  cuentaEditandoId = id; modoRapido = r;
   const c = id ? cuentas.find(x => x.id === id) : null;
-  document.getElementById('cuentaModalTitulo').textContent = c ? 'Editar Cuenta' : 'Nueva Cuenta';
   document.getElementById('inpCuentaNombre').value = c ? c.nombre : '';
-  document.getElementById('btnEliminarCuenta').style.display = c ? 'block' : 'none';
   pickC(c ? c.color : COLORES[0]);
   document.getElementById('modalCuentaOverlay').classList.add('activo');
 }
 
 async function guardarCuenta() {
-  const n = document.getElementById('inpCuentaNombre').value.trim();
-  if(!n) { alert("Ponele un nombre a la cuenta."); return; }
+  const n = document.getElementById('inpCuentaNombre').value;
   const p = { user_id: user.id, nombre: n, moneda: 'ARS', color: colorElegidoCuenta };
-  
-  let res;
-  if (cuentaEditandoId) res = await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select();
-  else res = await _supabase.from('cuentas').insert([p]).select();
-  
-  if (res.error) { alert("Error: " + res.error.message); return; }
-  await fetchData();
-  cerrarModal('modalCuentaOverlay');
-  
-  if(modoRapido && res.data && res.data[0]) {
-    poblarSelectsMov(res.data[0].id, undefined);
-    modoRapido = false;
-  }
-}
-
-async function eliminarCuenta() {
-  if(!confirm("¿Eliminar cuenta? Sus movimientos quedarán desvinculados.")) return;
-  await _supabase.from('cuentas').delete().eq('id', cuentaEditandoId);
+  const { data } = cuentaEditandoId ? await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select() : await _supabase.from('cuentas').insert([p]).select();
   cerrarModal('modalCuentaOverlay'); fetchData();
+  if(modoRapido) poblarSelectsMov(data[0].id);
 }
 
-function setTipoCat(t) {
-  tipoCatForm = t;
-  document.getElementById('btnTipoEgreso').classList.toggle('activo', t==='egreso');
-  document.getElementById('btnTipoIngreso').classList.toggle('activo', t==='ingreso');
-  document.getElementById('btnTipoAmbas').classList.toggle('activo', t==='ambas');
-}
-
-function abrirModalCategoria(id, rapido = false) {
-  categoriaEditandoId = id; modoRapido = rapido;
+function abrirModalCategoria(id, r) {
+  categoriaEditandoId = id; modoRapido = r;
   const c = id ? categorias.find(x => x.id === id) : null;
-  document.getElementById('categoriaModalTitulo').textContent = c ? 'Editar Categoría' : 'Nueva Categoría';
   document.getElementById('inpCategoriaNombre').value = c ? c.nombre : '';
-  document.getElementById('btnEliminarCategoria').style.display = c ? 'block' : 'none';
-  
-  setTipoCat(c ? c.tipo : (modoRapido ? tipoActual : 'egreso'));
+  setTipoCat(c ? c.tipo : 'egreso');
   pickCat(c ? c.color : COLORES[0]);
-  
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
-  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + 
-    padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
+  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Principal</option>' + padres.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
   document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
-  
   document.getElementById('modalCategoriaOverlay').classList.add('activo');
 }
 
 async function guardarCategoria() {
-  const n = document.getElementById('inpCategoriaNombre').value.trim();
-  if(!n) { alert("Ponele un nombre a la categoría."); return; }
+  const n = document.getElementById('inpCategoriaNombre').value;
   const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorElegidoCategoria };
-  
-  let res;
-  if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
-  else res = await _supabase.from('categorias').insert([p]).select();
-  
-  if (res.error) { alert("Error: " + res.error.message); return; }
-  await fetchData();
-  cerrarModal('modalCategoriaOverlay');
-  
-  if(modoRapido && res.data && res.data[0]) {
-    poblarSelectsMov(undefined, res.data[0].id);
-    modoRapido = false;
-  }
-}
-
-async function eliminarCategoria() {
-  if(!confirm("¿Eliminar categoría?")) return;
-  const subs = categorias.filter(c => c.padre_id === categoriaEditandoId).map(c => c.id);
-  if(subs.length) await _supabase.from('categorias').delete().in('id', subs);
-  await _supabase.from('categorias').delete().eq('id', categoriaEditandoId);
+  const { data } = categoriaEditandoId ? await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select() : await _supabase.from('categorias').insert([p]).select();
   cerrarModal('modalCategoriaOverlay'); fetchData();
+  if(modoRapido) poblarSelectsMov(undefined, data[0].id);
 }
 
-function abrirModalEtiqueta(id, rapido = false) {
-  etiquetaEditandoId = id; modoRapido = rapido;
+function abrirModalEtiqueta(id, r) {
+  etiquetaEditandoId = id; modoRapido = r;
   const e = id ? etiquetas.find(x => x.id === id) : null;
-  document.getElementById('etiquetaModalTitulo').textContent = e ? 'Editar Etiqueta' : 'Nueva Etiqueta';
   document.getElementById('inpEtiquetaNombre').value = e ? e.nombre : '';
-  document.getElementById('btnEliminarEtiqueta').style.display = e ? 'block' : 'none';
   pickEt(e ? e.color : COLORES[0]);
   document.getElementById('modalEtiquetaOverlay').classList.add('activo');
 }
 
 async function guardarEtiqueta() {
-  const n = document.getElementById('inpEtiquetaNombre').value.trim();
-  if(!n) { alert("Escribe un nombre para la etiqueta."); return; }
+  const n = document.getElementById('inpEtiquetaNombre').value;
   const p = { user_id: user.id, nombre: n, color: colorElegidoEtiqueta };
-  
-  let res;
-  if (etiquetaEditandoId) res = await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select();
-  else res = await _supabase.from('etiquetas').insert([p]).select();
-  
-  if (res.error) { alert("Error: " + res.error.message); return; }
-  await fetchData();
-  cerrarModal('modalEtiquetaOverlay');
-  
-  if(modoRapido && res.data && res.data[0]) {
-    if(!etiquetasSeleccionadas.includes(res.data[0].id)) {
-      etiquetasSeleccionadas.push(res.data[0].id);
-      renderChipsEtiquetas();
-    }
-    modoRapido = false;
+  const { data } = etiquetaEditandoId ? await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select() : await _supabase.from('etiquetas').insert([p]).select();
+  cerrarModal('modalEtiquetaOverlay'); fetchData();
+  if(modoRapido) {
+      etiquetasSeleccionadas.push(data[0].id);
+      document.getElementById('chipsEtiquetas').innerHTML += `<span class="chip">${data[0].nombre} <strong onclick="quitarEtiqueta('${data[0].id}', event)">×</strong></span>`;
   }
 }
 
-async function eliminarEtiqueta() {
-  if(!confirm("¿Eliminar etiqueta?")) return;
-  await _supabase.from('etiquetas').delete().eq('id', etiquetaEditandoId);
-  cerrarModal('modalEtiquetaOverlay'); fetchData();
-}
+function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
+function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(null, true); }
 
 function abrirFiltro() {
   document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
   document.getElementById('filtroOverlay').classList.add('activo');
 }
 
 function aplicarFiltros() {
   filtro.cuenta_id = document.getElementById('filtroCuenta').value;
   filtro.categoria_id = document.getElementById('filtroCategoria').value;
+  filtro.etiqueta_id = document.getElementById('filtroEtiqueta').value;
   cerrarModal('filtroOverlay'); renderInicio();
+  document.getElementById('btnFiltro').className = (filtro.cuenta_id || filtro.categoria_id || filtro.etiqueta_id) ? 'btn-filtro activo' : 'btn-filtro';
 }
 
 function limpiarFiltros() {
-  filtro = { cuenta_id: '', categoria_id: '' };
+  filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
   cerrarModal('filtroOverlay'); renderInicio();
+  document.getElementById('btnFiltro').className = 'btn-filtro';
 }
 
-// Inicializar la app al cargar
 checkUser();
 </script>
 </body>
