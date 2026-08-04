@@ -80,7 +80,7 @@
   @keyframes orbPulse { 0%,100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 0.4; } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #login-screen { position: relative; z-index: 10; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  #login-screen, #set-password-screen { position: relative; z-index: 10; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
   #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 110px; min-height: 100vh; display: none; }
 
   header.topbar { text-align: center; margin-bottom: 20px; }
@@ -208,7 +208,7 @@
 </head>
 <body>
 
-<!-- ===== NUEVO: SPLASH SCREEN (Pantalla de carga inicial) ===== -->
+<!-- ===== SPLASH SCREEN (Pantalla de carga inicial) ===== -->
 <div id="splash-screen">
   <div class="brand-orb">
     <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo">
@@ -231,6 +231,31 @@
     <div class="lf-group"><label class="lf-label" style="text-align:left;">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
     <button onclick="handleLogin()" class="btn-main" style="margin-top: 10px;">Entrar</button>
     <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
+  </div>
+</div>
+
+<!-- ===== PANTALLA: CREAR CONTRASEÑA (invitación / recovery) ===== -->
+<div id="set-password-screen" style="display:none;">
+  <div class="brand-orb">
+    <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Turismo Isabel Logo">
+  </div>
+  <div class="brand-title">Turismo Isabel</div>
+  <div class="brand-sub">Crear Contraseña</div>
+
+  <div class="card" style="width: 100%; margin-top: 32px; max-width: 340px;">
+    <p style="font-size:13px; color:var(--text-2); margin-bottom:16px; text-align:left; line-height:1.5;">
+      Bienvenido/a. Antes de continuar, creá tu contraseña para acceder a la cuenta.
+    </p>
+    <div class="lf-group">
+      <label class="lf-label" style="text-align:left;">Nueva contraseña</label>
+      <input type="password" id="setPassword1" class="lf-input" placeholder="Mínimo 6 caracteres">
+    </div>
+    <div class="lf-group">
+      <label class="lf-label" style="text-align:left;">Repetir contraseña</label>
+      <input type="password" id="setPassword2" class="lf-input" placeholder="••••••••">
+    </div>
+    <button onclick="guardarNuevaPassword()" id="btnSetPassword" class="btn-main" style="margin-top: 10px;">Crear Contraseña y Entrar</button>
+    <p id="set-password-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
   </div>
 </div>
 
@@ -387,10 +412,9 @@
       </div>
       <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
-      <!-- NUEVO: Selector de Contraparte -->
+      <!-- Selector de Contraparte -->
       <div class="lf-group"><label class="lf-label" id="labelContraparte">Contraparte</label><select class="lf-select" id="inpContraparteId" onchange="onCambioSelectContraparte()"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
-      <!-- CAMBIO: Label de Etiquetas -->
       <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
       <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
       <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf"></div>
@@ -506,7 +530,7 @@
       <div class="lf-group"><label class="lf-label">Desde</label><input type="datetime-local" class="lf-input" id="filtroDesde"></div>
       <div class="lf-group"><label class="lf-label">Hasta</label><input type="datetime-local" class="lf-input" id="filtroHasta"></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
-      <!-- NUEVO: Filtro de Contraparte -->
+      <!-- Filtro de Contraparte -->
       <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
@@ -537,21 +561,100 @@ let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
 
 /* === AUTH === */
+
+// NUEVO: bandera que indica que la sesión activa viene de un link de invitación/recuperación
+// y todavía necesita que el usuario cree su contraseña.
+let modoCrearPassword = false;
+
+// NUEVO: revisa el hash de la URL (#access_token=...&type=invite / type=recovery)
+// para detectar tempranamente que estamos ante un link de Supabase de este tipo.
+function detectarLinkAuth() {
+  const hash = window.location.hash;
+  if (!hash) return;
+  const params = new URLSearchParams(hash.replace('#', '?'));
+  const type = params.get('type');
+  if (type === 'invite' || type === 'recovery') {
+    modoCrearPassword = true;
+  }
+}
+
+// NUEVO: Supabase dispara el evento PASSWORD_RECOVERY específicamente cuando
+// detecta y consume un link de recuperación/invitación en la URL.
+_supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    modoCrearPassword = true;
+    mostrarPantallaCrearPassword();
+  }
+});
+
 async function checkUser() {
+  detectarLinkAuth();
   const { data: { session } } = await _supabase.auth.getSession();
   
-  // NUEVO: Ocultar Splash Screen una vez verificado el usuario
+  // Ocultar Splash Screen una vez verificado el usuario
   setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 800);
 
-  if (session) {
+  if (session && modoCrearPassword) {
+    // NUEVO: hay sesión (creada por el token del link) pero todavía falta setear contraseña
+    mostrarPantallaCrearPassword();
+  } else if (session) {
     user = session.user;
     document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('set-password-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     fetchData();
   } else {
     document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('set-password-screen').style.display = 'none';
     document.getElementById('app').style.display = 'none';
   }
+}
+
+// NUEVO: muestra la pantalla de creación de contraseña y oculta el resto
+function mostrarPantallaCrearPassword() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('set-password-screen').style.display = 'flex';
+}
+
+// NUEVO: valida y guarda la nueva contraseña usando la sesión temporal del link
+async function guardarNuevaPassword() {
+  const btn = document.getElementById('btnSetPassword');
+  const p1 = document.getElementById('setPassword1').value;
+  const p2 = document.getElementById('setPassword2').value;
+  const err = document.getElementById('set-password-error');
+  err.style.display = 'none';
+
+  if (!p1 || p1.length < 6) {
+    err.innerText = "La contraseña debe tener al menos 6 caracteres.";
+    err.style.display = 'block';
+    return;
+  }
+  if (p1 !== p2) {
+    err.innerText = "Las contraseñas no coinciden.";
+    err.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  const textoOriginal = btn.textContent;
+  btn.textContent = 'Guardando...';
+
+  const { error } = await _supabase.auth.updateUser({ password: p1 });
+
+  btn.disabled = false;
+  btn.textContent = textoOriginal;
+
+  if (error) {
+    err.innerText = "Error: " + error.message;
+    err.style.display = 'block';
+    return;
+  }
+
+  // Limpia el token de la URL para no volver a detectar el link, y entra a la app
+  modoCrearPassword = false;
+  window.history.replaceState({}, document.title, window.location.pathname);
+  checkUser();
 }
 
 async function handleLogin() {
