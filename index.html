@@ -396,7 +396,6 @@
         </div>
       </div>
       <div class="lf-group"><label class="lf-label">Categoría Padre (Opcional)</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
-      <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCategoria"></div></div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
@@ -451,9 +450,10 @@ const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
+function colorPorTipo(t) { return t === 'ingreso' ? '#2cb87a' : t === 'egreso' ? '#e04444' : '#55b3f5'; }
 let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [];
 let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
-let colorElegidoCuenta = COLORES[0], colorElegidoCategoria = COLORES[0], colorElegidoEtiqueta = COLORES[0];
+let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null;
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
@@ -719,7 +719,6 @@ async function guardarMovimiento() {
     monto: monto,
     moneda: moneda,
     cotizacion: cotizacion,
-    monto_ars: monto * cotizacion,
     cuenta_id: document.getElementById('inpCuenta').value || null,
     categoria_id: document.getElementById('inpCategoria').value || null,
     fecha: new Date(`${fecha}T${hora}`).toISOString()
@@ -763,8 +762,12 @@ async function verDetalle(id) {
   
   let arch = '';
   if (m.archivo_path) {
-    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 60);
-    arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data?.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
+    const { data, error: errArch } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
+    if (errArch || !data?.signedUrl) {
+      arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><div class="detalle-valor" style="color:var(--text-3); font-size:13px;">No se pudo cargar el comprobante (revisá que el bucket "comprobantes" exista y tenga las políticas RLS aplicadas).</div></div>`;
+    } else {
+      arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
+    }
   }
   
   let tagsHtml = '';
@@ -868,7 +871,6 @@ function renderColorPick(id, sel, f) {
 }
 
 function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
-function pickCat(c) { colorElegidoCategoria = c; renderColorPick('colorPickerCategoria', c, 'pickCat'); }
 function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
 
 /* === CRUD AUXILIAR (CUENTA, CATEGORÍA, ETIQUETA) === */
@@ -922,7 +924,6 @@ function abrirModalCategoria(id, rapido = false) {
   document.getElementById('btnEliminarCategoria').style.display = c ? 'block' : 'none';
   
   setTipoCat(c ? c.tipo : (modoRapido ? tipoActual : 'egreso'));
-  pickCat(c ? c.color : COLORES[0]);
   
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
   document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + 
@@ -935,7 +936,7 @@ function abrirModalCategoria(id, rapido = false) {
 async function guardarCategoria() {
   const n = document.getElementById('inpCategoriaNombre').value.trim();
   if(!n) { alert("Ponele un nombre a la categoría."); return; }
-  const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorElegidoCategoria };
+  const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorPorTipo(tipoCatForm) };
   
   let res;
   if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
