@@ -1,4 +1,3 @@
---- START OF FILE text/plain ---
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -693,7 +692,17 @@ async function fetchData() {
   etiquetas = rE.data || [];
   contrapartes = rCon.data || [];
   movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
+  ordenarMovimientos();
   renderTodaLaApp();
+}
+
+// CORRECCIÓN ORDEN: garantiza siempre más nuevo -> más viejo, con created_at como desempate
+function ordenarMovimientos() {
+  movements.sort((a, b) => {
+    const diff = new Date(b.fecha) - new Date(a.fecha);
+    if (diff !== 0) return diff;
+    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+  });
 }
 
 /* === RENDERERS === */
@@ -1010,6 +1019,12 @@ async function editarMovimiento(id) {
   movEditandoId = m.id;
   tipoActual = m.tipo;
   document.getElementById('modalTitulo').textContent = m.tipo === 'ingreso' ? 'Editar Ingreso' : 'Editar Egreso';
+
+  // CORRECCIÓN COLOR BOTÓN: el botón Guardar debe reflejar el tipo del movimiento
+  // que se está editando (antes conservaba la clase del último modal usado).
+  const btn = document.getElementById('btnGuardar');
+  btn.className = "btn-guardar " + (m.tipo === 'ingreso' ? 'ing' : 'egr');
+
   const fObj = new Date(m.fecha);
   const yyyy = fObj.getFullYear(), mm = String(fObj.getMonth() + 1).padStart(2, '0'), dd = String(fObj.getDate()).padStart(2, '0');
   document.getElementById('inpFecha').value = `${yyyy}-${mm}-${dd}`;
