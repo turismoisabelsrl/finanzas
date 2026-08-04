@@ -1,3 +1,4 @@
+--- START OF FILE text/plain ---
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -46,6 +47,13 @@
     --font-num: 'Inter', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  /* CORRECCIÓN SCROLL: Evitar scroll de fondo al abrir modales */
+  body.modal-open {
+    overflow: hidden;
+    height: 100vh;
+  }
+
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--navy);
@@ -166,7 +174,7 @@
   .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
   .modal-head { padding: 22px 20px 8px; flex-shrink: 0; }
   .modal-titulo { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text-0); }
-  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
+  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
   .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
   .lf-group { margin-bottom: 14px; position: relative; }
@@ -417,7 +425,12 @@
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
       <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
       <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
-      <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf"></div>
+      <div class="lf-group">
+        <label class="lf-label">Comprobante</label>
+        <!-- CORRECCIÓN COMPROBANTE: Espacio para indicar que ya hay un archivo -->
+        <div id="infoArchivoExistente" style="display:none; margin-bottom:8px;"></div>
+        <input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf">
+      </div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
@@ -815,16 +828,23 @@ function abrirModalMovimiento(t) {
   document.getElementById('inpCotizacion').value = '';
   onCambioMoneda();
   document.getElementById('inpConcepto').value = '';
-  document.getElementById('inpContraparteId').value = '';
   document.getElementById('inpNotas').value = '';
   document.getElementById('inpArchivo').value = '';
-  
+
+  // CORRECCIÓN RESET: Limpiar indicadores de archivo y forzar reset de selects
+  document.getElementById('infoArchivoExistente').style.display = 'none';
+  document.getElementById('infoArchivoExistente').innerHTML = '';
+
   const btn = document.getElementById('btnGuardar');
   btn.textContent = "Guardar";
   btn.className = "btn-guardar " + (t === 'ingreso' ? 'ing' : 'egr');
 
-  poblarSelectsMov();
+  // CORRECCIÓN RESET: Pasar strings vacíos para que no mantenga la selección anterior
+  poblarSelectsMov('', '', ''); 
+  
   renderChipsEtiquetas();
+  // CORRECCIÓN SCROLL: Bloquear scroll de fondo
+  document.body.classList.add('modal-open');
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
@@ -845,14 +865,15 @@ function actualizarPreviewARS() {
 }
 
 function poblarSelectsMov(selCta, selCat, selCon) {
-  const ctaVal = selCta !== undefined ? selCta : document.getElementById('inpCuenta').value;
-  const catVal = selCat !== undefined ? selCat : document.getElementById('inpCategoria').value;
-  const conVal = selCon !== undefined ? selCon : document.getElementById('inpContraparteId').value;
+  // Aseguramos que si vienen undefined o null, se trate como vacío para el reset
+  const ctaVal = (selCta !== undefined && selCta !== null) ? selCta : '';
+  const catVal = (selCat !== undefined && selCat !== null) ? selCat : '';
+  const conVal = (selCon !== undefined && selCon !== null) ? selCon : '';
   
   document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + 
     cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
     '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CUENTA...</option>';
-  document.getElementById('inpCuenta').value = ctaVal || '';
+  document.getElementById('inpCuenta').value = ctaVal;
 
   const cats = categorias.slice();
   let catHtml = '<option value="">Sin categoría asignada</option>';
@@ -865,12 +886,12 @@ function poblarSelectsMov(selCta, selCat, selCon) {
   });
   catHtml += '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CATEGORÍA...</option>';
   document.getElementById('inpCategoria').innerHTML = catHtml;
-  document.getElementById('inpCategoria').value = catVal || '';
+  document.getElementById('inpCategoria').value = catVal;
 
   document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + 
     contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
     '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CONTRAPARTE...</option>';
-  document.getElementById('inpContraparteId').value = conVal || '';
+  document.getElementById('inpContraparteId').value = conVal;
 
   const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
   document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + 
@@ -884,7 +905,8 @@ function renderChipsEtiquetas() {
     if(!e) return '';
     return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px; cursor:pointer;">×</strong></span>`;
   }).join('');
-  poblarSelectsMov();
+  // Re-poblamos para actualizar disponibilidad de tags, pero manteniendo los valores de los otros selects
+  poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, document.getElementById('inpContraparteId').value);
 }
 
 function onAddEtiqueta() {
@@ -976,10 +998,12 @@ async function verDetalle(id) {
     ${arch}`;
   document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
   document.getElementById('btnEliminarMov').onclick = () => borrarMov(id);
+  // CORRECCIÓN SCROLL: Bloquear scroll de fondo
+  document.body.classList.add('modal-open');
   document.getElementById('detalleOverlay').classList.add('activo');
 }
 
-function editarMovimiento(id) {
+async function editarMovimiento(id) {
   const m = movements.find(x => x.id === id);
   if (!m) return;
   cerrarModal('detalleOverlay');
@@ -996,11 +1020,26 @@ function editarMovimiento(id) {
   document.getElementById('inpCotizacion').value = m.cotizacion && m.cotizacion !== 1 ? m.cotizacion : '';
   onCambioMoneda();
   document.getElementById('inpConcepto').value = m.concepto || '';
-  document.getElementById('inpContraparteId').value = m.contraparte_id || '';
   document.getElementById('inpNotas').value = m.notas || '';
   etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
-  poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '', m.contraparte_id || '');
+  
+  // CORRECCIÓN COMPROBANTE: Mostrar indicador si ya tiene archivo
+  const infoArch = document.getElementById('infoArchivoExistente');
+  if (m.archivo_path) {
+    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
+    infoArch.innerHTML = `<div style="font-size:12px; color:#5de09a; background:rgba(44,184,122,0.1); padding:8px; border-radius:8px; border:1px solid rgba(44,184,122,0.2);">
+      ✓ Ya existe un comprobante cargado. <a href="${data.signedUrl}" target="_blank" style="color:#fff; text-decoration:underline;">Ver actual</a><br>
+      <span style="opacity:0.7; font-size:10px;">Subí uno nuevo solo si querés reemplazarlo.</span>
+    </div>`;
+    infoArch.style.display = 'block';
+  } else {
+    infoArch.style.display = 'none';
+  }
+
+  poblarSelectsMov(m.cuenta_id, m.categoria_id, m.contraparte_id);
   renderChipsEtiquetas();
+  // CORRECCIÓN SCROLL: Bloquear scroll de fondo
+  document.body.classList.add('modal-open');
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
@@ -1011,7 +1050,13 @@ async function borrarMov(id) {
 }
 
 /* === HELPERS UI & FILTROS === */
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
+function cerrarModal(id) { 
+  document.getElementById(id).classList.remove('activo');
+  // CORRECCIÓN SCROLL: Habilitar scroll si no hay otros modales activos
+  if (!document.querySelector('.modal-overlay.activo')) {
+    document.body.classList.remove('modal-open');
+  }
+}
 function cambiarSegmentoCategoria(s) { segmentoCategoria = s; document.getElementById('segEgreso').classList.toggle('activo', s==='egreso'); document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso'); renderCategorias(); }
 function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
 function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(null, true); }
@@ -1032,6 +1077,7 @@ function abrirModalCuenta(id, rapido = false) {
   document.getElementById('inpCuentaNombre').value = c ? c.nombre : '';
   document.getElementById('btnEliminarCuenta').style.display = c ? 'block' : 'none';
   pickC(c ? c.color : COLORES[0]);
+  document.body.classList.add('modal-open');
   document.getElementById('modalCuentaOverlay').classList.add('activo');
 }
 async function guardarCuenta() {
@@ -1043,7 +1089,7 @@ async function guardarCuenta() {
   else res = await _supabase.from('cuentas').insert([p]).select();
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData(); cerrarModal('modalCuentaOverlay');
-  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(res.data[0].id, undefined, undefined); modoRapido = false; }
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(res.data[0].id, document.getElementById('inpCategoria').value, document.getElementById('inpContraparteId').value); modoRapido = false; }
 }
 async function eliminarCuenta() { if(!confirm("¿Eliminar cuenta?")) return; await _supabase.from('cuentas').delete().eq('id', cuentaEditandoId); cerrarModal('modalCuentaOverlay'); fetchData(); }
 
@@ -1057,6 +1103,7 @@ function abrirModalCategoria(id, rapido = false) {
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
   document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
   document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
+  document.body.classList.add('modal-open');
   document.getElementById('modalCategoriaOverlay').classList.add('activo');
 }
 async function guardarCategoria() {
@@ -1068,7 +1115,7 @@ async function guardarCategoria() {
   else res = await _supabase.from('categorias').insert([p]).select();
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData(); cerrarModal('modalCategoriaOverlay');
-  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(undefined, res.data[0].id, undefined); modoRapido = false; }
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(document.getElementById('inpCuenta').value, res.data[0].id, document.getElementById('inpContraparteId').value); modoRapido = false; }
 }
 function setTipoCat(t) { tipoCatForm = t; document.getElementById('btnTipoEgreso').classList.toggle('activo', t==='egreso'); document.getElementById('btnTipoIngreso').classList.toggle('activo', t==='ingreso'); document.getElementById('btnTipoAmbas').classList.toggle('activo', t==='ambas'); }
 async function eliminarCategoria() { if(!confirm("¿Eliminar categoría?")) return; await _supabase.from('categorias').delete().eq('id', categoriaEditandoId); cerrarModal('modalCategoriaOverlay'); fetchData(); }
@@ -1080,6 +1127,7 @@ function abrirModalEtiqueta(id, rapido = false) {
   document.getElementById('inpEtiquetaNombre').value = e ? e.nombre : '';
   document.getElementById('btnEliminarEtiqueta').style.display = e ? 'block' : 'none';
   pickEt(e ? e.color : COLORES[0]);
+  document.body.classList.add('modal-open');
   document.getElementById('modalEtiquetaOverlay').classList.add('activo');
 }
 async function guardarEtiqueta() {
@@ -1101,6 +1149,7 @@ function abrirModalContraparte(id, rapido = false) {
   document.getElementById('inpContraparteNombre').value = c ? c.nombre : '';
   document.getElementById('btnEliminarContraparte').style.display = c ? 'block' : 'none';
   pickCon(c ? c.color : COLORES[0]);
+  document.body.classList.add('modal-open');
   document.getElementById('modalContraparteOverlay').classList.add('activo');
 }
 async function guardarContraparte() {
@@ -1112,7 +1161,7 @@ async function guardarContraparte() {
   else res = await _supabase.from('contrapartes').insert([p]).select();
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData(); cerrarModal('modalContraparteOverlay');
-  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(undefined, undefined, res.data[0].id); modoRapido = false; }
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, res.data[0].id); modoRapido = false; }
 }
 
 function abrirFiltro() {
@@ -1122,6 +1171,7 @@ function abrirFiltro() {
   document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}" ${filtro.contraparte_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
+  document.body.classList.add('modal-open');
   document.getElementById('filtroOverlay').classList.add('activo');
 }
 function aplicarFiltros() {
