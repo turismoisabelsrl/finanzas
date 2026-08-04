@@ -1,37 +1,22 @@
 {
-  "name": "Registro — Ingresos y Egresos",
-  "short_name": "Registro",
-  "description": "Control personal de finanzas.",
+  "name": "Turismo Isabel Finanzas",
+  "short_name": "T. Isabel",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#071020",
   "theme_color": "#071020",
-  "orientation": "portrait",
+  "description": "Gestión de Ingresos y Egresos - Turismo Isabel",
   "icons": [
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-maskable-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icons/icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ]
 }
