@@ -121,6 +121,8 @@
   .segmented { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-hi); border-radius: var(--r-md); padding: 4px; gap: 4px; margin-bottom: 16px; }
   .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
   .segmented button.activo { background: rgba(85,179,245,0.18); color: var(--sky-bright); border: 1px solid rgba(85,179,245,0.35); }
+  #segEgreso.activo, #btnTipoEgreso.activo { background: rgba(224,68,68,0.18); color: #ff9090; border: 1px solid rgba(224,68,68,0.4); }
+  #segIngreso.activo, #btnTipoIngreso.activo { background: rgba(44,184,122,0.18); color: #5de09a; border: 1px solid rgba(44,184,122,0.4); }
 
   .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
   .etiqueta-tarjeta { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; }
@@ -182,8 +184,7 @@
 <!-- ===== PANTALLA LOGIN ===== -->
 <div id="login-screen">
   <div class="brand-orb">
-    <!-- REEMPLAZÁ "TU_LOGO_AQUI.png" POR LA RUTA O ENLACE HACIA TU LOGO -->
-    <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Turismo Isabel Logo">
+    <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Turismo Isabel Logo">
   </div>
   <div class="brand-title">Registro</div>
   <div class="brand-sub">Ingresos y Egresos</div>
@@ -200,8 +201,7 @@
 <div id="app">
   <header class="topbar">
     <div class="brand-orb">
-      <!-- REEMPLAZÁ "TU_LOGO_AQUI.png" POR LA RUTA O ENLACE HACIA TU LOGO -->
-      <img src="TU_LOGO_AQUI.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135673.png'" alt="Turismo Isabel Logo">
+      <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Turismo Isabel Logo">
     </div>
     <div class="brand-title">Registro</div>
     <div class="brand-sub">Ingresos y Egresos</div>
@@ -314,7 +314,24 @@
         <div class="lf-group"><label class="lf-label">Fecha *</label><input type="date" class="lf-input" id="inpFecha"></div>
         <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div>
       </div>
-      <div class="lf-group"><label class="lf-label">Monto (ARS) *</label><input type="number" step="any" class="lf-input" id="inpMonto" placeholder="0.00" style="font-size:18px; font-weight:700;"></div>
+      <div class="lf-row">
+        <div class="lf-group"><label class="lf-label">Monto *</label><input type="number" step="any" class="lf-input" id="inpMonto" placeholder="0.00" style="font-size:18px; font-weight:700;" oninput="actualizarPreviewARS()"></div>
+        <div class="lf-group" style="max-width:110px;"><label class="lf-label">Moneda</label>
+          <select class="lf-select" id="inpMoneda" onchange="onCambioMoneda()">
+            <option value="ARS">ARS</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="BRL">BRL</option>
+            <option value="OTRA">Otra...</option>
+          </select>
+        </div>
+      </div>
+      <div class="lf-group" id="grupoMonedaOtra" style="display:none;"><label class="lf-label">Código de moneda</label><input type="text" class="lf-input" id="inpMonedaOtra" placeholder="Ej: CLP, UYU..." maxlength="6"></div>
+      <div class="lf-group" id="grupoCotizacion" style="display:none;">
+        <label class="lf-label">Cotización a pesos (ARS)</label>
+        <input type="number" step="any" class="lf-input" id="inpCotizacion" placeholder="Ej: 1250" oninput="actualizarPreviewARS()">
+        <div id="previewARS" style="font-family:var(--font-num); font-size:12.5px; color:var(--sky-bright); margin-top:6px;"></div>
+      </div>
       <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
       <div class="lf-group"><label class="lf-label" id="labelContraparte">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Cliente, Proveedor o Negocio"></div>
@@ -416,6 +433,7 @@
     <div class="modal-body">
       <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
@@ -438,7 +456,7 @@ let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso'
 let colorElegidoCuenta = COLORES[0], colorElegidoCategoria = COLORES[0], colorElegidoEtiqueta = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null;
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
-let filtro = { cuenta_id: '', categoria_id: '' };
+let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
 
 /* === AUTH === */
 async function checkUser() {
@@ -487,6 +505,8 @@ function renderInicio() {
   let lista = movements.slice();
   if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
   if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
+  if (filtro.etiqueta_id) lista = lista.filter(m => (m.etiquetaIds || []).includes(filtro.etiqueta_id));
+  document.getElementById('btnFiltro').classList.toggle('activo', !!(filtro.cuenta_id || filtro.categoria_id || filtro.etiqueta_id));
 
   const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
@@ -511,7 +531,7 @@ function renderInicio() {
     const clip = m.archivo_path ? ' 📎' : '';
     const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
     
-    let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
     if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
     if (m.contraparte) subInfo += ` · De/Para: ${escapeHtml(m.contraparte)}`;
 
@@ -526,6 +546,7 @@ function renderInicio() {
       </div>
       <div class="mov-right">
         <div class="mov-monto ${esIng?'ing':'egr'}">${esIng?'+':'−'}${fmtARS(m.monto_ars || m.monto)}</div>
+        ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:10.5px; color:var(--text-3); margin-top:2px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})}</div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -584,6 +605,10 @@ function abrirModalMovimiento(t) {
   document.getElementById('inpFecha').valueAsDate = new Date();
   document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5);
   document.getElementById('inpMonto').value = ''; 
+  document.getElementById('inpMoneda').value = 'ARS';
+  document.getElementById('inpMonedaOtra').value = '';
+  document.getElementById('inpCotizacion').value = '';
+  onCambioMoneda();
   document.getElementById('inpConcepto').value = '';
   document.getElementById('inpContraparte').value = '';
   document.getElementById('inpNotas').value = '';
@@ -598,6 +623,22 @@ function abrirModalMovimiento(t) {
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
+function onCambioMoneda() {
+  const m = document.getElementById('inpMoneda').value;
+  document.getElementById('grupoMonedaOtra').style.display = (m === 'OTRA') ? 'block' : 'none';
+  document.getElementById('grupoCotizacion').style.display = (m === 'ARS') ? 'none' : 'block';
+  if (m === 'ARS') document.getElementById('inpCotizacion').value = '';
+  actualizarPreviewARS();
+}
+function actualizarPreviewARS() {
+  const m = document.getElementById('inpMoneda').value;
+  const monto = parseFloat(document.getElementById('inpMonto').value) || 0;
+  const preview = document.getElementById('previewARS');
+  if (m === 'ARS') { preview.textContent = ''; return; }
+  const cot = parseFloat(document.getElementById('inpCotizacion').value) || 0;
+  preview.textContent = (monto && cot) ? ('Equivale a ' + fmtARS(monto * cot)) : '';
+}
+
 function poblarSelectsMov(selCta, selCat) {
   const ctaVal = selCta !== undefined ? selCta : document.getElementById('inpCuenta').value;
   const catVal = selCat !== undefined ? selCat : document.getElementById('inpCategoria').value;
@@ -607,7 +648,7 @@ function poblarSelectsMov(selCta, selCat) {
     '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CUENTA...</option>';
   document.getElementById('inpCuenta').value = ctaVal || '';
 
-  const cats = categorias.filter(c => c.tipo === tipoActual || c.tipo === 'ambas');
+  const cats = categorias.slice();
   let catHtml = '<option value="">Sin categoría asignada</option>';
   const padres = cats.filter(c => !c.padre_id);
   padres.forEach(p => {
@@ -658,6 +699,17 @@ async function guardarMovimiento() {
   
   if (!monto || monto <= 0 || !fecha) { alert("Por favor completa al menos el Monto y la Fecha."); return; }
 
+  const fileInput = document.getElementById('inpArchivo');
+  if (fileInput.files[0] && fileInput.files[0].size > 5 * 1024 * 1024) {
+    alert("El comprobante supera los 5MB. Elegí un archivo más liviano.");
+    return;
+  }
+
+  let moneda = document.getElementById('inpMoneda').value;
+  if (moneda === 'OTRA') moneda = document.getElementById('inpMonedaOtra').value.trim().toUpperCase() || 'OTRA';
+  const cotizacion = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 0);
+  if (moneda !== 'ARS' && cotizacion <= 0) { alert("Ingresá la cotización para convertir a pesos argentinos."); return; }
+
   const payload = {
     user_id: user.id,
     tipo: tipoActual,
@@ -665,8 +717,9 @@ async function guardarMovimiento() {
     contraparte: document.getElementById('inpContraparte').value.trim() || null,
     notas: document.getElementById('inpNotas').value.trim() || null,
     monto: monto,
-    moneda: 'ARS',
-    cotizacion: 1,
+    moneda: moneda,
+    cotizacion: cotizacion,
+    monto_ars: monto * cotizacion,
     cuenta_id: document.getElementById('inpCuenta').value || null,
     categoria_id: document.getElementById('inpCategoria').value || null,
     fecha: new Date(`${fecha}T${hora}`).toISOString()
@@ -687,8 +740,11 @@ async function guardarMovimiento() {
     await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
   }
 
-  const fileInput = document.getElementById('inpArchivo');
   if (fileInput.files[0] && movId) {
+    if (movEditandoId) {
+      const anterior = movements.find(x => x.id === movEditandoId);
+      if (anterior && anterior.archivo_path) await _supabase.storage.from('comprobantes').remove([anterior.archivo_path]);
+    }
     const file = fileInput.files[0], path = `${user.id}/${movId}/${Date.now()}_${file.name}`;
     const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
     if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
@@ -721,9 +777,11 @@ async function verDetalle(id) {
   }
 
   document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div>
+      ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:12.5px; color:var(--text-3); margin-top:4px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})} · TC ${Number(m.cotizacion).toLocaleString('es-AR')}</div>` : ''}
+    </div>
     <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor" style="font-weight:600;">${m.concepto ? escapeHtml(m.concepto) : '<i>Sin concepto</i>'}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR')}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })}</div></div>
     ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
     ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
     ${m.contraparte ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(m.contraparte)}</div></div>` : ''}
@@ -753,6 +811,10 @@ function editarMovimiento(id) {
   document.getElementById('inpHora').value = fObj.toTimeString().slice(0, 5);
   
   document.getElementById('inpMonto').value = m.monto || '';
+  document.getElementById('inpMoneda').value = ['ARS','USD','EUR','BRL'].includes(m.moneda) ? m.moneda : 'OTRA';
+  document.getElementById('inpMonedaOtra').value = (!['ARS','USD','EUR','BRL'].includes(m.moneda)) ? (m.moneda || '') : '';
+  document.getElementById('inpCotizacion').value = m.cotizacion && m.cotizacion !== 1 ? m.cotizacion : '';
+  onCambioMoneda();
   document.getElementById('inpConcepto').value = m.concepto || '';
   document.getElementById('inpContraparte').value = m.contraparte || '';
   document.getElementById('inpNotas').value = m.notas || '';
@@ -938,22 +1000,31 @@ async function eliminarEtiqueta() {
 function abrirFiltro() {
   document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
   document.getElementById('filtroOverlay').classList.add('activo');
 }
 
 function aplicarFiltros() {
   filtro.cuenta_id = document.getElementById('filtroCuenta').value;
   filtro.categoria_id = document.getElementById('filtroCategoria').value;
+  filtro.etiqueta_id = document.getElementById('filtroEtiqueta').value;
   cerrarModal('filtroOverlay'); renderInicio();
 }
 
 function limpiarFiltros() {
-  filtro = { cuenta_id: '', categoria_id: '' };
+  filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
   cerrarModal('filtroOverlay'); renderInicio();
 }
 
 // Inicializar la app al cargar
 checkUser();
+
+// Cerrar cualquier modal al tocar fuera de la hoja (fuera del formulario)
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) cerrarModal(overlay.id);
+  });
+});
 </script>
 </body>
 </html>
