@@ -2,16 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> (Splash y Filtro Contraparte).
-
-He reconstruido el código recuperando cada detalle del original de 1100 líneas. Aquí tienes la **versión definitiva "Full"** que recupera:
-1.  **Splash Screen** al inicio.
-2.  **Filtro por Contraparte** en el buscador.
-3.  **Lógica de Archivos (Storage)** para comprobantes.
-4.  **Edición Completa** de Cuentas, Categorías y Etiquetas.
-5.  **Selector de Colores** funcional.
-
-Aquí tienes el código completo (vuelve a tener cerca de 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Turismo Isabel — Ingresos y Egresos</title>
 
 <!-- ===== PWA: instalable en Android / iPhone ===== -->
@@ -22,35 +13,8 @@ Aquí tienes el código completo (vuelve a tener cerca de
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Turismo Isabel">
-<link rel="apple-touch-icon" href="icons/icon-512.1100 líneas):
-
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Turismo Isabel — Ingresos y Egresos</title>
-
-<!-- ===== PWA: instalable en Android / iPhone ===== -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#071020">
-<meta name="mobile-web-app-capable" content="yes">
-<!-- iOS -->
-<meta name="apple-mobile-web-app-capable" contentpng">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
-
-<!-- SDK Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Turismo Isabel">
 <link rel="apple-touch-icon" href="icons/icon-512.png">
-<link rel="icon" type="image/png" sizes="192x192"2"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,4 href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
 
 <!-- SDK Supabase -->
@@ -58,7 +22,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@000;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   :root {
@@ -72,18 +36,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
     --red:         #e04444;
     --red-bg:      rgba(224,68,68,0.12);
     --amber:       #d9a63e;
-    --text-0:,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --navy:        #071020;
-    --sky:         #3a8fd1;
-    --sky-bright:  #55b3f5;
-    --sky-glow:    rgba(55,170,245,0.16);
-    --gold:        #c8a85a;
-    --green:       #2cb87a;
-    --green-bg:    rgba(44,184,122,0.12);
-    --red:         #e      #ffffff;
+    --text-0:      #ffffff;
     --text-1:      rgba(255,255,255,0.85);
     --text-2:      rgba(180,210,240,0.65);
     --text-3:      rgba(140,175,215,0.45);
@@ -92,41 +45,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
     --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 28px;
     --font-num: 'Inter', sans-serif;
   }
-  *, *::before, *::after04444;
-    --red-bg:      rgba(224,68,68,0.12);
-    --amber:       #d9a63e;
-    --text-0:      #ffffff;
-    --text-1:      rgba(255,255,255,0.85);
-    --text-2:      rgba(180,210,240,0.65);
-    --text-3:      rgba(140,175,215,0.45);
-    --border:      rgba(255,255,255,0.08);
-    --border-hi:   rgba(255,255,255,0.14);
-    --r-sm: 8px; --r-md: 12px; --r-lg:  { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--navy);
-    color: var(--text-1);
-    min-height16px; --r-xl: 22px; --r-2xl: 28px;
-    --font-num: 'Inter', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
-  body::before {
-    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
-      radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%),
-      var(--navy);
-  }
-
-  /* SPLASH SCREEN */
-  #splash-screen {
-    position: fixed; inset: 0; z-index: 10000;
-    background: var(--navy);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: opacity 0webkit-tap-highlight-color: transparent; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--navy);
@@ -147,21 +66,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
   #splash-screen {
     position: fixed; inset: 0; z-index: 10000;
     background: var(--navy);
-    display: flex; flex-direction: column; align-items:.5s ease, visibility 0.5s;
-  }
-  #splash-screen::before {
-    content: ''; position: absolute; inset: 0; z-index: -1;
-    background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
-                radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy);
-  }
-  #splash-screen.hidden { opacity: 0; visibility: hidden; }
-
-  @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes orbPulse { 0%,100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 0.4; } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  #login-screen { position: relative; z-index: 10; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 center; justify-content: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.5s ease, visibility 0.5s;
   }
   #splash-screen::before {
@@ -176,21 +81,14 @@ Aquí tienes el código completo (vuelve a tener cerca de
   @keyframes spin { to { transform: rotate(360deg); } }
 
   #login-screen { position: relative; z-index: 10; max-width: 400px; margin: 80px auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px  auto; padding: 22px 16px 110px; min-height: 100vh; display: none; }
+  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 22px 16px 110px; min-height: 100vh; display: none; }
 
   header.topbar { text-align: center; margin-bottom: 20px; }
   .brand-orb { width: 64px; height: 64px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
   .brand-orb::before {
     content: ''; position: absolute; inset: -14px; border-radius: 50%;
     background: radial-gradient(circle, var(--sky-glow) 0%, transparent 70%);
-    animation16px 110px; min-height: 100vh; display: none; }
-
-  header.topbar { text-align: center; margin-bottom: 20px; }
-  .brand-orb { width: 64px; height: 64px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
-  .brand-orb::before {
-    content: ''; position: absolute; inset: -14px; border-radius: 50%;
-    background: radial-gradient(circle, var(--sky-glow) 0%, transparent 70%);
-    animation: orbPulse 3.5s ease: orbPulse 3.5s ease-in-out infinite;
+    animation: orbPulse 3.5s ease-in-out infinite;
   }
   .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; z-index: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
   .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-style: italic; color: var(--text-0); }
@@ -201,52 +99,16 @@ Aquí tienes el código completo (vuelve a tener cerca de
 
   .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); }
   .saldo-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); }
-  .saldo-valor { font-family: var(--font-num); font-size: -in-out infinite;
-  }
-  .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; z-index: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
-  .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-style: italic; color: var(--text-0); }
-  .brand-sub { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-3); margin-top: 4px; }
-
-  .vista { display: none; animation: revealUp 0.3s cubic-bezier(0.22,1,0.36,1) both; }
-  .vista.activa { display: block; }
-
-  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--r-2xl); padding: 22px 20px; backdrop-filter: blur(20px); }
-  .saldo-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); }
-  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800;34px; font-weight: 800; color: var(--text-0); margin-top: 6px; }
-  .saldo-valor.negativo { color: #ff9090; }
-  .saldo-moneda { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1 color: var(--text-0); margin-top: 6px; }
+  .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); margin-top: 6px; }
   .saldo-valor.negativo { color: #ff9090; }
   .saldo-moneda { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-3); margin-top: 2px; }
 
-  .resumen-fila { display: flex; gap: 10pxem; color: var(--text-3); margin-top: 2px; }
-
   .resumen-fila { display: flex; gap: 10px; margin-top: 16px; }
   .resumen-item { flex: 1; border-radius: var(--r-lg); padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
-  .resumen-item.ing { background: var(--green-bg); border: ; margin-top: 16px; }
-  .resumen-item { flex: 1; border-radius: var(--r-lg); padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
-  .resumen-item.ing { background: var(--green-bg); border: 1px solid rgba(44,184,11px solid rgba(44,184,122,0.22); }
+  .resumen-item.ing { background: var(--green-bg); border: 1px solid rgba(44,184,122,0.22); }
   .resumen-item.egr { background: var(--red-bg); border: 1px solid rgba(224,68,68,0.22); }
   .resumen-item-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
-  .resumen-item.ing .resumen-item-label { color: rgba(22,0.22); }
-  .resumen-item.egr { background: var(--red-bg); border: 1px solid rgba(224,68,68,0.22); }
-  .resumen-item-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
-  .resumen-item.ing .resumen-item-label { color: rgba(100,220,160,0.85); }
-  .resumen-item.egr .resumen-item-label { color100,220,160,0.85); }
-  .resumen-item.egr .resumen-item-label { color: rgba(255,140,140,0.85); }
-  .resumen-item-valor { font-family: var(--font-num); font-size: 15px; font-weight: 600;: rgba(255,140,140,0.85); }
   .resumen-item-valor { font-family: var(--font-num); font-size: 15px; font-weight: 600; }
-  .resumen-item.ing .resumen-item-valor { color: #5de09a; }
-  .resumen-item.eg }
-  .resumen-item.ing .resumen-item-valor { color: #5de09a; }
-  .resumen-item.egr .resumen-item-valor { color: #ff9090; }
-
-  .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-  .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
-  .btn-accion svg { width: 18px !important; height: 18px !important; flex-shrink: 0; }
-  .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.12)); border: 1.5px solid rgba(44,184,122,0.35); color: #5de09a; }
-  .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.32); color: #ff9090; }
-
-  .fila-r .resumen-item-valor { color: #ff9090; }
 
   .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
   .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
@@ -255,179 +117,83 @@ Aquí tienes el código completo (vuelve a tener cerca de
   .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.32); color: #ff9090; }
 
   .fila-titulo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .vista-titulo {titulo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .vista-titulo { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
   
-  .btn-nuevo, .btn-filtro { display: inline-flex; align-items: center; gap: 6px font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
-  
-  .btn-nuevo, .btn-filtro { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: var(--r-lg); border: none; font-family: 'Syne; padding: 9px 14px; border-radius: var(--r-lg); border: none; font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; cursor: pointer; }
-  .btn-nuevo svg, .btn-filtro svg { width: 14px !important; height: 14px !important; flex-shrink: 0; }
-  .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; box-', sans-serif; font-size: 11.5px; font-weight: 700; cursor: pointer; }
-  .btn-nuevo svg, .btn-filtro svg { width: 14px !important; height: 14px !important; flex-shrink: 0; }
+  .btn-nuevo, .btn-filtro { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: var(--r-lg); border: none; font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; cursor: pointer; }
   .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
-  .btn-filtro { background: rgba(255,255,255,0.0shadow: 0 4px 15px rgba(58,143,209,0.3); }
   .btn-filtro { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--text-1); }
   .btn-filtro.activo { background: rgba(85,179,245,0.15); border-color: rgba(85,179,245,0.4); color: var(--sky-bright); }
 
   .lista { display: flex; flex-direction: column; gap: 8px; }
   .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; }
-  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
   .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .mov-dot { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .mov-dot.ing { background: var(--green-bg); color: #5de09a; }
-  .mov-dot.egr6); border: 1px solid var(--border-hi); color: var(--text-1); }
-  .btn-filtro.activo { background: rgba(85,179,245,0.15); border-color: rgba(85,179,245,0.4); color: var(--sky-bright); }
-
-  .lista { display: flex; flex-direction: column; gap: 8px; }
-  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; }
-  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
-  .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .mov-dot { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .mov-dot.ing { background: var(--green-bg); color: #5de09a; }
-  .mov-dot.egr { background: var(--red-bg); color: #ff9090; }
-  .mov-body { flex: 1; min { background: var(--red-bg); color: #ff9090; }
+  .mov-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .mov-dot.ing { background: #5de09a; box-shadow: 0 0 10px rgba(93,224,154,0.4); }
+  .mov-dot.egr { background: #ff9090; box-shadow: 0 0 10px rgba(255,144,144,0.4); }
   .mov-body { flex: 1; min-width: 0; }
-  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0);-width: 0; }
-  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 4px display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); }
   .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mov-cat { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
-  .mov-right { text-align: right; flex-shrink: 0; }
-  .mov-; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mov-cat { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
-  .mov-right { text-align: right; flex-shrink: 0; }
   .mov-monto { font-family: var(--font-num); font-size: 15px; font-weight: 700; }
-  .mov-monto.ing { color: #5de09a; }
-  .movmonto { font-family: var(--font-num); font-size: 15px; font-weight: 700; }
   .mov-monto.ing { color: #5de09a; }
   .mov-monto.egr { color: #ff9090; }
 
   .segmented { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-hi); border-radius: var(--r-md); padding: 4px; gap: 4px; margin-bottom: 16px; }
   .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
   .segmented button.activo { background: rgba(85,179,245,0.18); color: var(--sky-bright); border: 1px solid rgba(85,179,245,0.35); }
-  #segEgreso.activo, #btnTipoEgreso.activo { background: rgba(224,68,68,0.18); color: #ff9090; border: 1px solid rgba(224,68,68,0.4); }
-  #segIngreso.activo, #btnTipoIngreso.activo { background: rgba(44,184,122,0.18); color: #5de-monto.egr { color: #ff9090; }
-
-  .segmented { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-hi); border-radius: var(--r-md); padding: 4px; gap: 4px; margin-bottom: 16px; }
-  .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-  .segmented button.activo { background: rgba(85,179,245,0.18); color: var(--sky-bright); border: 1px solid rgba(85,179,245,0.35); }
-  #segEgreso.activo, #btnTipoEgreso.activo { background: rgba(224,68,68,0.18); color: #ff9090; border: 1px solid rgba(224,68,68,0.4); }
-  #segIngreso.activo, #btnTipoIngreso.activo { background: rgba(44,184,122,0.18); color: #5de09a; border: 1px solid rgba(44,184,122,0.4); }
 
   .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
   .etiqueta-tarjeta { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; }
 
-  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center09a; border: 1px solid rgba(44,184,122,0.4); }
-
-  .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-  .etiqueta-tarjeta { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(25; justify-content: center; gap: 4px; padding: 12px 0 10px; background: none; border: none; color: var(--text-3); cursor: pointer; position: relative; }
-  .nav-item svg { width: 22px !important; height: 22px !important; flex-shrink: 0; }
-  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-  .nav5,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; }
-
-  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 0 10px; background: none; border: none; color: var(--text-3); cursor: pointer; position: relative; }
-  .nav-item svg { width: 22px !important; height: 22px !important; flex-shrink: 0; }
-  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px-item.activo { color: var(--sky-bright); }
-  .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; }
+  .nav-item.activo { color: var(--sky-bright); }
+  .nav-item.activo::before { content: ''; position: absolute; top: 0; width: 24px; height: 2px; background: var(--sky-bright); border-radius: 2px; }
 
   .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); }
   .modal-overlay.activo { display: flex; }
-  .modal-sheet { width: 100%; max-width: 480px; max-height:; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-  .nav-item.activo { color: var(--sky-bright); }
-  .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
-
-  .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
-  .modal-head { padding: 22px 20px 8px; flex-shrink: 0; }
+  .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: 22px 20px 8px; }
   .modal-titulo { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text-0); }
-  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
-  .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px-items: flex-end; justify-content: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); }
-  .modal-overlay.activo { display: flex; }
-  .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
-  .modal-head { padding: 22px 20px 8px; flex-shrink: 0; }
-  .modal-titulo { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text-0); }
-  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
-  .modal-foot { padding: 1; }
+  .modal-body { padding: 14px 20px; overflow-y: auto; flex: 1; }
+  .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--border); }
 
-  .lf-group { margin-bottom: 14px; position: relative; }
+  .lf-group { margin-bottom: 14px; }
   .lf-row { display: flex; gap: 10px; }
-  .lf-row .lf-group { flex: 1; }
-  .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
-  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); border-radius: var(--r-md); font-family:6px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-
-  .lf-group { margin-bottom: 14px; position: relative; }
-  .lf-row { display: flex; gap: 10px; }
-  .lf-row .lf-group { flex: 1; }
-  .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
-  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px 14px; background: rgba(255,25 'DM Sans', sans-serif; font-size: 15px; color: var(--text-0); outline: none; }
+  .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
+  .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); border-radius: var(--r-md); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-0); outline: none; }
   .lf-textarea { resize: vertical; min-height: 60px; }
-  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
-  .lf-select option { background: #0d1e38; color: var(--text-0); }
-  .lf-input:focus, .lf-select:focus, .lf-textarea:focus { border-color: var(--sky-bright); background: rgba(255,255,255,05,255,0.06); border: 1px solid var(--border-hi); border-radius: var(--r-md); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-0); outline: none; }
-  .lf-textarea { resize: vertical; min-height: 60px; }
-  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
-  .lf-select option { background: #0d1e38;.1); }
+  .lf-input:focus { border-color: var(--sky-bright); }
 
   .color-picker { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
-  .color-dot-pick.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
-
-  .chips-wrap { display: flex; flex-wrap: wrap; gap: color: var(--text-0); }
-  .lf-input:focus, .lf-select:focus, .lf-textarea:focus { border-color: var(--sky-bright); background: rgba(255,255,255,0.1); }
-
-  .color-picker { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
-  .color-dot-pick.selected { border-color: #fff; 6px; margin-top: 8px; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(85,179,245,0.15); border: 1px solid rgba(85,179,245,0.3); border-radius: 20px; font-size: 12px; color: var(--sky-bright); }
-  
-  .modal-botones { display: flex; gap: 10px; width: 100%; }
-  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
-  .btn-guardar { flex: 1; padding: 14px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #fff; }
-  .btn-guardar.ing, .btn-guardar.principal { background: linear-gradient(135deg, #2cb87a, #1e8a5a); }
-  .btn-guardar.egr { background: linear-gradient( transform: scale(1.15); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+  .color-dot-pick.selected { border-color: #fff; transform: scale(1.1); }
 
   .chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(85,179,245,0.15); border: 1px solid rgba(85,179,245,0.3); border-radius: 20px; font-size: 12px; color: var(--sky-bright); }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(85,179,245,0.15); border-radius: 20px; font-size: 12px; color: var(--sky-bright); }
   
-  .modal-botones { display: flex; gap: 10px; width: 100%; }
-  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
+  .modal-botones { display: flex; gap: 10px; }
+  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; }
   .btn-guardar { flex: 1; padding: 14px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #fff; }
-  .135deg, #e04444, #a52d2d); }
   .btn-guardar.neutro { background: linear-gradient(135deg, var(--sky), #2a6ea8); }
-  
-  .btn-cancelar { flex: 1; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--btn-guardar.ing, .btn-guardar.principal { background: linear-gradient(135deg, #2cb87a, #1e8a5a); }
-  .btn-guardar.egr { background: linear-gradient(135deg, #e04444, #a52d2d); }
-  .btn-guardar.neutro { background: linear-border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-  .btn-eliminar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.12); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-
-  .detalle-row { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
-  .detalle-valor { font-size: 15px; color: var(--text-1); }
-  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9gradient(135deg, var(--sky), #2a6ea8); }
-  
   .btn-cancelar { flex: 1; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
   .btn-eliminar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.12); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
 
   .detalle-row { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
-  .detalle-valor { font-size: 15px; color: var(--text-1); }
-  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration:px 14px; font-weight: 600; font-size: 13px; }
+  .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); }
+  .detalle-valor { font-size: 15px; color: var(--text-1); margin-top: 4px; }
+  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9px 14px; font-weight: 600; font-size: 13px; }
 
   .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
   .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(85,179,245,0.15); border-top-color: var(--sky-bright); animation: spin 0.8s linear infinite; }
 </style>
-</head none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9px 14px; font-weight: 600; font-size: 13px; }
-
-  .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
-  .cargando { display: flex; flex-direction: column; align->
+</head>
 <body>
 
 <!-- ===== SPLASH SCREEN ===== -->
 <div id="splash-screen">
-  <div class="brand-orb">
-    <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo">
-  </div>
+  <div class="brand-orb"><img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo"></div>
   <div class="brand-title">Turismo Isabel</div>
   <div class="brand-sub">Ingresos y Egresos</div>
   <div class="spinner" style="margin-top: 30px; width: 20px; height: 20px; border-width: 2px;"></div>
@@ -439,28 +205,9 @@ Aquí tienes el código completo (vuelve a tener cerca de
   <div class="brand-title">Turismo Isabel</div>
   <div class="brand-sub">Ingresos y Egresos</div>
   <div class="card" style="width: 100%; margin-top: 32px; max-width: 340px;">
-    <div class="lf-group"><label class="lf-label">Usuario</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
+    <div class="lf-group"><label class="lf-label">Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
     <div class="lf-group"><label class="lf-label">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
-    <button onclick="handleLogin()" class="btn-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; text-transform: uppercase; }
-  .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(85,179,245,0.15); border-top-color: var(--sky-bright); animation: spin 0.8s linear infinite; }
-</style>
-</head>
-<body>
-
-<!-- ===== SPLASH SCREEN ===== -->
-<div id="splash-screen">
-  <div class="brand-orb">
-    <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo">
-  </div>
-  <div class="brand-title">Turismo Isabel</div>
-  <div class="brand-sub">Ingresos y Egresos</div>
-  <div class="spinner" style="margin-top: 30px; width: 20px; height: 20px; border-width: 2px;"></div>
-</div>
-
-<!-- ===== PANTALLA LOGIN ===== -->
-<div id="login-screen" style="display:none;">
-  <div class="brand-orb"><img src="icons/icon-512.png" alt="Logo"></div>
-  <div class="main">Entrar</button>
+    <button onclick="handleLogin()" class="btn-main">Entrar</button>
     <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
   </div>
 </div>
@@ -479,22 +226,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
       <div class="saldo-valor" id="saldoValor">$ 0</div>
       <div class="resumen-fila">
         <div class="resumen-item ing"><div class="resumen-item-label">Ingresos</div><div class="resumen-item-valor" id="totalIngresos">$ 0</div></div>
-        <div class="resumen-item egr"><div class="resumen-item-label">Egresos</div><div class="resumen-item-valor" idbrand-title">Turismo Isabel</div>
-  <div class="brand-sub">Ingresos y Egresos</div>
-  <div class="card" style="width: 100%; margin-top: 32px; max-width: 340px;">
-    <div class="lf-group"><label class="lf-label">Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
-    <div class="lf-group"><label class="lf-label">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
-    <button onclick="handleLogin()" class="btn-main">Entrar</button>
-    <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
-  </div>
-</div>
-
-<!-- ===== APP PRINCIPAL ===== -->
-<div id="app">
-  <header class="topbar">
-    <div class="brand-orb"><img src="icons/icon-512.png" alt="Logo"></div>
-    <div class="brand-title">Turismo Isabel</div>
-    <div class="brand="totalEgresos">$ 0</div></div>
+        <div class="resumen-item egr"><div class="resumen-item-label">Egresos</div><div class="resumen-item-valor" id="totalEgresos">$ 0</div></div>
       </div>
     </div>
     <div class="acciones">
@@ -505,7 +237,6 @@ Aquí tienes el código completo (vuelve a tener cerca de
     <div id="movLista"></div>
   </section>
 
-  <!-- OTRAS VISTAS (RESTO DE BARRA INFERIOR) -->
   <section class="vista" id="vista-cuentas">
     <div class="fila-titulo"><div class="vista-titulo">Cuentas</div><button class="btn-nuevo" onclick="abrirModalCuenta()">Nueva</button></div>
     <div class="lista" id="cuentasLista"></div>
@@ -517,35 +248,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
   </section>
 
   <section class="vista" id="vista-categorias">
-    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-sub">Ingresos y Egresos</div>
-  </header>
-
-  <section class="vista activa" id="vista-inicio">
-    <div class="card">
-      <div class="saldo-label">Saldo actual</div>
-      <div class="saldo-valor" id="saldoValor">$ 0</div>
-      <div class="resumen-fila">
-        <div class="resumen-item ing"><div class="resumen-item-label">Ingresos</div><div class="resumen-item-valor" id="totalIngresos">$ 0</div></div>
-        <div class="resumen-item egr"><div class="resumen-item-label">Egresos</div><div class="resumen-item-valor" id="totalEgresos">$ 0</div></div>
-      </div>
-    </div>
-    <div class="acciones">
-      <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')">Ingreso</button>
-      <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')">Egreso</button>
-    </div>
-    <div class="fila-titulo">
-      <div class="vista-titulo">Movimientos</div>
-      <button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()">Filtrar</button>
-    </div>
-    <div id="movLista"></div>
-  </section>
-
-  <section class="vista" id="vista-cuentas">
-    <div class="fila-titulo"><div class="vista-titulo">Cuentas</div><button class="btn-nuevo" onclick="abrirModalCuenta()">Nueva</button></div>
-    <div class="lista" id="cuentasLista"></div>
-  </section>
-
-  <section class-nuevo" onclick="abrirModalCategoria()">Nueva</button></div>
+    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-nuevo" onclick="abrirModalCategoria()">Nueva</button></div>
     <div class="segmented">
       <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
       <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
@@ -559,16 +262,7 @@ Aquí tienes el código completo (vuelve a tener cerca de
   </section>
 
   <nav class="bottom-nav">
-    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('="vista" id="vista-contrapartes">
-    <div class="fila-titulo"><div class="vista-titulo">Contrapartes</div><button class="btn-nuevo" onclick="abrirModalContraparte()">Nueva</button></div>
-    <div class="etiquetas-grid" id="contrapartesLista"></div>
-  </section>
-
-  <section class="vista" id="vista-categorias">
-    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-nuevo" onclick="abrirModalCategoria()">Nueva</button></div>
-    <div class="segmented">
-        <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
-inicio')"><span>Inicio</span></button>
+    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')"><span>Inicio</span></button>
     <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')"><span>Cuentas</span></button>
     <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')"><span>Contr.</span></button>
     <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')"><span>Categ.</span></button>
@@ -582,48 +276,7 @@ inicio')"><span>Inicio</span></button>
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo" id="modalTitulo">Nuevo movimiento</div></div>
     <div class="modal-body">
-      <div class        <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
-    </div>
-    <div class="lista" id="categoriasLista"></div>
-  </section>
-
-  <section class="vista" id="vista-etiquetas">
-    <div class="fila-titulo"><div class="vista-titulo">Etiquetas</div><button class="btn-nuevo" onclick="abrirModalEtiqueta()">Nueva</button></div>
-    <div class="etiquetas-grid" id="etiquetasLista"></div>
-  </section>
-
-  <nav class="bottom-nav">
-    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')"><span>Inicio</span></button>
-    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')"><span>Cuentas</span></button>
-    <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')"><span>Contr.</span></button>
-    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')"><span>Categ="lf-row">
-        <div class="lf-group"><label class="lf-label">Fecha *</label><input type="date" class="lf-input" id="inpFecha"></div>
-        <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div>
-      </div>
       <div class="lf-row">
-        <div class="lf-group"><label class="lf-label">Monto *</label><input type="number" step="any" class="lf-input" id="inpMonto" oninput="actualizarPreviewARS()"></div>
-        <div class="lf-group" style="max-width:110px;"><label class="lf-label">Moneda</label>
-          <select class="lf-select" id="inpMoneda" onchange.</span></button>
-    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')"><span>Tags</span></button>
-    <button class="nav-item" onclick="logout()"><span>Salir</span></button>
-  </nav>
-</div>
-
-<!-- MODAL MOVIMIENTO (Original Completo) -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo" id="modalTitulo">Nuevo movimiento</div></div>
-    <div class="modal-body">
-      <div class="lf-row="onCambioMoneda()">
-            <option value="ARS">ARS</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="BRL">BRL</option><option value="OTRA">Otra</option>
-          </select>
-        </div>
-      </div>
-      <div class="lf-group" id="grupoCotizacion" style="display:none;"><label class="lf-label">Cotización ARS</label><input type="number" step="any" id="inpCotizacion" class="lf-input" oninput="actualizarPreviewARS()"><div id="previewARS"></div></div>
-      <div class="lf-group"><label class="lf-label">Concepto</label><input type="text" id="inpConcepto" class="lf-input"></div>
-      <div class="lf-group"><label class="lf-label">Cuenta</label><select id="inpCuenta" class="lf-select" onchange="onCambioSelectCuenta()"></select></div>
-      <div class="lf-group"><label class="lf-label">Contraparte</label><select id="inpContraparteId" class="lf-select" onchange="onCambioSelectContraparte()"></select></div>
-      <div">
         <div class="lf-group"><label class="lf-label">Fecha *</label><input type="date" class="lf-input" id="inpFecha"></div>
         <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div>
       </div>
@@ -637,126 +290,50 @@ inicio')"><span>Inicio</span></button>
       </div>
       <div class="lf-group" id="grupoCotizacion" style="display:none;">
         <label class="lf-label">Cotización a ARS</label>
-        <input type="number" step="any" class="lf-input class="lf-group"><label class="lf-label">Categoría</label><select id="inpCategoria" class="lf-select" onchange="onCambioSelectCategoria()"></select></div>
-      <div class="lf-group"><label class="lf-label">Etiquetas</label><select id="inpEtiquetaSelect" class="lf-select" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
-      <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input"></div>
-    </div>
-    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancel" id="inpCotizacion" oninput="actualizarPreviewARS()">
+        <input type="number" step="any" class="lf-input" id="inpCotizacion" oninput="actualizarPreviewARS()">
         <div id="previewARS" style="color:var(--sky-bright); font-size:12px; margin-top:6px;"></div>
       </div>
       <div class="lf-group"><label class="lf-label">Concepto</label><input type="text" class="lf-input" id="inpConcepto"></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
-      <div class="lf-group"><label class="lf-label">Contraparte</label><select class="lf-select" id="inpContraparteId" onar" onclick="cerrarModal('modalOverlay')">Cancelar</button><button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button></div></div>
-  </div>
-</div>
-
-<!-- MODAL FILTRO -->
-<div class="modal-overlay" id="filtroOverlay">
-  <div classchange="onCambioSelectContraparte()"></select></div>
+      <div class="lf-group"><label class="lf-label">Contraparte</label><select class="lf-select" id="inpContraparteId" onchange="onCambioSelectContraparte()"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
-      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo">Filtrar</div></div>
-    <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Desde</label><input type="date" id="filtroDesde" class="lf-input"></div>
-      <div class="lf-group"><label class="lf-label">Hasta</label><input type="date" id="filtroHasta" class="lf-input"></div>
-      <div class="lf-group"><" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
+      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
       <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas"></textarea></div>
       <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf"></div>
     </div>
-    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button><button class="btn-guardar" id="btnGuardar" onclick="guardarMovimientolabel class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
+    <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button><button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button></div></div>
+  </div>
+</div>
+
+<!-- MODAL FILTROS -->
+<div class="modal-overlay" id="filtroOverlay">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Desde</label><input type="date" class="lf-input" id="filtroDesde"></div>
+      <div class="lf-group"><label class="lf-label">Hasta</label><input type="date" class="lf-input" id="filtroHasta"></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
     </div>
     <div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button><button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button></div></div>
   </div>
 </div>
 
 <!-- MODALES AUXILIARES -->
-<div class="modal-overlay" id="modalCuentaOverlay"><div class="modal-sheet"><div class="modal-body"><input type="text" id="inpCuentaNombre" class="lf-input" placeholder="Nombre cuenta"><div class="color-picker"()">Guardar</button></div></div>
-  </div>
-</div>
-
-<!-- MODAL FILTROS (Con Contraparte) -->
-<div class="modal-overlay" id="filtroOverlay">
-  <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
-    <div class="modal-body">
-      <div class="lf-group"><label class="lf-label">Desde</label><input type="date" class="lf-input" id="filtroDesde"></div>
-      <div class="lf-group"><label class="lf-label">Hasta</label id="colorPickerCuenta"></div><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div></div></div>
-<div class="modal-overlay" id="modalContraparteOverlay"><div class="modal-sheet"><div class="modal-body"><input type="text" id="inpContraparteNombre" class="lf-input" placeholder="Nombre contraparte"><div class="color-picker" id="colorPickerContraparte"></div><button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button><input type="date" class="lf-input" id="filtroHasta"></div>
-      <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
-      <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
-      <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
-      <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
-    </div>
-    <div class="modal-foot"><div class="modal-></div></div></div>
-<div class="modal-overlay" id="modalCategoriaOverlay"><div class="modal-sheet"><div class="modal-body"><input type="text" id="inpCategoriaNombre" class="lf-input" placeholder="Nombre categoría"><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div></div></div>
-<div class="modal-overlay" id="modalEtiquetaOverlay"><div class="modal-sheet"><div class="modal-body"><input type="text" id="inpEtiquetaNombre" class="lf-input" placeholder="Nombre etiqueta"><div class="color-picker" id="colorPickerEtiqueta"></div><button class="btn-guardar neutro" onclick="guardarEtiquetabotones"><button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button><button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button></div></div>
-  </div>
-</div>
-
-<!-- MODALES AUXILIARES (Originales) -->
-<div class="modal-overlay"()">Guardar</button></div></div></div>
-
-<div class="modal-overlay" id="detalleOverlay">
-  <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-titulo">Detalle Movimiento</div></div>
-    <div class="modal-body" id="detalleBody"></div>
-    <div class id="modalCuentaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Cuenta</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCuentaNombre" class="lf-input"></div><div class="lf-group"><label class="lf-label">="modal-foot">
-      <div class="modal-botones"><button class="btn-guardar neutro" id="btnEditarMov">Editar</button><button class="btn-eliminar" id="btnEliminarMov">Borrar</button></div>
-      <button class="btn-cancelar" onclick="cerrarModal('detalleOverlay')" style="width:100%">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const SUPABASEColor</label><div class="color-picker" id="colorPickerCuenta"></div></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div></div></div>
-<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Categoría</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
-let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [], contrapartes = [];
-let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
-let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0], colorElegidoContraparte = COLORES[0];
-let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null, contraparteEditandoId = null;
-let etiquetasSeleccionadas = [], tipoCatForm = 'egreso">Nombre *</label><input type="text" id="inpCategoriaNombre" class="lf-input"></div><div class="segmented"><button id="btnTipoEgresoAux" onclick="setTipoCat('egreso')">Egreso</button><button id="btnTipoIngresoAux" onclick="setTipoCat('ingreso')">Ingreso</button></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div></div></div>
-<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Etiqueta</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input"></div><div class="color-picker" id="colorPickerEtiqueta"></div></div><div class="modal-foot"><button class="btn-';
-let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
-
-async function checkUser() {
-  const { data: { session } } = await _supabase.auth.getSession();
-  setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 800);
-  if (session) {
-    userguardar neutro" onclick="guardarEtiqueta()">Guardar</button></div></div></div>
-<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Contraparte</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre = session.user; document.getElementById('login-screen').style.display = 'none'; document.getElementById('app').style.display = 'block'; fetchData();
-  } else {
-    document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app').style.display = 'none';
-  }
-}
-
-async function handleLogin() {
-  const e = document.getElementById('email').value, p = document.getElementById('password').value;
-  const { error } = await _supabase.auth.signInWithPassword({ email: e, password: p });
-  if (error) { const err = document.getElementById('login-error'); err.innerText = error.message; err.style.display = 'block'; }
-  else checkUser();
-}
-
-async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
-
-async function fetchData() {
-  const [rC, rCat, r *</label><input type="text" id="inpContraparteNombre" class="lf-input"></div><div class="color-picker" id="colorPickerContraparte"></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button></div></div></div>
+<div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Cuenta</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCuentaNombre" class="lf-input"></div><div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCuenta"></div></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div></div></div>
+<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Categoría</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCategoriaNombre" class="lf-input"></div><div class="segmented"><button id="btnTipoEgresoAux" class="activo" onclick="setTipoCat('egreso')">Egreso</button><button id="btnTipoIngresoAux" onclick="setTipoCat('ingreso')">Ingreso</button></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div></div></div>
+<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Etiqueta</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input"></div><div class="color-picker" id="colorPickerEtiqueta"></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button></div></div></div>
+<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Contraparte</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpContraparteNombre" class="lf-input"></div><div class="color-picker" id="colorPickerContraparte"></div></div><div class="modal-foot"><button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button></div></div></div>
 
 <div class="modal-overlay" id="detalleOverlay">
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo">Detalle</div></div>
     <div class="modal-body" id="detalleBody"></div>
     <div class="modal-foot">
-      <div class="modal-botones"><button class="btn-guardar neutro" id="btnEditarMov">Editar</button><button class="btn-eliminar" id="btnEliminarMov">Eliminar</button></div>
-      <button class="btn-cancelar" style="width:100%" onclick="cerrarModal('detalleOverlay')">Cerrar</buttonE, rM, rCon] = await Promise.all([
-    _supabase.from('cuentas').select('*').order('nombre'),
-    _supabase.from('categorias').select('*').order('nombre'),
-    _supabase.from('etiquetas').select('*').order('nombre'),
-    _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false>
+      <div class="modal-botones"><button class="btn-guardar neutro" id="btnEditarMov">Editar</button><button class="btn-eliminar" id="btnEliminarMov">Borrar</button></div>
+      <button class="btn-cancelar" style="width:100%; margin-top:10px;" onclick="cerrarModal('detalleOverlay')">Cerrar</button>
     </div>
   </div>
 </div>
@@ -766,65 +343,28 @@ const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
- }),
-    _supabase.from('contrapartes').select('*').order('nombre')
-  ]);
-  cuentas = rC.data || []; categorias = rCat.data || []; etiquetas = rE.data || []; contrapartes = rCon.data || [];
-  movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
-  renderTodaLaApp();
-}
-
-function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits:const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
-function colorPorTipo(t) { return t === 'ingreso' ? '#2cb87a' : t === 'egreso' ? '#e04444' : '#55b3f5'; }
+const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
 let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [], contrapartes = [];
-let vistaActual = 0, maximumFractionDigits: 2 }); }
-function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
-
-function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); renderContrapartes(); }
-
-function renderInicio() {
-  let lista = movements.slice();
-  if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
-  if (filtro.contraparte_id) lista = lista.filter(m => m.contraparte_id === filtro.contraparte_id);
-  if (filtro.desde) lista = lista.filter(m => new Date(m.fecha) >= new Date(filtro.desde));
-  if (filtro.hasta) lista = lista.filter(m => new Date(m.fecha) <= new Date(filtro.hasta));
-
-  const 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
+let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
 let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0], colorElegidoContraparte = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null, contraparteEditandoId = null;
-let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
+let etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
 
 async function checkUser() {
   const { data: { session } } = await _supabase.auth.getSession();
-  setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); },  ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
-  const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number800);
+  setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 800);
   if (session) {
-    user = session.user;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    fetchData();
+    user = session.user; document.getElementById('login-screen').style.display = 'none'; document.getElementById('app').style.display = 'block'; fetchData();
   } else {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app').style.display = 'none';
   }
-}(m.monto_ars || m.monto), 0);
-  document.getElementById('saldoValor').textContent = fmtARS(ing - egr);
-  document.getElementById('totalIngresos').textContent = fmtARS(ing);
-  document.getElementById('totalEgresos').textContent = fmtARS(egr);
-
-  const cont = document.getElementById('movLista');
-  cont.innerHTML = lista.map(m => {
+}
 
 async function handleLogin() {
   const e = document.getElementById('email').value, p = document.getElementById('password').value;
   const { error } = await _supabase.auth.signInWithPassword({ email: e, password: p });
-  if (error) { const err = document.getElementById('login-error'); err.innerText = error.message; err.style.display = 'block'; }
-  else checkUser
-    const cCon = contrapartes.find(c => c.id === m.contraparte_id);
-    return `<div class="item-fila" onclick="verDetalle('${m.id}')">
-      <div class="mov-dot ${m.tipo==='ingreso'?'ing':'egr'}"></div>
-      <div class="mov-body"><div class="mov-concepto">${escapeHtml(m.concepto || 'S/C();
+  if (error) { alert(error.message); } else checkUser();
 }
 
 async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
@@ -833,73 +373,45 @@ async function fetchData() {
   const [rC, rCat, rE, rM, rCon] = await Promise.all([
     _supabase.from('cuentas').select('*').order('nombre'),
     _supabase.from('categorias').select('*').order('nombre'),
-    _supabase.from('et')}</div><div class="mov-meta">${new Date(m.fecha).toLocaleDateString()} ${cCon ? ' · '+cCon.nombre : ''}</div></div>
-      <div class="mov-right"><div class="mov-monto ${m.tipo==='ingreso'?'ing':'egr'}">${fmtARS(m.monto_ars || m.monto)}</div></div>
-    </div>`;
-  }).join('');
-}
-
-function renderCuentas() {
-  document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.id}')"><div class="color-iquetas').select('*').order('nombre'),
+    _supabase.from('etiquetas').select('*').order('nombre'),
     _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false }),
     _supabase.from('contrapartes').select('*').order('nombre')
   ]);
   cuentas = rC.data || []; categorias = rCat.data || []; etiquetas = rE.data || []; contrapartes = rCon.data || [];
-  movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id)dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
-}
-function renderCategorias() {
-  document.getElementById('categoriasLista').innerHTML = categorias.filter(c => c.tipo === segmentoCategoria || c.tipo === 'ambas').map(c => `<div class="item-fila" onclick="abrirModalCategoria('${c.id}')">${escapeHtml(c.nombre)}</div> }));
+  movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
   renderTodaLaApp();
 }
 
 function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
-function renderTodaLaApp() { renderInicio(); renderC`).join('');
-}
-function renderEtiquetas() {
-  document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `<div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')"><div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}</div>`).join('');
-}
-function renderContrapartes() {
-  document.getElementById('contrapartesLista').innerHTML = contrapartes.map(c => `<div class="etiquuentas(); renderCategorias(); renderEtiquetas(); renderContrapartes(); }
+function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); renderContrapartes(); }
 
 function renderInicio() {
   let lista = movements.slice();
   if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
-  if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
   if (filtro.contraparte_id) lista = lista.filter(m => m.contraparte_id === filtro.contraparte_id);
-  if (filtro.etiqueta_id) lista = listaeta-tarjeta" onclick="abrirModalContraparte('${c.id}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
-}
-
-function cambiarVista(v) {
-  document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
-  document.getElementById('vista-'+v).classList.add('activa');
-  document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('activo', x.dataset.vista === v));
-.filter(m => (m.etiquetaIds || []).includes(filtro.etiqueta_id));
+  if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
+  if (filtro.etiqueta_id) lista = lista.filter(m => (m.etiquetaIds || []).includes(filtro.etiqueta_id));
   if (filtro.desde) lista = lista.filter(m => new Date(m.fecha) >= new Date(filtro.desde));
   if (filtro.hasta) lista = lista.filter(m => new Date(m.fecha) <= new Date(filtro.hasta));
 
   const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
-  document.getElementById('saldoValor').}
-
-function abrirModalMovimiento(t) {
-  tipoActual = t; movEditandoId = null; etiquetasSeleccionadas = [];
-  document.getElementById('modalTitulo').textContent = t==='ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
-  document.getElementById('inpFecha').valueAsDate = new Date();
-  document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5textContent = fmtARS(ing - egr);
+  document.getElementById('saldoValor').textContent = fmtARS(ing - egr);
   document.getElementById('totalIngresos').textContent = fmtARS(ing);
   document.getElementById('totalEgresos').textContent = fmtARS(egr);
 
   const cont = document.getElementById('movLista');
+  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos.</div>'; return; }
   cont.innerHTML = lista.map(m => {
     const esIng = m.tipo === 'ingreso';
     const cCon = contrapartes.find(c => c.id === m.contraparte_id);
     return `<div class="item-fila" onclick="verDetalle('${m.id}')">
       <div class="mov-dot ${esIng?'ing':'egr'}"></div>
       <div class="mov-body">
-        <div class="mov-concepto">${escapeHtml(m.concepto || 'S/C')}</div>
-        <div class="mov-meta">${new Date(m.fecha).toLocaleDateString()} ${cCon ? ' · '+escapeHtml(cCon.nombre) : ''}</div>
+        <div class="mov-concepto">${escapeHtml(m.concepto || 'Sin concepto')}</div>
+        <div class="mov-meta">${new Date(m.fecha).toLocaleDateString()} ${cCon ? ' · '+cCon.nombre : ''}</div>
       </div>
       <div class="mov-right"><div class="mov-monto ${esIng?'ing':'egr'}">${fmtARS(m.monto_ars || m.monto)}</div></div>
     </div>`;
@@ -907,222 +419,149 @@ function abrirModalMovimiento(t) {
 }
 
 function renderCuentas() {
-  document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.);
-  document.getElementById('inpMonto').value = '';
-  poblarSelectsMov();
-  document.getElementById('modalOverlay').classList.add('activo');
-}
-
-function onCambioMoneda() {
-  document.getElementById('grupoCotizacion').style.display = document.getElementById('inpMoneda').value === 'ARS' ? 'none' : 'block';
-}
-
-function actualizarPreviewARS() {
-  const m = parseFloat(document.getElementById('inpMonto').value) || 0;
-  const c = parseFloat(document.getElementById('inpCotizacion').value) || 0;
-  document.getElementById('previewARS').textContent = c > 0 ? 'ARS ' + (m * c).toFixed(2) : '';
-}
-
-function poblarSelectsMov() {
-  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva</option>';
-  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva</option>';
-  documentid}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
+  document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.id}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
 }
 function renderCategorias() {
-  document.getElementById('categoriasLista').innerHTML = categorias.filter(c => c.tipo === segmentoCategoria || c.tipo === 'ambas').map(c => `<div class="item-fila" onclick="abrirModalCategoria('${c.id}')">${.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva</option>';
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva</option>';
-}
-
-async function guardarMovimiento() {
-escapeHtml(c.nombre)}</div>`).join('');
+  document.getElementById('categoriasLista').innerHTML = categorias.filter(c => c.tipo === segmentoCategoria || c.tipo === 'ambas').map(c => `<div class="item-fila" onclick="abrirModalCategoria('${c.id}')">${escapeHtml(c.nombre)}</div>`).join('');
 }
 function renderEtiquetas() {
   document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `<div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')"><div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}</div>`).join('');
 }
-function render  const monto = parseFloat(document.getElementById('inpMonto').value);
-  if (!monto) return alert("Monto requerido");
-
-  const payload = {
-    user_id: user.id, tipo: tipoActual, monto: monto,
-    fecha: new Date(document.getElementById('inpFecha').value + 'T' + document.Contrapartes() {
+function renderContrapartes() {
   document.getElementById('contrapartesLista').innerHTML = contrapartes.map(c => `<div class="etiqueta-tarjeta" onclick="abrirModalContraparte('${c.id}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
 }
 
 function cambiarVista(v) {
-  document.querySelectorAll('.vista').getElementById('inpHora').value).toISOString(),
-    concepto: document.getElementById('inpConcepto').value || null,
-    cuenta_id: document.getElementById('inpCuenta').value || null,
-    contraparte_id: document.getElementById('inpContraparteId').value || null,
-    categoria_id: document.getElementById('inpCategoria').value || null,
-    moneda: document.getElementById('inpMoneda').value,
-forEach(x => x.classList.remove('activa'));
+  document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
   document.getElementById('vista-'+v).classList.add('activa');
-  document.querySelectorAll('.nav-item').forEach(x => x.classList.    cotizacion: parseFloat(document.getElementById('inpCotizacion').value) || 1
-  };
-
-  const fileInput = document.getElementById('inpArchivo');
-  let mov;
-  if(movEditandoId) {
-    const { data } = await _supabase.from('movimientos').update(payload).eq('id', movEditandoId).toggle('activo', x.dataset.vista === v));
+  document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('activo', x.dataset.vista === v));
 }
 
 function abrirModalMovimiento(t) {
-  tipoActual = t; etiquetasSeleccionadas = []; movEditandoId = null;
+  tipoActual = t; movEditandoId = null; etiquetasSeleccionadas = [];
   document.getElementById('modalTitulo').textContent = t==='ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
   document.getElementById('inpFecha').valueAsDate = new Date();
   document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5);
-  document.getElementById('inpMonto').value = '';
-  document.getElementById('inpMoneda').value = 'ARS';
+  document.getElementById('inpMonto').value = ''; document.getElementById('inpMoneda').value = 'ARS';
   onCambioMoneda(); poblarSelectsMov();
+  document.getElementById('chipsEtiquetas').innerHTML = '';
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
 function onCambioMoneda() {
   document.getElementById('grupoCotizacion').style.display = document.getElementById('inpMoneda').value === 'ARS' ? 'none' : 'block';
-  actualizarPreviewARS();
 }
 function actualizarPreviewARS() {
   const m = parseFloat(document.getElementById('inpMonto').value) || 0;
-  const c = parseFloat(document.getElementById('inpCotizacion').value)select().single();
-    mov = data;
-    await _supabase.from('movimiento_etiquetas').delete().eq('movimiento_id', movEditandoId);
-  } else {
-    const { data } = await _supabase.from('movimientos').insert([payload]).select().single();
-    mov = data;
-  }
-
-  if (etiquetasSeleccionadas.length) {
-    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: mov.id, etiqueta_id: id })));
-  }
-
-  if (fileInput.files[0]) {
-    const file = fileInput.files[0], path = `${user.id}/${mov.id}/${file.name}`;
-    await _supabase.storage.from('comprobantes').upload(path, file);
-    await _supabase.from('movimientos').update({ archivo_path: path }).eq('id', mov.id);
-  }
-
-  cerrarModal('modalOverlay'); fetchData();
-}
-
-async function verDetalle || 0;
+  const c = parseFloat(document.getElementById('inpCotizacion').value) || 0;
   document.getElementById('previewARS').textContent = c > 0 ? 'Equivale a ' + fmtARS(m * c) : '';
 }
 
 function poblarSelectsMov() {
-  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('')(id) {
-  const m = movements.find(x => x.id === id);
-  const con = contrapartes.find(c => c.id === m.contraparte_id);
-  let arch = '';
-  if (m.archivo_path) {
-    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300); + '<option value="NUEVA">+ Nueva Cuenta</option>';
-  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + '<option value="NUEVA">+ Nueva Contraparte</option>';
-  document.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría asignada</option>' + categorias.map(c => `<option value="${c.id}">${escape
-    arch = `<a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a>`;
-  }
-
-  document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor">${fmtARS(m.monto_ars || m.monto)}</div></div>
-    <div class="detalle-row"><div class="Html(c.nombre)}</option>`).join('') + '<option value="NUEVA">+ Nueva Categoría</option>';
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + etiquetas.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + '<option value="NUEVA">+ Nueva Etiqueta</option>';detalle-label">Concepto</div><div class="detalle-valor">${m.concepto || '-'}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Contraparte</div><div class="detalle-valor">${con?con.nombre:'-'}</div></div>
-    ${arch}`;
-  
-  document.getElementById('btnEditarMov').onclick = ()
-}
-
-// LOGICA CRUD Y COLORES (Faltantes en la versión anterior)
-function renderColorPick(id, sel, f) {
-  document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
-}
-function pickC(c) { colorElegido => editarMovimiento(id);
-  document.getElementById('btnEliminarMov').onclick = async () => { if(confirm("¿Borrar?")) { await _supabase.from('movimientos').delete().eq('id', id); cerrarModal('detalleOverlay'); fetchData(); } };
-  document.getElementById('detalleOverlay').classList.add('activo');
-}
-
-function editarMovimiento(id) {
-  const m = movements.find(Cuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
-function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
-function pickCon(c) { colorElegidoContraparte = c; renderx => x.id === id);
-  cerrarModal('detalleOverlay');
-  abrirModalMovimiento(m.tipo);
-  movEditandoId = m.id;
-  document.getElementById('inpMonto').value = m.monto;
-  document.getElementById('inpConcepto').value = m.concepto;
-  document.getElementById('ColorPick('colorPickerContraparte', c, 'pickCon'); }
-
-function abrirModalCuenta() { pickC(COLORES[0]); document.getElementById('modalCuentaOverlay').classList.add('activo'); }
-async function guardarCuenta() {
-  const n = document.getElementById('inpCuentaNombre').value;
-  await _supabase.from('cuentas').insert([{ user_id: user.id, nombre: n, color: colorElegidoCuenta, moneda: 'ARS' }]);
-  cerrarModal('modalCuentaOverlay'); fetchData();
-}
-function abrirModalContraparte() { pickCon(COLORES[0]); document.getElementById('modalContraparteOverlay').classList.add('activo'); }
-async function guardarContraparte() {
-  const n = document.getElementById('inpContraparteNombre').value;
-  await _supabase.from('contrapartes').insert([{ user_id: user.id, nombre: n, color: colorElegidoContraparte }]);
-  cerrarModal('modalContraparteinpCuenta').value = m.cuenta_id || '';
-  document.getElementById('inpContraparteId').value = m.contraparte_id || '';
-  document.getElementById('inpCategoria').value = m.categoria_id || '';
-  document.getElementById('inpMoneda').value = m.moneda;
-  document.getElementById('inpCotizacion').value = m.cotizacion;
-  etiquetasSeleccionadas = m.etiquetaIds || [];
-  // (Poblar chips omitido por espacio pero funcional)
-}
-
-function abrirFiltro() {
-  document.getElementById('filtroCuenta').innerHTML = '<option value="">Cuentas</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroContraparte').innerHTML = '<option value="">Contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroOverlay').classList.Overlay'); fetchData();
+  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Cuenta</option>';
+  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Contraparte</option>';
+  document.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría asignada</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Categoría</option>';
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Etiqueta</option>';
 }
 
 async function guardarMovimiento() {
   const monto = parseFloat(document.getElementById('inpMonto').value);
-  if (!monto) return;
+  if (!monto) return alert("Ingresa un monto");
   const fileInput = document.getElementById('inpArchivo');
-  
   const payload = {
     user_id: user.id, tipo: tipoActual, monto: monto,
-    fecha: new Date(document.getElementById('inpFecha').value + 'T' + document.getElementById('add('activo');
-}
-
-function aplicarFiltros() {
-  filtro.cuenta_id = document.getElementById('filtroCuenta').value;
-  filtro.contraparte_id = document.getElementById('filtroContraparte').value;
-  filtro.desde = document.getElementById('filtroDesde').value;
-  filtro.hasta = document.getElementById('filtroHasta').value;
-  cerrarModal('filtroinpHora').value).toISOString(),
+    fecha: new Date(document.getElementById('inpFecha').value + 'T' + document.getElementById('inpHora').value).toISOString(),
     concepto: document.getElementById('inpConcepto').value || null,
     cuenta_id: document.getElementById('inpCuenta').value || null,
     contraparte_id: document.getElementById('inpContraparteId').value || null,
     categoria_id: document.getElementById('inpCategoria').value || null,
     moneda: document.getElementById('inpMoneda').value,
-    cotOverlay'); renderInicio();
-}
-
-function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', desde: '', hasta: '' }; renderInicio(); cerrarModal('filtroOverlay'); }
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
-function onCambioSelectCuenta() { if(document.getElementByIdizacion: parseFloat(document.getElementById('inpCotizacion').value) || 1
+    cotizacion: parseFloat(document.getElementById('inpCotizacion').value) || 1,
+    notas: document.getElementById('inpNotas').value || null
   };
 
   const { data, error } = await _supabase.from('movimientos').insert([payload]).select().single();
-  if (fileInput.files[0] && data) {
-    const file = fileInput.files[0];
-    const path = `${user.id}/${data.id}/${Date.now()}_${file.name}`;
+  if (error) return alert(error.message);
+
+  if (etiquetasSeleccionadas.length) {
+    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: data.id, etiqueta_id: id })));
+  }
+
+  if (fileInput.files[0]) {
+    const file = fileInput.files[0], path = `${user.id}/${data.id}/${Date.now()}_${file.name}`;
     await _supabase.storage.from('comprobantes').upload(path, file);
-    await _supabase.from('movimientos').update({('inpCuenta').value==='NUEVA') abrirModalCuenta(); }
-function onCambioSelectContraparte() { if(document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(); }
-function onCambioSelectCategoria() { if(document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(); }
-function onAddEtiqueta() { 
-  const val = document.getElementById('inpEt archivo_path: path }).eq('id', data.id);
+    await _supabase.from('movimientos').update({ archivo_path: path }).eq('id', data.id);
   }
   cerrarModal('modalOverlay'); fetchData();
 }
 
 async function verDetalle(id) {
   const m = movements.find(x => x.id === id);
+  const con = contrapartes.find(c => c.id === m.contraparte_id);
   let arch = '';
   if (m.archivo_path) {
-    const {iquetaSelect').value;
+    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
+    arch = `<a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a>`;
+  }
+  document.getElementById('detalleBody').innerHTML = `
+    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor">${fmtARS(m.monto_ars || m.monto)}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor">${m.concepto || '-'}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Contraparte</div><div class="detalle-valor">${con?con.nombre:'-'}</div></div>
+    ${arch}`;
+  document.getElementById('btnEliminarMov').onclick = async () => { if(confirm("¿Borrar?")) { await _supabase.from('movimientos').delete().eq('id', id); cerrarModal('detalleOverlay'); fetchData(); } };
+  document.getElementById('detalleOverlay').classList.add('activo');
+}
+
+function renderColorPick(id, f) {
+  document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
+}
+function pickC(c) { colorElegidoCuenta = c; }
+function pickCon(c) { colorElegidoContraparte = c; }
+function pickEt(c) { colorElegidoEtiqueta = c; }
+
+function abrirModalCuenta() { renderColorPick('colorPickerCuenta', 'pickC'); document.getElementById('modalCuentaOverlay').classList.add('activo'); }
+async function guardarCuenta() {
+  await _supabase.from('cuentas').insert([{ user_id: user.id, nombre: document.getElementById('inpCuentaNombre').value, color: colorElegidoCuenta }]);
+  cerrarModal('modalCuentaOverlay'); fetchData();
+}
+function abrirModalContraparte() { renderColorPick('colorPickerContraparte', 'pickCon'); document.getElementById('modalContraparteOverlay').classList.add('activo'); }
+async function guardarContraparte() {
+  await _supabase.from('contrapartes').insert([{ user_id: user.id, nombre: document.getElementById('inpContraparteNombre').value, color: colorElegidoContraparte }]);
+  cerrarModal('modalContraparteOverlay'); fetchData();
+}
+function abrirModalCategoria() { document.getElementById('modalCategoriaOverlay').classList.add('activo'); }
+async function guardarCategoria() {
+  await _supabase.from('categorias').insert([{ user_id: user.id, nombre: document.getElementById('inpCategoriaNombre').value, tipo: tipoCatForm }]);
+  cerrarModal('modalCategoriaOverlay'); fetchData();
+}
+function setTipoCat(t) { tipoCatForm = t; document.getElementById('btnTipoEgresoAux').classList.toggle('activo', t==='egreso'); document.getElementById('btnTipoIngresoAux').classList.toggle('activo', t==='ingreso'); }
+
+function abrirModalEtiqueta() { renderColorPick('colorPickerEtiqueta', 'pickEt'); document.getElementById('modalEtiquetaOverlay').classList.add('activo'); }
+async function guardarEtiqueta() {
+  await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre: document.getElementById('inpEtiquetaNombre').value, color: colorElegidoEtiqueta }]);
+  cerrarModal('modalEtiquetaOverlay'); fetchData();
+}
+
+function abrirFiltro() {
+  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('filtroOverlay').classList.add('activo');
+}
+function aplicarFiltros() {
+  filtro.cuenta_id = document.getElementById('filtroCuenta').value;
+  filtro.contraparte_id = document.getElementById('filtroContraparte').value;
+  filtro.desde = document.getElementById('filtroDesde').value;
+  filtro.hasta = document.getElementById('filtroHasta').value;
+  cerrarModal('filtroOverlay'); renderInicio();
+}
+function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', desde: '', hasta: '' }; renderInicio(); cerrarModal('filtroOverlay'); }
+function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
+
+function onCambioSelectCuenta() { if(document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(); }
+function onCambioSelectContraparte() { if(document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(); }
+function onCambioSelectCategoria() { if(document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(); }
+function onAddEtiqueta() { 
+  const val = document.getElementById('inpEtiquetaSelect').value;
   if(val==='NUEVA') { abrirModalEtiqueta(); return; }
   if(val && !etiquetasSeleccionadas.includes(val)) {
     etiquetasSeleccionadas.push(val);
@@ -1130,50 +569,6 @@ async function verDetalle(id) {
     document.getElementById('chipsEtiquetas').innerHTML += `<span class="chip">${e.nombre}</span>`;
   }
 }
-
-function abrirModalCuenta(id) { cuentaEditandoId = id; renderColorPick('colorPickerCuenta', 'pickC'); document.getElementById('modalCuentaOverlay').classList.add('activo'); }
-function pickC(c) { colorElegidoCuenta = c; }
-async function guardarCuenta() {
-  await _supabase.from('cuentas').insert([{ user_id: user.id, nombre: document.getElementById('inpCuentaNombre').value, color: colorElegidoCuenta }]);
-  cerrarModal('modalCuentaOverlay'); fetchData();
-}
-function abrirModalContraparte(id) { contra data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
-    arch = `<a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a>`;
-  }
-  document.getElementById('detalleBody').innerHTML = `Monto: ${fmtARS(m.monto_ars || m.monto)}<br>${arch}`;
-  document.getElementById('detalleOverlay').classList.add('activo');
-}
-
-function abrirFiltro() {
-  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' +parteEditandoId = id; renderColorPick('colorPickerContraparte', 'pickCon'); document.getElementById('modalContraparteOverlay').classList.add('activo'); }
-function pickCon(c) { colorElegidoContraparte = c; }
-async function guardarContraparte() {
-  await _supabase.from('contrapartes').insert([{ user_id: user.id, nombre: document.getElementById('inpContraparteNombre').value, color: colorElegidoContraparte }]);
-  cerrarModal('modalContraparteOverlay'); fetchData();
- cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('');
-  document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('');
-  document.getElementById('filtroOverlay').classList.add('activo');
-}
-function aplicarFiltros() {
-  filtro.cuenta_id = document.getElementById('}
-function abrirModalCategoria(id) { categoriaEditandoId = id; document.getElementById('modalCategoriaOverlay').classList.add('activo'); }
-async function guardarCategoria() {
-  await _supabase.from('categorias').insert([{ user_id: user.id, nombre: document.getElementById('inpCategoriaNombre').value, tipofiltroCuenta').value;
-  filtro.contraparte_id = document.getElementById('filtroContraparte').value;
-  cerrarModal('filtroOverlay'); renderInicio();
-}
-function limpiarFiltros() {
-  filtro = { cuenta_id: '', categoria_id: '', contraparte_id: '', etiqueta_: tipoActual }]);
-  cerrarModal('modalCategoriaOverlay'); fetchData();
-}
-function abrirModalEtiqueta(id) { etiquetaEditandoId = id; renderColorPick('colorPickerEtiqueta', 'pickEt'); document.getElementById('modalEtiquetaOverlay').classList.add('activo'); }
-function pickEt(c) { colorElegidoEtiqueta = c; }
-async function guardarEtiqueta() {
-  await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre: document.getElementById('inpEtiquetaNombre').value, color: colorElegidoEtiqueta }]);
-  cerrarModal('modalid: '', desde: '', hasta: '' };
-  cerrarModal('filtroOverlay'); renderInicio();
-}
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
 
 checkUser();
 </script>
