@@ -1,38 +1,33 @@
-const CACHE_NAME = 'registro-v1';
-const ARCHIVOS_CORE = [
+const CACHE_NAME = 'turismo-isabel-v1';
+const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Sans&family=Inter&display=swap'
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+  'https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500;600;700;800&display=swap'
 ];
 
+// Instalación: Guarda los archivos esenciales en el teléfono
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ARCHIVOS_CORE))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
 });
 
+// Activación: Limpia versiones viejas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((nombres) =>
-      Promise.all(nombres.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
-    )
+    caches.keys().then((keys) => {
+      return Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)));
+    })
   );
-  self.clients.claim();
 });
 
+// Estrategia: Cache First (Carga desde el teléfono primero, luego busca en red)
 self.addEventListener('fetch', (event) => {
-  // Network-first: siempre intenta traer lo último; si no hay conexión, usa el cache.
   event.respondWith(
-    fetch(event.request)
-      .then((respuesta) => {
-        const clone = respuesta.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        return respuesta;
-      })
-      .catch(() => caches.match(event.request))
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
   );
 });
