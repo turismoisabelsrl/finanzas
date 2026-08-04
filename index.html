@@ -521,6 +521,21 @@
   </div>
 </div>
 
+<!-- ===== MODAL: CREAR CONTRASEÑA (invitación por mail) ===== -->
+<div class="modal-overlay" id="modalCrearPasswordOverlay" style="z-index: 200;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo">Crear tu contraseña</div></div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--text-2); margin-bottom:16px;">Fuiste invitado a Turismo Isabel. Elegí una contraseña para poder entrar la próxima vez.</p>
+      <div class="lf-group"><label class="lf-label">Nueva contraseña</label><input type="password" id="inpNuevaPassword" class="lf-input" placeholder="Mínimo 6 caracteres"></div>
+      <div class="lf-group"><label class="lf-label">Confirmar contraseña</label><input type="password" id="inpConfirmarPassword" class="lf-input" placeholder="Repetí la contraseña"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-main" onclick="guardarNuevaPassword()">Guardar contraseña y entrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* === CREDENCIALES SUPABASE === */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
@@ -536,18 +551,98 @@ let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = nu
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
 
+/* === BORRADOR AUTOMÁTICO (para no perder el movimiento si el celular recarga la página al usar cámara/archivos) === */
+const DRAFT_KEY = 'ti_borrador_movimiento';
+
+function guardarBorrador() {
+  if (!document.getElementById('modalOverlay').classList.contains('activo')) return;
+  try {
+    const draft = {
+      tipo: tipoActual,
+      editId: movEditandoId,
+      fecha: document.getElementById('inpFecha').value,
+      hora: document.getElementById('inpHora').value,
+      monto: document.getElementById('inpMonto').value,
+      moneda: document.getElementById('inpMoneda').value,
+      monedaOtra: document.getElementById('inpMonedaOtra').value,
+      cotizacion: document.getElementById('inpCotizacion').value,
+      concepto: document.getElementById('inpConcepto').value,
+      cuentaId: document.getElementById('inpCuenta').value,
+      contraparteId: document.getElementById('inpContraparteId').value,
+      categoriaId: document.getElementById('inpCategoria').value,
+      notas: document.getElementById('inpNotas').value,
+      etiquetas: etiquetasSeleccionadas,
+      ts: Date.now()
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  } catch (e) { /* almacenamiento no disponible, no hacemos nada */ }
+}
+
+function borrarBorrador() {
+  try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+}
+
+function restaurarBorrador() {
+  let draft;
+  try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { draft = null; }
+  if (!draft) return;
+  // Descartamos borradores viejos (más de 6 horas) para no reabrir algo de hace días
+  if (Date.now() - (draft.ts || 0) > 6 * 60 * 60 * 1000) { borrarBorrador(); return; }
+
+  tipoActual = draft.tipo || 'ingreso';
+  movEditandoId = draft.editId || null;
+  etiquetasSeleccionadas = draft.etiquetas || [];
+
+  document.getElementById('modalTitulo').textContent = movEditandoId
+    ? (tipoActual === 'ingreso' ? 'Editar Ingreso' : 'Editar Egreso')
+    : (tipoActual === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Egreso');
+  document.getElementById('inpFecha').value = draft.fecha || '';
+  document.getElementById('inpHora').value = draft.hora || '';
+  document.getElementById('inpMonto').value = draft.monto || '';
+  document.getElementById('inpMoneda').value = draft.moneda || 'ARS';
+  document.getElementById('inpMonedaOtra').value = draft.monedaOtra || '';
+  document.getElementById('inpCotizacion').value = draft.cotizacion || '';
+  onCambioMoneda();
+  document.getElementById('inpConcepto').value = draft.concepto || '';
+  document.getElementById('inpNotas').value = draft.notas || '';
+  document.getElementById('inpArchivo').value = '';
+
+  const btn = document.getElementById('btnGuardar');
+  btn.textContent = movEditandoId ? 'Guardar Cambios' : 'Guardar';
+  btn.className = 'btn-guardar ' + (tipoActual === 'ingreso' ? 'ing' : 'egr');
+
+  poblarSelectsMov(draft.cuentaId || '', draft.categoriaId || '', draft.contraparteId || '');
+  renderChipsEtiquetas();
+  document.getElementById('modalOverlay').classList.add('activo');
+
+  setTimeout(() => { alert('Recuperamos los datos del movimiento que estabas completando. Si habías adjuntado un comprobante, por favor volvé a seleccionarlo.'); }, 300);
+}
+
 /* === AUTH === */
 async function checkUser() {
+  // Capturamos el hash ANTES de llamar a getSession(), porque el SDK de Supabase
+  // lo detecta y lo limpia de la URL automáticamente al procesar la sesión.
+  const hashInicial = window.location.hash;
   const { data: { session } } = await _supabase.auth.getSession();
-  
+
   // NUEVO: Ocultar Splash Screen una vez verificado el usuario
   setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 800);
 
+  const esInvitacionOrRecovery = hashInicial.includes('type=invite') || hashInicial.includes('type=recovery');
+
   if (session) {
     user = session.user;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    fetchData();
+    if (esInvitacionOrRecovery) {
+      // El usuario vino de un link de invitación/recuperación: le pedimos que cree su contraseña.
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('modalCrearPasswordOverlay').classList.add('activo');
+    } else {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      await fetchData();
+      restaurarBorrador();
+    }
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
@@ -562,6 +657,22 @@ async function handleLogin() {
 }
 
 async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
+
+/* === CREAR CONTRASEÑA (invitación por mail) === */
+async function guardarNuevaPassword() {
+  const p1 = document.getElementById('inpNuevaPassword').value;
+  const p2 = document.getElementById('inpConfirmarPassword').value;
+  if (!p1 || p1.length < 6) { alert("La contraseña debe tener al menos 6 caracteres."); return; }
+  if (p1 !== p2) { alert("Las contraseñas no coinciden."); return; }
+  const { error } = await _supabase.auth.updateUser({ password: p1 });
+  if (error) { alert("Error: " + error.message); return; }
+  // Limpiamos el hash de invitación de la URL para que no quede ahí
+  window.history.replaceState(null, '', window.location.pathname);
+  cerrarModal('modalCrearPasswordOverlay');
+  document.getElementById('app').style.display = 'block';
+  await fetchData();
+  restaurarBorrador();
+}
 
 /* === DATA === */
 async function fetchData() {
@@ -782,6 +893,7 @@ function renderChipsEtiquetas() {
     return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px; cursor:pointer;">×</strong></span>`;
   }).join('');
   poblarSelectsMov();
+  guardarBorrador();
 }
 
 function onAddEtiqueta() {
@@ -845,6 +957,7 @@ async function _guardarMovimientoInterno() {
     const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
     if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
   }
+  borrarBorrador();
   cerrarModal('modalOverlay'); fetchData();
 }
 
@@ -896,6 +1009,12 @@ function editarMovimiento(id) {
   document.getElementById('inpContraparteId').value = m.contraparte_id || '';
   document.getElementById('inpNotas').value = m.notas || '';
   etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
+
+  // Fix: el botón Guardar tiene que heredar el color verde (ingreso) o rojo (egreso), si no queda blanco
+  const btn = document.getElementById('btnGuardar');
+  btn.textContent = 'Guardar Cambios';
+  btn.className = 'btn-guardar ' + (m.tipo === 'ingreso' ? 'ing' : 'egr');
+
   poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '', m.contraparte_id || '');
   renderChipsEtiquetas();
   document.getElementById('modalOverlay').classList.add('activo');
@@ -908,7 +1027,11 @@ async function borrarMov(id) {
 }
 
 /* === HELPERS UI & FILTROS === */
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('activo');
+  // Si cierran el modal de movimiento con "Cancelar", borramos el borrador para que no reaparezca solo.
+  if (id === 'modalOverlay') borrarBorrador();
+}
 function cambiarSegmentoCategoria(s) { segmentoCategoria = s; document.getElementById('segEgreso').classList.toggle('activo', s==='egreso'); document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso'); renderCategorias(); }
 function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
 function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(null, true); }
@@ -1031,6 +1154,15 @@ function aplicarFiltros() {
   cerrarModal('filtroOverlay'); renderInicio();
 }
 function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' }; cerrarModal('filtroOverlay'); renderInicio(); }
+
+/* === Listeners del borrador automático: guardamos cada vez que el usuario escribe algo === */
+['inpFecha','inpHora','inpMonto','inpMoneda','inpMonedaOtra','inpCotizacion','inpConcepto','inpCuenta','inpContraparteId','inpCategoria','inpNotas'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', guardarBorrador);
+    el.addEventListener('change', guardarBorrador);
+  }
+});
 
 checkUser();
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.log('SW no registrado:', err)); }); }
