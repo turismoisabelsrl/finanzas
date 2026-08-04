@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Registro — Ingresos y Egresos</title>
 
+<!-- ===== PWA: instalable en Android / iPhone ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#071020">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Registro">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
 <!-- SDK Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -430,15 +442,18 @@
   <div class="modal-sheet">
     <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
     <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Desde</label><input type="datetime-local" class="lf-input" id="filtroDesde"></div>
+      <div class="lf-group"><label class="lf-label">Hasta</label><input type="datetime-local" class="lf-input" id="filtroHasta"></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
-        <button class="btn-cancelar" onclick="cerrarModal('filtroOverlay')">Cerrar</button>
+        <button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button>
         <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button>
       </div>
+      <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('filtroOverlay')">Cerrar</button>
     </div>
   </div>
 </div>
@@ -456,7 +471,7 @@ let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso'
 let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null;
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
-let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
+let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' };
 
 /* === AUTH === */
 async function checkUser() {
@@ -506,7 +521,9 @@ function renderInicio() {
   if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
   if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
   if (filtro.etiqueta_id) lista = lista.filter(m => (m.etiquetaIds || []).includes(filtro.etiqueta_id));
-  document.getElementById('btnFiltro').classList.toggle('activo', !!(filtro.cuenta_id || filtro.categoria_id || filtro.etiqueta_id));
+  if (filtro.desde) lista = lista.filter(m => new Date(m.fecha) >= new Date(filtro.desde));
+  if (filtro.hasta) lista = lista.filter(m => new Date(m.fecha) <= new Date(filtro.hasta));
+  document.getElementById('btnFiltro').classList.toggle('activo', !!(filtro.cuenta_id || filtro.categoria_id || filtro.etiqueta_id || filtro.desde || filtro.hasta));
 
   const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
@@ -999,6 +1016,8 @@ async function eliminarEtiqueta() {
 }
 
 function abrirFiltro() {
+  document.getElementById('filtroDesde').value = filtro.desde;
+  document.getElementById('filtroHasta').value = filtro.hasta;
   document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
@@ -1009,16 +1028,25 @@ function aplicarFiltros() {
   filtro.cuenta_id = document.getElementById('filtroCuenta').value;
   filtro.categoria_id = document.getElementById('filtroCategoria').value;
   filtro.etiqueta_id = document.getElementById('filtroEtiqueta').value;
+  filtro.desde = document.getElementById('filtroDesde').value;
+  filtro.hasta = document.getElementById('filtroHasta').value;
   cerrarModal('filtroOverlay'); renderInicio();
 }
 
 function limpiarFiltros() {
-  filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '' };
+  filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' };
   cerrarModal('filtroOverlay'); renderInicio();
 }
 
 // Inicializar la app al cargar
 checkUser();
+
+// Registro del Service Worker (necesario para poder instalar la app en Android)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW no registrado:', err));
+  });
+}
 
 // Cerrar cualquier modal al tocar fuera de la hoja (fuera del formulario)
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
