@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Turismo Isabel — Ingresos y Egresos</title>
 
-<!-- ===== PWA ===== -->
+<!-- ===== PWA: instalable en Android / iPhone ===== -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#071020">
 <meta name="mobile-web-app-capable" content="yes">
+<!-- iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Turismo Isabel">
@@ -45,12 +46,34 @@
     --font-num: 'Inter', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text-1); min-height: 100vh; overflow-x: hidden; position: relative; }
-  body::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy); }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text-1);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
+      radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%),
+      var(--navy);
+  }
 
-  /* SPLASH SCREEN */
-  #splash-screen { position: fixed; inset: 0; z-index: 10000; background: var(--navy); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s; }
-  #splash-screen::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy); }
+  /* NUEVO: Splash Screen Styles */
+  #splash-screen {
+    position: fixed; inset: 0; z-index: 10000;
+    background: var(--navy);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  #splash-screen::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(ellipse 900px 600px at 60% -10%, #0e2555 0%, transparent 60%),
+                radial-gradient(ellipse 600px 500px at 0% 100%, #0a1e44 0%, transparent 55%), var(--navy);
+  }
   #splash-screen.hidden { opacity: 0; visibility: hidden; }
 
   @keyframes revealUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
@@ -62,7 +85,11 @@
 
   header.topbar { text-align: center; margin-bottom: 20px; }
   .brand-orb { width: 64px; height: 64px; margin: 0 auto 10px; position: relative; display: flex; align-items: center; justify-content: center; }
-  .brand-orb::before { content: ''; position: absolute; inset: -14px; border-radius: 50%; background: radial-gradient(circle, var(--sky-glow) 0%, transparent 70%); animation: orbPulse 3.5s ease-in-out infinite; }
+  .brand-orb::before {
+    content: ''; position: absolute; inset: -14px; border-radius: 50%;
+    background: radial-gradient(circle, var(--sky-glow) 0%, transparent 70%);
+    animation: orbPulse 3.5s ease-in-out infinite;
+  }
   .brand-orb img { width: 100%; height: 100%; border-radius: 50%; object-fit: contain; z-index: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
   .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-style: italic; color: var(--text-0); }
   .brand-sub { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-3); margin-top: 4px; }
@@ -74,143 +101,215 @@
   .saldo-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); }
   .saldo-valor { font-family: var(--font-num); font-size: 34px; font-weight: 800; color: var(--text-0); margin-top: 6px; }
   .saldo-valor.negativo { color: #ff9090; }
+  .saldo-moneda { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-3); margin-top: 2px; }
 
   .resumen-fila { display: flex; gap: 10px; margin-top: 16px; }
   .resumen-item { flex: 1; border-radius: var(--r-lg); padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
   .resumen-item.ing { background: var(--green-bg); border: 1px solid rgba(44,184,122,0.22); }
   .resumen-item.egr { background: var(--red-bg); border: 1px solid rgba(224,68,68,0.22); }
   .resumen-item-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .resumen-item.ing .resumen-item-label { color: rgba(100,220,160,0.85); }
+  .resumen-item.egr .resumen-item-label { color: rgba(255,140,140,0.85); }
   .resumen-item-valor { font-family: var(--font-num); font-size: 15px; font-weight: 600; }
+  .resumen-item.ing .resumen-item-valor { color: #5de09a; }
+  .resumen-item.egr .resumen-item-valor { color: #ff9090; }
 
   .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
   .btn-accion { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 12px; border-radius: var(--r-xl); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+  .btn-accion svg { width: 18px !important; height: 18px !important; flex-shrink: 0; }
   .btn-ingreso { background: linear-gradient(135deg, rgba(44,184,122,0.26), rgba(44,184,122,0.12)); border: 1.5px solid rgba(44,184,122,0.35); color: #5de09a; }
   .btn-egreso { background: linear-gradient(135deg, rgba(224,68,68,0.22), rgba(224,68,68,0.10)); border: 1.5px solid rgba(224,68,68,0.32); color: #ff9090; }
 
+  .fila-titulo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .vista-titulo { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+  
   .btn-nuevo, .btn-filtro { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: var(--r-lg); border: none; font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; cursor: pointer; }
-  .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; }
+  .btn-nuevo svg, .btn-filtro svg { width: 14px !important; height: 14px !important; flex-shrink: 0; }
+  .btn-nuevo { background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; text-transform: uppercase; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
   .btn-filtro { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--text-1); }
   .btn-filtro.activo { background: rgba(85,179,245,0.15); border-color: rgba(85,179,245,0.4); color: var(--sky-bright); }
 
-  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; margin-bottom: 8px; }
-  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); }
+  .lista { display: flex; flex-direction: column; gap: 8px; }
+  .item-fila { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: var(--r-lg); background: rgba(255,255,255,0.04); border: 1px solid var(--border); cursor: pointer; }
+  .item-fila.sub { margin-left: 20px; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
   .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
   .mov-dot { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .mov-dot.ing { background: var(--green-bg); color: #5de09a; }
   .mov-dot.egr { background: var(--red-bg); color: #ff9090; }
   .mov-body { flex: 1; min-width: 0; }
-  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); display: flex; align-items: center; gap: 6px; }
+  .mov-concepto { font-size: 14px; font-weight: 600; color: var(--text-0); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .mov-meta { font-size: 11.5px; color: var(--text-3); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mov-cat { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
-  .mov-right { text-align: right; }
+  .mov-right { text-align: right; flex-shrink: 0; }
   .mov-monto { font-family: var(--font-num); font-size: 15px; font-weight: 700; }
+  .mov-monto.ing { color: #5de09a; }
+  .mov-monto.egr { color: #ff9090; }
 
-  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .segmented { display: flex; background: rgba(255,255,255,0.05); border: 1px solid var(--border-hi); border-radius: var(--r-md); padding: 4px; gap: 4px; margin-bottom: 16px; }
+  .segmented button { flex: 1; padding: 10px 8px; border-radius: var(--r-sm); border: none; background: transparent; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 11.5px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+  .segmented button.activo { background: rgba(85,179,245,0.18); color: var(--sky-bright); border: 1px solid rgba(85,179,245,0.35); }
+  #segEgreso.activo, #btnTipoEgreso.activo { background: rgba(224,68,68,0.18); color: #ff9090; border: 1px solid rgba(224,68,68,0.4); }
+  #segIngreso.activo, #btnTipoIngreso.activo { background: rgba(44,184,122,0.18); color: #5de09a; border: 1px solid rgba(44,184,122,0.4); }
+
+  .etiquetas-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .etiqueta-tarjeta { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 20px; font-size: 13px; cursor: pointer; }
+
+  .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; max-width: 480px; margin: 0 auto; background: rgba(7,16,32,0.85); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 0 10px; background: none; border: none; color: var(--text-3); cursor: pointer; position: relative; }
-  .nav-item svg { width: 22px !important; height: 22px !important; }
-  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; }
+  .nav-item svg { width: 22px !important; height: 22px !important; flex-shrink: 0; }
+  .nav-item span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
   .nav-item.activo { color: var(--sky-bright); }
   .nav-item.activo::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2.5px; border-radius: 2px; background: var(--sky-bright); }
 
   .modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); }
   .modal-overlay.activo { display: flex; }
   .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
-  .modal-body { padding: 14px 20px; overflow-y: auto; flex: 1; }
-  .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--border); }
+  .modal-head { padding: 22px 20px 8px; flex-shrink: 0; }
+  .modal-titulo { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text-0); }
+  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
+  .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
-  .lf-group { margin-bottom: 14px; }
+  .lf-group { margin-bottom: 14px; position: relative; }
   .lf-row { display: flex; gap: 10px; }
+  .lf-row .lf-group { flex: 1; }
   .lf-label { display: block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
   .lf-input, .lf-select, .lf-textarea { width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); border-radius: var(--r-md); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-0); outline: none; }
-  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; }
+  .lf-textarea { resize: vertical; min-height: 60px; }
+  .lf-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238cafd7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
+  .lf-select option { background: #0d1e38; color: var(--text-0); }
+  .lf-input:focus, .lf-select:focus, .lf-textarea:focus { border-color: var(--sky-bright); background: rgba(255,255,255,0.1); }
 
-  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; margin-right: 8px; display: inline-block; }
+  .color-picker { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .color-dot-pick { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
   .color-dot-pick.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
-  .btn-guardar { width: 100%; padding: 16px; border-radius: 16px; border: none; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; cursor: pointer; color: #fff; }
-  .btn-guardar.ing { background: linear-gradient(135deg, #2cb87a, #1e8a5a); }
+  .chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(85,179,245,0.15); border: 1px solid rgba(85,179,245,0.3); border-radius: 20px; font-size: 12px; color: var(--sky-bright); }
+  
+  .modal-botones { display: flex; gap: 10px; width: 100%; }
+  .btn-main { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, var(--sky), var(--sky-bright)); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(58,143,209,0.3); }
+  .btn-guardar { flex: 1; padding: 14px; border-radius: var(--r-md); border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #fff; }
+  .btn-guardar.ing, .btn-guardar.principal { background: linear-gradient(135deg, #2cb87a, #1e8a5a); }
   .btn-guardar.egr { background: linear-gradient(135deg, #e04444, #a52d2d); }
   .btn-guardar.neutro { background: linear-gradient(135deg, var(--sky), #2a6ea8); }
-  .btn-cancelar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
-  .btn-eliminar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.12); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; margin-bottom: 10px; }
+  
+  .btn-cancelar { flex: 1; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--border-hi); background: rgba(255,255,255,0.06); color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+  .btn-eliminar { width: 100%; padding: 14px; border-radius: var(--r-md); border: 1px solid rgba(224,68,68,0.3); background: rgba(224,68,68,0.12); color: #ff9090; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
 
+  .detalle-row { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
+  .detalle-valor { font-size: 15px; color: var(--text-1); }
   .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9px 14px; font-weight: 600; font-size: 13px; }
+
   .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
+  .cargando { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; text-transform: uppercase; }
   .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(85,179,245,0.15); border-top-color: var(--sky-bright); animation: spin 0.8s linear infinite; }
 </style>
 </head>
 <body>
 
-<!-- SPLASH SCREEN -->
+<!-- ===== NUEVO: SPLASH SCREEN (Pantalla de carga inicial) ===== -->
 <div id="splash-screen">
-  <div class="brand-orb"><img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo"></div>
+  <div class="brand-orb">
+    <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo">
+  </div>
   <div class="brand-title">Turismo Isabel</div>
   <div class="brand-sub">Ingresos y Egresos</div>
   <div class="spinner" style="margin-top: 30px; width: 20px; height: 20px; border-width: 2px;"></div>
 </div>
 
-<!-- LOGIN -->
+<!-- ===== PANTALLA LOGIN ===== -->
 <div id="login-screen" style="display:none;">
-  <div class="brand-orb"><img src="icons/icon-512.png" alt="Logo"></div>
+  <div class="brand-orb">
+    <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Turismo Isabel Logo">
+  </div>
   <div class="brand-title">Turismo Isabel</div>
   <div class="brand-sub">Ingresos y Egresos</div>
+  
   <div class="card" style="width: 100%; margin-top: 32px; max-width: 340px;">
-    <div class="lf-group"><label class="lf-label">Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
-    <div class="lf-group"><label class="lf-label">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
-    <button onclick="handleLogin()" class="btn-guardar neutro" style="padding:14px; border-radius:12px;">Entrar</button>
+    <div class="lf-group"><label class="lf-label" style="text-align:left;">Usuario / Email</label><input type="email" id="email" class="lf-input" placeholder="ejemplo@correo.com"></div>
+    <div class="lf-group"><label class="lf-label" style="text-align:left;">Contraseña</label><input type="password" id="password" class="lf-input" placeholder="••••••••"></div>
+    <button onclick="handleLogin()" class="btn-main" style="margin-top: 10px;">Entrar</button>
     <p id="login-error" style="color:var(--red); font-size:12px; margin-top:15px; display:none;"></p>
   </div>
 </div>
 
-<!-- MODAL: SET PASSWORD (INVITACIONES) -->
-<div class="modal-overlay" id="setPassOverlay" style="z-index: 20000;">
-  <div class="modal-sheet" style="max-width:340px; margin:auto;">
-    <div class="modal-body">
-      <div class="brand-title" style="font-size:22px;">Nueva Contraseña</div>
-      <p style="font-size:12px; color:var(--text-3); margin: 10px 0 20px;">Establece una contraseña para tu nueva cuenta.</p>
-      <div class="lf-group"><input type="password" id="newPassword" class="lf-input" placeholder="Mínimo 6 caracteres"></div>
-      <button onclick="actualizarPassword()" class="btn-guardar neutro">Guardar y Entrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- APP -->
-<div id="app" style="display:none;">
+<!-- ===== APP PRINCIPAL ===== -->
+<div id="app">
   <header class="topbar">
-    <div class="brand-orb"><img src="icons/icon-512.png" alt="Logo"></div>
+    <div class="brand-orb">
+      <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Turismo Isabel Logo">
+    </div>
     <div class="brand-title">Turismo Isabel</div>
     <div class="brand-sub">Ingresos y Egresos</div>
   </header>
 
+  <!-- VISTA INICIO -->
   <section class="vista activa" id="vista-inicio">
     <div class="card">
       <div class="saldo-label">Saldo actual</div>
       <div class="saldo-valor" id="saldoValor">$ 0</div>
+      <div class="saldo-moneda">Pesos argentinos (ARS)</div>
       <div class="resumen-fila">
         <div class="resumen-item ing"><div class="resumen-item-label">Ingresos</div><div class="resumen-item-valor" id="totalIngresos">$ 0</div></div>
         <div class="resumen-item egr"><div class="resumen-item-label">Egresos</div><div class="resumen-item-valor" id="totalEgresos">$ 0</div></div>
       </div>
     </div>
+
     <div class="acciones">
-      <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')">Ingreso</button>
-      <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')">Egreso</button>
+      <button class="btn-accion btn-ingreso" onclick="abrirModalMovimiento('ingreso')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        Ingreso
+      </button>
+      <button class="btn-accion btn-egreso" onclick="abrirModalMovimiento('egreso')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        Egreso
+      </button>
     </div>
-    <div class="fila-titulo"><div class="vista-titulo">Movimientos</div><button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()">Filtrar</button></div>
-    <div id="movLista"></div>
+
+    <div class="fila-titulo">
+      <div class="vista-titulo">Movimientos</div>
+      <button class="btn-filtro" id="btnFiltro" onclick="abrirFiltro()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        Filtrar
+      </button>
+    </div>
+    <div id="movLista"><div class="cargando"><div class="spinner"></div><p>Cargando</p></div></div>
   </section>
 
+  <!-- VISTA CUENTAS -->
   <section class="vista" id="vista-cuentas">
-    <div class="fila-titulo"><div class="vista-titulo">Cuentas</div><button class="btn-nuevo" onclick="abrirModalCuenta()">Nueva</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Cuentas</div>
+      <button class="btn-nuevo" onclick="abrirModalCuenta()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
     <div class="lista" id="cuentasLista"></div>
   </section>
 
+  <!-- VISTA CONTRAPARTES (Antes Personas) -->
   <section class="vista" id="vista-contrapartes">
-    <div class="fila-titulo"><div class="vista-titulo">Contrapartes</div><button class="btn-nuevo" onclick="abrirModalContraparte()">Nueva</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Contrapartes</div>
+      <button class="btn-nuevo" onclick="abrirModalContraparte()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
     <div class="etiquetas-grid" id="contrapartesLista"></div>
   </section>
 
+  <!-- VISTA CATEGORÍAS -->
   <section class="vista" id="vista-categorias">
-    <div class="fila-titulo"><div class="vista-titulo">Categorías</div><button class="btn-nuevo" onclick="abrirModalCategoria()">Nueva</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Categorías</div>
+      <button class="btn-nuevo" onclick="abrirModalCategoria()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
     <div class="segmented">
       <button id="segEgreso" class="activo" onclick="cambiarSegmentoCategoria('egreso')">Egreso</button>
       <button id="segIngreso" onclick="cambiarSegmentoCategoria('ingreso')">Ingreso</button>
@@ -218,182 +317,249 @@
     <div class="lista" id="categoriasLista"></div>
   </section>
 
+  <!-- VISTA ETIQUETAS -->
   <section class="vista" id="vista-etiquetas">
-    <div class="fila-titulo"><div class="vista-titulo">Etiquetas</div><button class="btn-nuevo" onclick="abrirModalEtiqueta()">Nueva</button></div>
+    <div class="fila-titulo">
+      <div class="vista-titulo">Etiquetas</div>
+      <button class="btn-nuevo" onclick="abrirModalEtiqueta()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
     <div class="etiquetas-grid" id="etiquetasLista"></div>
   </section>
 
+  <!-- NAVEGACIÓN INFERIOR (REORGANIZADA) -->
   <nav class="bottom-nav">
-    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')"><span>Inicio</span></button>
-    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')"><span>Cuentas</span></button>
-    <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')"><span>Contr.</span></button>
-    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')"><span>Categ.</span></button>
-    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')"><span>Tags</span></button>
-    <button class="nav-item" onclick="logout()"><span>Salir</span></button>
+    <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" data-vista="cuentas" onclick="cambiarVista('cuentas')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <span>Cuentas</span>
+    </button>
+    <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Contr.</span>
+    </button>
+    <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+      <span>Categ.</span>
+    </button>
+    <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+      <span>Tags</span>
+    </button>
+    <button class="nav-item" onclick="logout()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      <span>Salir</span>
+    </button>
   </nav>
 </div>
 
-<!-- MODALES -->
+<!-- ===== MODAL: MOVIMIENTO ===== -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="modalTitulo">Nuevo movimiento</div></div>
     <div class="modal-body">
-      <div class="modal-titulo" id="modalTitulo" style="margin-bottom:20px;">Nuevo Movimiento</div>
       <div class="lf-row">
-        <div class="lf-group"><label class="lf-label">Fecha *</label><input type="date" class="lf-input" id="inpFecha" oninput="saveDraft()"></div>
-        <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora" oninput="saveDraft()"></div>
+        <div class="lf-group"><label class="lf-label">Fecha *</label><input type="date" class="lf-input" id="inpFecha"></div>
+        <div class="lf-group"><label class="lf-label">Hora</label><input type="time" class="lf-input" id="inpHora"></div>
       </div>
       <div class="lf-row">
-        <div class="lf-group"><label class="lf-label">Monto *</label><input type="number" step="any" class="lf-input" id="inpMonto" oninput="actualizarPreviewARS(); saveDraft()"></div>
+        <div class="lf-group"><label class="lf-label">Monto *</label><input type="number" step="any" class="lf-input" id="inpMonto" placeholder="0.00" style="font-size:18px; font-weight:700;" oninput="actualizarPreviewARS()"></div>
         <div class="lf-group" style="max-width:110px;"><label class="lf-label">Moneda</label>
-          <select class="lf-select" id="inpMoneda" onchange="onCambioMoneda(); saveDraft()">
-            <option value="ARS">ARS</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="BRL">BRL</option><option value="OTRA">Otra...</option>
+          <select class="lf-select" id="inpMoneda" onchange="onCambioMoneda()">
+            <option value="ARS">ARS</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="BRL">BRL</option>
+            <option value="OTRA">Otra...</option>
           </select>
         </div>
       </div>
+      <div class="lf-group" id="grupoMonedaOtra" style="display:none;"><label class="lf-label">Código de moneda</label><input type="text" class="lf-input" id="inpMonedaOtra" placeholder="Ej: CLP, UYU..." maxlength="6"></div>
       <div class="lf-group" id="grupoCotizacion" style="display:none;">
-        <label class="lf-label">Cotización a ARS</label>
-        <input type="number" step="any" class="lf-input" id="inpCotizacion" oninput="actualizarPreviewARS(); saveDraft()">
-        <div id="previewARS" style="color:var(--sky-bright); font-size:12px; margin-top:6px;"></div>
+        <label class="lf-label">Cotización a pesos (ARS)</label>
+        <input type="number" step="any" class="lf-input" id="inpCotizacion" placeholder="Ej: 1250" oninput="actualizarPreviewARS()">
+        <div id="previewARS" style="font-family:var(--font-num); font-size:12.5px; color:var(--sky-bright); margin-top:6px;"></div>
       </div>
-      <div class="lf-group"><label class="lf-label">Concepto</label><input type="text" class="lf-input" id="inpConcepto" oninput="saveDraft()"></div>
-      <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta(); saveDraft()"></select></div>
-      <div class="lf-group"><label class="lf-label">Contraparte</label><select class="lf-select" id="inpContraparteId" onchange="onCambioSelectContraparte(); saveDraft()"></select></div>
-      <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria(); saveDraft()"></select></div>
-      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta(); saveDraft()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
-      <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" oninput="saveDraft()"></textarea></div>
+      <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
+      <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
+      <!-- NUEVO: Selector de Contraparte -->
+      <div class="lf-group"><label class="lf-label" id="labelContraparte">Contraparte</label><select class="lf-select" id="inpContraparteId" onchange="onCambioSelectContraparte()"></select></div>
+      <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
+      <!-- CAMBIO: Label de Etiquetas -->
+      <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
+      <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
       <div class="lf-group"><label class="lf-label">Comprobante</label><input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button>
-      <button class="btn-cancelar" onclick="borrarBorrador(); cerrarModal('modalOverlay')">Cancelar</button>
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalOverlay')">Cancelar</button>
+        <button class="btn-guardar" id="btnGuardar" onclick="guardarMovimiento()">Guardar</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="filtroOverlay">
-  <div class="modal-sheet">
-    <div class="modal-body">
-      <div class="modal-titulo" style="margin-bottom:20px;">Filtrar</div>
-      <div class="lf-group"><label class="lf-label">Desde</label><input type="date" class="lf-input" id="filtroDesde"></div>
-      <div class="lf-group"><label class="lf-label">Hasta</label><input type="date" class="lf-input" id="filtroHasta"></div>
-      <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
-      <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button>
-      <button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODALES AUXILIARES -->
-<div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpCuentaNombre" class="lf-input"></div><label class="lf-label">Color</label><div id="colorPickerCuenta"></div><button class="btn-guardar neutro" onclick="guardarCuenta()" style="margin-top:20px;">Guardar</button><button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cerrar</button></div></div></div>
-<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpCategoriaNombre" class="lf-input"></div><div class="segmented"><button id="btnTipoEgresoAux" onclick="setTipoCat('egreso')">Egreso</button><button id="btnTipoIngresoAux" onclick="setTipoCat('ingreso')">Ingreso</button></div><button class="btn-guardar neutro" onclick="guardarCategoria()" style="margin-top:20px;">Guardar</button><button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cerrar</button></div></div></div>
-<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpEtiquetaNombre" class="lf-input"></div><div id="colorPickerEtiqueta"></div><button class="btn-guardar neutro" onclick="guardarEtiqueta()" style="margin-top:20px;">Guardar</button><button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cerrar</button></div></div></div>
-<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre</label><input type="text" id="inpContraparteNombre" class="lf-input"></div><div id="colorPickerContraparte"></div><button class="btn-guardar neutro" onclick="guardarContraparte()" style="margin-top:20px;">Guardar</button><button class="btn-cancelar" onclick="cerrarModal('modalContraparteOverlay')">Cerrar</button></div></div></div>
-
+<!-- ===== MODAL: DETALLE MOVIMIENTO ===== -->
 <div class="modal-overlay" id="detalleOverlay">
   <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="detalleTitulo">Detalle del Movimiento</div></div>
     <div class="modal-body" id="detalleBody"></div>
     <div class="modal-foot">
-      <button class="btn-guardar neutro" id="btnEditarMov">Editar</button>
-      <button class="btn-eliminar" id="btnEliminarMov">Eliminar</button>
-      <button class="btn-cancelar" onclick="cerrarModal('detalleOverlay')">Cerrar</button>
+      <div class="modal-botones">
+        <button class="btn-guardar neutro" id="btnEditarMov">Editar</button>
+        <button class="btn-eliminar" id="btnEliminarMov" style="width: auto; flex:1;">Eliminar</button>
+      </div>
+      <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('detalleOverlay')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: CUENTA ===== -->
+<div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Cuenta</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre de la Cuenta *</label><input type="text" id="inpCuentaNombre" class="lf-input" placeholder="Ej: Efectivo, Banco Nación..."></div>
+      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerCuenta"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: CATEGORÍA ===== -->
+<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Categoría</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre de Categoría *</label><input type="text" id="inpCategoriaNombre" class="lf-input" placeholder="Ej: Sueldos, Alquiler, Mercadería..."></div>
+      <div class="lf-group"><label class="lf-label">Tipo de Categoría</label>
+        <div class="segmented">
+          <button id="btnTipoEgreso" onclick="setTipoCat('egreso')">Egreso</button>
+          <button id="btnTipoIngreso" onclick="setTipoCat('ingreso')">Ingreso</button>
+          <button id="btnTipoAmbas" onclick="setTipoCat('ambas')">Ambas</button>
+        </div>
+      </div>
+      <div class="lf-group"><label class="lf-label">Categoría Padre (Opcional)</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar categoría</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ETIQUETA ===== -->
+<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Etiqueta</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input" placeholder="Ej: Urgente, Pagado, Facturado..."></div>
+      <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerEtiqueta"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar etiqueta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: CONTRAPARTE ===== -->
+<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="contraparteModalTitulo">Contraparte</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre / Razón Social *</label><input type="text" id="inpContraparteNombre" class="lf-input" placeholder="Ej: Juan Pérez, Gas Natural..."></div>
+      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerContraparte"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalContraparteOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarContraparte" style="display:none;" onclick="eliminarContraparte()">Eliminar contraparte</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: FILTROS ===== -->
+<div class="modal-overlay" id="filtroOverlay">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Desde</label><input type="datetime-local" class="lf-input" id="filtroDesde"></div>
+      <div class="lf-group"><label class="lf-label">Hasta</label><input type="datetime-local" class="lf-input" id="filtroHasta"></div>
+      <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
+      <!-- NUEVO: Filtro de Contraparte -->
+      <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button>
+        <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button>
+      </div>
+      <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('filtroOverlay')">Cerrar</button>
     </div>
   </div>
 </div>
 
 <script>
+/* === CREDENCIALES SUPABASE === */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
+function colorPorTipo(t) { return t === 'ingreso' ? '#2cb87a' : t === 'egreso' ? '#e04444' : '#55b3f5'; }
 let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [], contrapartes = [];
 let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
 let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0], colorElegidoContraparte = COLORES[0];
-let movEditandoId = null, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
-let filtro = { cuenta_id: '', contraparte_id: '', desde: '', hasta: '' };
+let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null, contraparteEditandoId = null;
+let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
+let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
 
-/* === AUTH & DRAFTS === */
+/* === AUTH === */
 async function checkUser() {
   const { data: { session } } = await _supabase.auth.getSession();
   
-  // Lógica Invitación por Mail
-  const hash = window.location.hash;
-  if (hash && (hash.includes('type=invite') || hash.includes('type=recovery'))) {
-    document.getElementById('splash-screen').classList.add('hidden');
-    document.getElementById('setPassOverlay').classList.add('activo');
-    return;
-  }
-
+  // NUEVO: Ocultar Splash Screen una vez verificado el usuario
   setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 800);
 
   if (session) {
     user = session.user;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    await fetchData();
-    restoreDraft(); // Restaurar si hubo recarga por adjunto
+    fetchData();
   } else {
     document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
   }
 }
 
 async function handleLogin() {
   const e = document.getElementById('email').value, p = document.getElementById('password').value;
   const { error } = await _supabase.auth.signInWithPassword({ email: e, password: p });
-  if (error) { alert(error.message); } else checkUser();
+  if (error) { const err = document.getElementById('login-error'); err.innerText = "Error: " + error.message; err.style.display = 'block'; }
+  else checkUser();
 }
-
-async function actualizarPassword() {
-  const p = document.getElementById('newPassword').value;
-  if (p.length < 6) return alert("Mínimo 6 caracteres");
-  const { error } = await _supabase.auth.updateUser({ password: p });
-  if (error) alert(error.message);
-  else { alert("Contraseña guardada"); window.location.hash = ""; window.location.reload(); }
-}
-
-function saveDraft() {
-  if (movEditandoId) return; // No guardar borrador si estamos editando uno viejo
-  const draft = {
-    tipo: tipoActual,
-    fecha: document.getElementById('inpFecha').value,
-    hora: document.getElementById('inpHora').value,
-    monto: document.getElementById('inpMonto').value,
-    moneda: document.getElementById('inpMoneda').value,
-    cotizacion: document.getElementById('inpCotizacion').value,
-    concepto: document.getElementById('inpConcepto').value,
-    cuenta_id: document.getElementById('inpCuenta').value,
-    contraparte_id: document.getElementById('inpContraparteId').value,
-    categoria_id: document.getElementById('inpCategoria').value,
-    notas: document.getElementById('inpNotas').value,
-    etiquetas: etiquetasSeleccionadas
-  };
-  localStorage.setItem('mov_draft', JSON.stringify(draft));
-}
-
-function restoreDraft() {
-  const raw = localStorage.getItem('mov_draft');
-  if (!raw) return;
-  const d = JSON.parse(raw);
-  abrirModalMovimiento(d.tipo);
-  document.getElementById('inpFecha').value = d.fecha;
-  document.getElementById('inpHora').value = d.hora;
-  document.getElementById('inpMonto').value = d.monto;
-  document.getElementById('inpMoneda').value = d.moneda;
-  document.getElementById('inpCotizacion').value = d.cotizacion;
-  document.getElementById('inpConcepto').value = d.concepto;
-  document.getElementById('inpCuenta').value = d.cuenta_id;
-  document.getElementById('inpContraparteId').value = d.contraparte_id;
-  document.getElementById('inpCategoria').value = d.categoria_id;
-  document.getElementById('inpNotas').value = d.notas;
-  etiquetasSeleccionadas = d.etiquetas || [];
-  onCambioMoneda();
-  renderChipsEtiquetas();
-}
-
-function borrarBorrador() { localStorage.removeItem('mov_draft'); }
 
 async function logout() { await _supabase.auth.signOut(); window.location.reload(); }
 
@@ -406,10 +572,17 @@ async function fetchData() {
     _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false }),
     _supabase.from('contrapartes').select('*').order('nombre')
   ]);
-  cuentas = rC.data || []; categorias = rCat.data || []; etiquetas = rE.data || []; contrapartes = rCon.data || [];
+  cuentas = rC.data || [];
+  categorias = rCat.data || [];
+  etiquetas = rE.data || [];
+  contrapartes = rCon.data || [];
   movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
   renderTodaLaApp();
 }
+
+/* === RENDERERS === */
+function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
 function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); renderContrapartes(); }
 
@@ -417,210 +590,451 @@ function renderInicio() {
   let lista = movements.slice();
   if (filtro.cuenta_id) lista = lista.filter(m => m.cuenta_id === filtro.cuenta_id);
   if (filtro.contraparte_id) lista = lista.filter(m => m.contraparte_id === filtro.contraparte_id);
+  if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
+  if (filtro.etiqueta_id) lista = lista.filter(m => (m.etiquetaIds || []).includes(filtro.etiqueta_id));
   if (filtro.desde) lista = lista.filter(m => new Date(m.fecha) >= new Date(filtro.desde));
   if (filtro.hasta) lista = lista.filter(m => new Date(m.fecha) <= new Date(filtro.hasta));
+  
+  document.getElementById('btnFiltro').classList.toggle('activo', !!(filtro.cuenta_id || filtro.contraparte_id || filtro.categoria_id || filtro.etiqueta_id || filtro.desde || filtro.hasta));
 
   const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
-  document.getElementById('saldoValor').textContent = fmtARS(ing - egr);
+  const saldo = ing - egr;
+
+  const saldoValEl = document.getElementById('saldoValor');
+  saldoValEl.textContent = fmtARS(saldo);
+  saldoValEl.classList.toggle('negativo', saldo < 0);
   document.getElementById('totalIngresos').textContent = fmtARS(ing);
   document.getElementById('totalEgresos').textContent = fmtARS(egr);
 
   const cont = document.getElementById('movLista');
-  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos.</div>'; return; }
+  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos registrados.</div>'; return; }
+  
   cont.innerHTML = lista.map(m => {
+    const cta = cuentas.find(c => c.id === m.cuenta_id);
+    const cat = categorias.find(c => c.id === m.categoria_id);
     const esIng = m.tipo === 'ingreso';
+    
+    const titulo = m.concepto && m.concepto.trim() !== '' ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
+    const clip = m.archivo_path ? ' 📎' : '';
+    const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
+    
+    let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
+    if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
+    
+    // Buscar nombre contraparte por ID o usar texto antiguo
     const cCon = contrapartes.find(c => c.id === m.contraparte_id);
-    return `<div class="item-fila" onclick="verDetalle('${m.id}')">
-      <div class="mov-dot ${esIng?'ing':'egr'}"></div>
-      <div class="mov-body">
-        <div class="mov-concepto">${escapeHtml(m.concepto || 'Sin concepto')}</div>
-        <div class="mov-meta">${new Date(m.fecha).toLocaleDateString()} ${cCon ? ' · '+cCon.nombre : ''}</div>
+    const conNombre = cCon ? cCon.nombre : m.contraparte;
+    if (conNombre) subInfo += ` · De/Para: ${escapeHtml(conNombre)}`;
+
+    return `
+    <div class="item-fila" onclick="verDetalle('${m.id}')">
+      <div class="mov-dot ${esIng?'ing':'egr'}">
+        ${esIng ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>'}
       </div>
-      <div class="mov-right"><div class="mov-monto ${esIng?'ing':'egr'}">${fmtARS(m.monto_ars || m.monto)}</div></div>
+      <div class="mov-body">
+        <div class="mov-concepto">${titulo}${clip} ${catBadge}</div>
+        <div class="mov-meta">${subInfo}</div>
+      </div>
+      <div class="mov-right">
+        <div class="mov-monto ${esIng?'ing':'egr'}">${esIng?'+':'−'}${fmtARS(m.monto_ars || m.monto)}</div>
+        ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:10.5px; color:var(--text-3); margin-top:2px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})}</div>` : ''}
+      </div>
     </div>`;
   }).join('');
 }
 
 function renderCuentas() {
-  document.getElementById('cuentasLista').innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.id}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
-}
-function renderCategorias() {
-  document.getElementById('categoriasLista').innerHTML = categorias.filter(c => c.tipo === segmentoCategoria).map(c => `<div class="item-fila" onclick="abrirModalCategoria('${c.id}')">${escapeHtml(c.nombre)}</div>`).join('');
-}
-function renderEtiquetas() {
-  document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `<div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')"><div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}</div>`).join('');
-}
-function renderContrapartes() {
-  document.getElementById('contrapartesLista').innerHTML = contrapartes.map(c => `<div class="etiqueta-tarjeta" onclick="abrirModalContraparte('${c.id}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
+  const cont = document.getElementById('cuentasLista');
+  if (!cuentas.length) { cont.innerHTML = '<div class="vacio">No creaste cuentas todavía.</div>'; return; }
+  cont.innerHTML = cuentas.map(c => `
+    <div class="item-fila" onclick="abrirModalCuenta('${c.id}')">
+      <div class="color-dot" style="background:${c.color}"></div>
+      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(c.nombre)}</div></div>
+      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
+    </div>`).join('');
 }
 
+function renderCategorias() {
+  const padres = categorias.filter(c => !c.padre_id && (c.tipo === segmentoCategoria || c.tipo === 'ambas'));
+  const cont = document.getElementById('categoriasLista');
+  if (!padres.length) { cont.innerHTML = '<div class="vacio">No hay categorías para este tipo.</div>'; return; }
+  cont.innerHTML = padres.map(p => `
+    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')">
+      <div class="color-dot" style="background:${p.color}"></div>
+      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(p.nombre)}</div></div>
+      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
+    </div>
+    ${categorias.filter(c => c.padre_id === p.id).map(s => `
+      <div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')">
+        <div class="color-dot" style="background:${s.color}"></div>
+        <div class="mov-body"><div style="font-size:14px; color:var(--text-2);">— ${escapeHtml(s.nombre)}</div></div>
+      </div>`).join('')}
+  `).join('');
+}
+
+function renderEtiquetas() {
+  const cont = document.getElementById('etiquetasLista');
+  if (!etiquetas.length) { cont.innerHTML = '<div class="vacio">No creaste etiquetas todavía.</div>'; return; }
+  cont.innerHTML = etiquetas.map(e => `
+    <div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')">
+      <div class="color-dot" style="background:${e.color}"></div>
+      <strong style="color:white;">${escapeHtml(e.nombre)}</strong>
+    </div>`).join('');
+}
+
+function renderContrapartes() {
+  const cont = document.getElementById('contrapartesLista');
+  if (!contrapartes.length) { cont.innerHTML = '<div class="vacio">No creaste contrapartes todavía.</div>'; return; }
+  cont.innerHTML = contrapartes.map(c => `
+    <div class="etiqueta-tarjeta" onclick="abrirModalContraparte('${c.id}')">
+      <div class="color-dot" style="background:${c.color}"></div>
+      <strong style="color:white;">${escapeHtml(c.nombre)}</strong>
+    </div>`).join('');
+}
+
+/* === MODALS LOGIC === */
 function cambiarVista(v) {
   document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
   document.getElementById('vista-'+v).classList.add('activa');
   document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('activo', x.dataset.vista === v));
+  vistaActual = v;
 }
 
 function abrirModalMovimiento(t) {
-  tipoActual = t; movEditandoId = null; etiquetasSeleccionadas = [];
-  document.getElementById('modalTitulo').textContent = t==='ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
+  tipoActual = t; etiquetasSeleccionadas = []; movEditandoId = null;
+  document.getElementById('modalTitulo').textContent = t === 'ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
   document.getElementById('inpFecha').valueAsDate = new Date();
   document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5);
   document.getElementById('inpMonto').value = ''; 
+  document.getElementById('inpMoneda').value = 'ARS';
+  document.getElementById('inpMonedaOtra').value = '';
+  document.getElementById('inpCotizacion').value = '';
+  onCambioMoneda();
+  document.getElementById('inpConcepto').value = '';
+  document.getElementById('inpContraparteId').value = '';
+  document.getElementById('inpNotas').value = '';
+  document.getElementById('inpArchivo').value = '';
+  
   const btn = document.getElementById('btnGuardar');
   btn.textContent = "Guardar";
   btn.className = "btn-guardar " + (t === 'ingreso' ? 'ing' : 'egr');
+
   poblarSelectsMov();
-  document.getElementById('chipsEtiquetas').innerHTML = '';
+  renderChipsEtiquetas();
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
 function onCambioMoneda() {
-  document.getElementById('grupoCotizacion').style.display = document.getElementById('inpMoneda').value === 'ARS' ? 'none' : 'block';
+  const m = document.getElementById('inpMoneda').value;
+  document.getElementById('grupoMonedaOtra').style.display = (m === 'OTRA') ? 'block' : 'none';
+  document.getElementById('grupoCotizacion').style.display = (m === 'ARS') ? 'none' : 'block';
+  if (m === 'ARS') document.getElementById('inpCotizacion').value = '';
+  actualizarPreviewARS();
 }
 function actualizarPreviewARS() {
-  const m = parseFloat(document.getElementById('inpMonto').value) || 0;
-  const c = parseFloat(document.getElementById('inpCotizacion').value) || 0;
-  document.getElementById('previewARS').textContent = c > 0 ? 'Equivale a ' + fmtARS(m * c) : '';
+  const m = document.getElementById('inpMoneda').value;
+  const monto = parseFloat(document.getElementById('inpMonto').value) || 0;
+  const preview = document.getElementById('previewARS');
+  if (m === 'ARS') { preview.textContent = ''; return; }
+  const cot = parseFloat(document.getElementById('inpCotizacion').value) || 0;
+  preview.textContent = (monto && cot) ? ('Equivale a ' + fmtARS(monto * cot)) : '';
 }
 
 function poblarSelectsMov(selCta, selCat, selCon) {
-  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Cuenta</option>';
-  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Contraparte</option>';
-  document.getElementById('inpCategoria').innerHTML = '<option value="">Sin categoría asignada</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Categoría</option>';
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('') + '<option value="NUEVA">+ Nueva Etiqueta</option>';
-  if(selCta) document.getElementById('inpCuenta').value = selCta;
-  if(selCat) document.getElementById('inpCategoria').value = selCat;
-  if(selCon) document.getElementById('inpContraparteId').value = selCon;
+  const ctaVal = selCta !== undefined ? selCta : document.getElementById('inpCuenta').value;
+  const catVal = selCat !== undefined ? selCat : document.getElementById('inpCategoria').value;
+  const conVal = selCon !== undefined ? selCon : document.getElementById('inpContraparteId').value;
+  
+  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + 
+    cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CUENTA...</option>';
+  document.getElementById('inpCuenta').value = ctaVal || '';
+
+  const cats = categorias.slice();
+  let catHtml = '<option value="">Sin categoría asignada</option>';
+  const padres = cats.filter(c => !c.padre_id);
+  padres.forEach(p => {
+    catHtml += `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`;
+    cats.filter(c => c.padre_id === p.id).forEach(sub => {
+      catHtml += `<option value="${sub.id}">&nbsp;&nbsp;&nbsp;— ${escapeHtml(sub.nombre)}</option>`;
+    });
+  });
+  catHtml += '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CATEGORÍA...</option>';
+  document.getElementById('inpCategoria').innerHTML = catHtml;
+  document.getElementById('inpCategoria').value = catVal || '';
+
+  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + 
+    contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CONTRAPARTE...</option>';
+  document.getElementById('inpContraparteId').value = conVal || '';
+
+  const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + 
+    tagsDisp.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA ETIQUETA...</option>';
 }
 
 function renderChipsEtiquetas() {
   document.getElementById('chipsEtiquetas').innerHTML = etiquetasSeleccionadas.map(id => {
     const e = etiquetas.find(x => x.id === id);
-    return e ? `<span class="chip">${escapeHtml(e.nombre)}</span>` : '';
+    if(!e) return '';
+    return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px; cursor:pointer;">×</strong></span>`;
   }).join('');
+  poblarSelectsMov();
 }
 
-async function guardarMovimiento() {
-  const monto = parseFloat(document.getElementById('inpMonto').value);
-  if (!monto) return alert("Ingresa monto");
-  const fileInput = document.getElementById('inpArchivo');
-  
-  const payload = {
-    user_id: user.id, tipo: tipoActual, monto: monto,
-    fecha: new Date(document.getElementById('inpFecha').value + 'T' + document.getElementById('inpHora').value).toISOString(),
-    concepto: document.getElementById('inpConcepto').value || null,
-    cuenta_id: document.getElementById('inpCuenta').value || null,
-    contraparte_id: document.getElementById('inpContraparteId').value || null,
-    categoria_id: document.getElementById('inpCategoria').value || null,
-    moneda: document.getElementById('inpMoneda').value,
-    cotizacion: parseFloat(document.getElementById('inpCotizacion').value) || 1,
-    notas: document.getElementById('inpNotas').value || null
-  };
+function onAddEtiqueta() {
+  const s = document.getElementById('inpEtiquetaSelect');
+  if (s.value === 'NUEVA') { abrirModalEtiqueta(null, true); s.value = ''; return; }
+  if (s.value && !etiquetasSeleccionadas.includes(s.value)) {
+    etiquetasSeleccionadas.push(s.value);
+    renderChipsEtiquetas();
+  }
+  s.value = '';
+}
 
-  let mov;
+function quitarEtiqueta(id) {
+  etiquetasSeleccionadas = etiquetasSeleccionadas.filter(x => x !== id);
+  renderChipsEtiquetas();
+}
+
+/* === CRUD SUPABASE MOVIMIENTOS === */
+async function guardarMovimiento() {
+  const btnGuardar = document.getElementById('btnGuardar');
+  if (btnGuardar.disabled) return; 
+  btnGuardar.disabled = true;
+  const textoOriginal = btnGuardar.textContent;
+  btnGuardar.textContent = 'Guardando...';
+  try { await _guardarMovimientoInterno(); } finally { btnGuardar.disabled = false; btnGuardar.textContent = textoOriginal; }
+}
+
+async function _guardarMovimientoInterno() {
+  const monto = parseFloat(document.getElementById('inpMonto').value);
+  const fecha = document.getElementById('inpFecha').value;
+  const hora = document.getElementById('inpHora').value || '00:00';
+  if (!monto || monto <= 0 || !fecha) { alert("Por favor completa al menos el Monto y la Fecha."); return; }
+  const fileInput = document.getElementById('inpArchivo');
+  let moneda = document.getElementById('inpMoneda').value;
+  if (moneda === 'OTRA') moneda = document.getElementById('inpMonedaOtra').value.trim().toUpperCase() || 'OTRA';
+  const cotizacion = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 0);
+  const payload = {
+    user_id: user.id, tipo: tipoActual, monto: monto, moneda: moneda, cotizacion: cotizacion,
+    concepto: document.getElementById('inpConcepto').value.trim() || null,
+    contraparte_id: document.getElementById('inpContraparteId').value || null,
+    notas: document.getElementById('inpNotas').value.trim() || null,
+    cuenta_id: document.getElementById('inpCuenta').value || null,
+    categoria_id: document.getElementById('inpCategoria').value || null,
+    fecha: new Date(`${fecha}T${hora}`).toISOString()
+  };
+  let movId = movEditandoId;
   if (movEditandoId) {
-    const { data } = await _supabase.from('movimientos').update(payload).eq('id', movEditandoId).select().single();
-    mov = data;
+    const { error } = await _supabase.from('movimientos').update(payload).eq('id', movEditandoId);
+    if (error) { alert(error.message); return; }
     await _supabase.from('movimiento_etiquetas').delete().eq('movimiento_id', movEditandoId);
   } else {
-    const { data } = await _supabase.from('movimientos').insert([payload]).select().single();
-    mov = data;
+    const { data: mov, error } = await _supabase.from('movimientos').insert([payload]).select().single();
+    if (error) { alert(error.message); return; }
+    movId = mov.id;
   }
-
-  if (etiquetasSeleccionadas.length) {
-    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: mov.id, etiqueta_id: id })));
+  if (etiquetasSeleccionadas.length && movId) {
+    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
   }
-
-  if (fileInput.files[0]) {
-    const file = fileInput.files[0], path = `${user.id}/${mov.id}/${Date.now()}_${file.name}`;
-    await _supabase.storage.from('comprobantes').upload(path, file);
-    await _supabase.from('movimientos').update({ archivo_path: path }).eq('id', mov.id);
+  if (fileInput.files[0] && movId) {
+    const file = fileInput.files[0], path = `${user.id}/${movId}/${Date.now()}_${file.name}`;
+    const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
+    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
   }
-  borrarBorrador();
-  cerrarModal('modalOverlay'); 
-  fetchData();
+  cerrarModal('modalOverlay'); fetchData();
 }
 
 async function verDetalle(id) {
   const m = movements.find(x => x.id === id);
-  const con = contrapartes.find(c => c.id === m.contraparte_id);
+  if (!m) return;
+  const cta = cuentas.find(c => c.id === m.cuenta_id);
+  const cat = categorias.find(c => c.id === m.categoria_id);
   let arch = '';
   if (m.archivo_path) {
     const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
-    arch = `<a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Ver Comprobante</a>`;
+    if (data?.signedUrl) arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
   }
+  const cCon = contrapartes.find(c => c.id === m.contraparte_id);
+  const conNombre = cCon ? cCon.nombre : (m.contraparte || '-');
   document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor" style="color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}">${fmtARS(m.monto_ars || m.monto)}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor">${escapeHtml(m.concepto || '-')}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Contraparte</div><div class="detalle-valor">${con?con.nombre:'-'}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div>
+      ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:12.5px; color:var(--text-3); margin-top:4px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})} · TC ${Number(m.cotizacion).toLocaleString('es-AR')}</div>` : ''}
+    </div>
+    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor" style="font-weight:600;">${m.concepto ? escapeHtml(m.concepto) : '<i>Sin concepto</i>'}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })}</div></div>
+    ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
+    ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
+    ${conNombre ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>` : ''}
+    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
     ${arch}`;
   document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
-  document.getElementById('btnEliminarMov').onclick = async () => { if(confirm("¿Borrar?")) { await _supabase.from('movimientos').delete().eq('id', id); cerrarModal('detalleOverlay'); fetchData(); } };
+  document.getElementById('btnEliminarMov').onclick = () => borrarMov(id);
   document.getElementById('detalleOverlay').classList.add('activo');
 }
 
 function editarMovimiento(id) {
   const m = movements.find(x => x.id === id);
+  if (!m) return;
   cerrarModal('detalleOverlay');
   movEditandoId = m.id;
   tipoActual = m.tipo;
-  document.getElementById('modalTitulo').textContent = 'Editar';
-  const btn = document.getElementById('btnGuardar');
-  btn.textContent = "Actualizar";
-  btn.className = "btn-guardar " + (m.tipo === 'ingreso' ? 'ing' : 'egr');
-  
-  document.getElementById('inpFecha').value = m.fecha.split('T')[0];
-  document.getElementById('inpHora').value = m.fecha.split('T')[1].slice(0,5);
-  document.getElementById('inpMonto').value = m.monto;
-  document.getElementById('inpConcepto').value = m.concepto;
-  poblarSelectsMov(m.cuenta_id, m.categoria_id, m.contraparte_id);
+  document.getElementById('modalTitulo').textContent = m.tipo === 'ingreso' ? 'Editar Ingreso' : 'Editar Egreso';
+  const fObj = new Date(m.fecha);
+  const yyyy = fObj.getFullYear(), mm = String(fObj.getMonth() + 1).padStart(2, '0'), dd = String(fObj.getDate()).padStart(2, '0');
+  document.getElementById('inpFecha').value = `${yyyy}-${mm}-${dd}`;
+  document.getElementById('inpHora').value = fObj.toTimeString().slice(0, 5);
+  document.getElementById('inpMonto').value = m.monto || '';
+  document.getElementById('inpMoneda').value = ['ARS','USD','EUR','BRL'].includes(m.moneda) ? m.moneda : 'OTRA';
+  document.getElementById('inpMonedaOtra').value = (!['ARS','USD','EUR','BRL'].includes(m.moneda)) ? (m.moneda || '') : '';
+  document.getElementById('inpCotizacion').value = m.cotizacion && m.cotizacion !== 1 ? m.cotizacion : '';
+  onCambioMoneda();
+  document.getElementById('inpConcepto').value = m.concepto || '';
+  document.getElementById('inpContraparteId').value = m.contraparte_id || '';
+  document.getElementById('inpNotas').value = m.notas || '';
+  etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
+  poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '', m.contraparte_id || '');
+  renderChipsEtiquetas();
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
-/* === AUXILIARES === */
-function renderColorPick(id, f) {
-  document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
+async function borrarMov(id) {
+  if(!confirm("¿Seguro de eliminar este movimiento?")) return;
+  await _supabase.from('movimientos').delete().eq('id', id);
+  cerrarModal('detalleOverlay'); fetchData();
 }
-function pickC(c) { colorElegidoCuenta = c; }
-function pickCon(c) { colorElegidoContraparte = c; }
-function pickEt(c) { colorElegidoEtiqueta = c; }
 
-function abrirModalCuenta() { renderColorPick('colorPickerCuenta', 'pickC'); document.getElementById('modalCuentaOverlay').classList.add('activo'); }
-async function guardarCuenta() { await _supabase.from('cuentas').insert([{ user_id: user.id, nombre: document.getElementById('inpCuentaNombre').value, color: colorElegidoCuenta }]); cerrarModal('modalCuentaOverlay'); fetchData(); }
+/* === HELPERS UI & FILTROS === */
+function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
+function cambiarSegmentoCategoria(s) { segmentoCategoria = s; document.getElementById('segEgreso').classList.toggle('activo', s==='egreso'); document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso'); renderCategorias(); }
+function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
+function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(null, true); }
+function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(null, true); }
 
-function abrirModalContraparte() { renderColorPick('colorPickerContraparte', 'pickCon'); document.getElementById('modalContraparteOverlay').classList.add('activo'); }
-async function guardarContraparte() { await _supabase.from('contrapartes').insert([{ user_id: user.id, nombre: document.getElementById('inpContraparteNombre').value, color: colorElegidoContraparte }]); cerrarModal('modalContraparteOverlay'); fetchData(); }
+function renderColorPick(id, sel, f) {
+  document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
+}
+function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
+function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
+function pickCon(c) { colorElegidoContraparte = c; renderColorPick('colorPickerContraparte', c, 'pickCon'); }
 
-function abrirModalCategoria() { document.getElementById('modalCategoriaOverlay').classList.add('activo'); }
-async function guardarCategoria() { await _supabase.from('categorias').insert([{ user_id: user.id, nombre: document.getElementById('inpCategoriaNombre').value, tipo: tipoCatForm }]); cerrarModal('modalCategoriaOverlay'); fetchData(); }
-function setTipoCat(t) { tipoCatForm = t; }
+/* === CRUD AUXILIAR === */
+function abrirModalCuenta(id, rapido = false) {
+  cuentaEditandoId = id; modoRapido = rapido;
+  const c = id ? cuentas.find(x => x.id === id) : null;
+  document.getElementById('cuentaModalTitulo').textContent = c ? 'Editar Cuenta' : 'Nueva Cuenta';
+  document.getElementById('inpCuentaNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarCuenta').style.display = c ? 'block' : 'none';
+  pickC(c ? c.color : COLORES[0]);
+  document.getElementById('modalCuentaOverlay').classList.add('activo');
+}
+async function guardarCuenta() {
+  const n = document.getElementById('inpCuentaNombre').value.trim();
+  if(!n) { alert("Ponele un nombre a la cuenta."); return; }
+  const p = { user_id: user.id, nombre: n, moneda: 'ARS', color: colorElegidoCuenta };
+  let res;
+  if (cuentaEditandoId) res = await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select();
+  else res = await _supabase.from('cuentas').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData(); cerrarModal('modalCuentaOverlay');
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(res.data[0].id, undefined, undefined); modoRapido = false; }
+}
+async function eliminarCuenta() { if(!confirm("¿Eliminar cuenta?")) return; await _supabase.from('cuentas').delete().eq('id', cuentaEditandoId); cerrarModal('modalCuentaOverlay'); fetchData(); }
 
-function abrirModalEtiqueta() { renderColorPick('colorPickerEtiqueta', 'pickEt'); document.getElementById('modalEtiquetaOverlay').classList.add('activo'); }
-async function guardarEtiqueta() { await _supabase.from('etiquetas').insert([{ user_id: user.id, nombre: document.getElementById('inpEtiquetaNombre').value, color: colorElegidoEtiqueta }]); cerrarModal('modalEtiquetaOverlay'); fetchData(); }
+function abrirModalCategoria(id, rapido = false) {
+  categoriaEditandoId = id; modoRapido = rapido;
+  const c = id ? categorias.find(x => x.id === id) : null;
+  document.getElementById('categoriaModalTitulo').textContent = c ? 'Editar Categoría' : 'Nueva Categoría';
+  document.getElementById('inpCategoriaNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarCategoria').style.display = c ? 'block' : 'none';
+  setTipoCat(c ? c.tipo : (modoRapido ? tipoActual : 'egreso'));
+  const padres = categorias.filter(x => !x.padre_id && x.id !== id);
+  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
+  document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
+  document.getElementById('modalCategoriaOverlay').classList.add('activo');
+}
+async function guardarCategoria() {
+  const n = document.getElementById('inpCategoriaNombre').value.trim();
+  if(!n) { alert("Ponele un nombre a la categoría."); return; }
+  const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorPorTipo(tipoCatForm) };
+  let res;
+  if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
+  else res = await _supabase.from('categorias').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData(); cerrarModal('modalCategoriaOverlay');
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(undefined, res.data[0].id, undefined); modoRapido = false; }
+}
+function setTipoCat(t) { tipoCatForm = t; document.getElementById('btnTipoEgreso').classList.toggle('activo', t==='egreso'); document.getElementById('btnTipoIngreso').classList.toggle('activo', t==='ingreso'); document.getElementById('btnTipoAmbas').classList.toggle('activo', t==='ambas'); }
+async function eliminarCategoria() { if(!confirm("¿Eliminar categoría?")) return; await _supabase.from('categorias').delete().eq('id', categoriaEditandoId); cerrarModal('modalCategoriaOverlay'); fetchData(); }
+
+function abrirModalEtiqueta(id, rapido = false) {
+  etiquetaEditandoId = id; modoRapido = rapido;
+  const e = id ? etiquetas.find(x => x.id === id) : null;
+  document.getElementById('etiquetaModalTitulo').textContent = e ? 'Editar Etiqueta' : 'Nueva Etiqueta';
+  document.getElementById('inpEtiquetaNombre').value = e ? e.nombre : '';
+  document.getElementById('btnEliminarEtiqueta').style.display = e ? 'block' : 'none';
+  pickEt(e ? e.color : COLORES[0]);
+  document.getElementById('modalEtiquetaOverlay').classList.add('activo');
+}
+async function guardarEtiqueta() {
+  const n = document.getElementById('inpEtiquetaNombre').value.trim();
+  if(!n) { alert("Escribe un nombre para la etiqueta."); return; }
+  const p = { user_id: user.id, nombre: n, color: colorElegidoEtiqueta };
+  let res;
+  if (etiquetaEditandoId) res = await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select();
+  else res = await _supabase.from('etiquetas').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData(); cerrarModal('modalEtiquetaOverlay');
+  if(modoRapido && res.data && res.data[0]) { if(!etiquetasSeleccionadas.includes(res.data[0].id)) { etiquetasSeleccionadas.push(res.data[0].id); renderChipsEtiquetas(); } modoRapido = false; }
+}
+
+function abrirModalContraparte(id, rapido = false) {
+  contraparteEditandoId = id; modoRapido = rapido;
+  const c = id ? contrapartes.find(x => x.id === id) : null;
+  document.getElementById('contraparteModalTitulo').textContent = c ? 'Editar Contraparte' : 'Nueva Contraparte';
+  document.getElementById('inpContraparteNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarContraparte').style.display = c ? 'block' : 'none';
+  pickCon(c ? c.color : COLORES[0]);
+  document.getElementById('modalContraparteOverlay').classList.add('activo');
+}
+async function guardarContraparte() {
+  const n = document.getElementById('inpContraparteNombre').value.trim();
+  if(!n) { alert("Escribe un nombre para la contraparte."); return; }
+  const p = { user_id: user.id, nombre: n, color: colorElegidoContraparte };
+  let res;
+  if (contraparteEditandoId) res = await _supabase.from('contrapartes').update(p).eq('id', contraparteEditandoId).select();
+  else res = await _supabase.from('contrapartes').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData(); cerrarModal('modalContraparteOverlay');
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(undefined, undefined, res.data[0].id); modoRapido = false; }
+}
 
 function abrirFiltro() {
-  document.getElementById('filtroCuenta').innerHTML = '<option value="">Cuentas</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroContraparte').innerHTML = '<option value="">Contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('filtroDesde').value = filtro.desde;
+  document.getElementById('filtroHasta').value = filtro.hasta;
+  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}" ${filtro.contraparte_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
   document.getElementById('filtroOverlay').classList.add('activo');
 }
-function aplicarFiltros() { filtro.cuenta_id = document.getElementById('filtroCuenta').value; filtro.contraparte_id = document.getElementById('filtroContraparte').value; cerrarModal('filtroOverlay'); renderInicio(); }
-function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', desde: '', hasta: '' }; renderInicio(); cerrarModal('filtroOverlay'); }
-function cerrarModal(id) { document.getElementById(id).classList.remove('activo'); }
-
-function onCambioSelectCuenta() { if(document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(); }
-function onCambioSelectContraparte() { if(document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(); }
-function onCambioSelectCategoria() { if(document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(); }
-function onAddEtiqueta() { 
-  const val = document.getElementById('inpEtiquetaSelect').value;
-  if(val==='NUEVA') { abrirModalEtiqueta(); return; }
-  if(val && !etiquetasSeleccionadas.includes(val)) { etiquetasSeleccionadas.push(val); renderChipsEtiquetas(); }
+function aplicarFiltros() {
+  filtro.cuenta_id = document.getElementById('filtroCuenta').value;
+  filtro.contraparte_id = document.getElementById('filtroContraparte').value;
+  filtro.categoria_id = document.getElementById('filtroCategoria').value;
+  filtro.etiqueta_id = document.getElementById('filtroEtiqueta').value;
+  filtro.desde = document.getElementById('filtroDesde').value;
+  filtro.hasta = document.getElementById('filtroHasta').value;
+  cerrarModal('filtroOverlay'); renderInicio();
 }
-
-function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
-function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' }; cerrarModal('filtroOverlay'); renderInicio(); }
 
 checkUser();
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.log('SW no registrado:', err)); }); }
+document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrarModal(overlay.id); }); });
 </script>
 </body>
 </html>
