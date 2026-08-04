@@ -264,6 +264,18 @@
     <div class="lista" id="cuentasLista"></div>
   </section>
 
+  <!-- VISTA CONTRAPARTES -->
+  <section class="vista" id="vista-contrapartes">
+    <div class="fila-titulo">
+      <div class="vista-titulo">Contrapartes</div>
+      <button class="btn-nuevo" onclick="abrirModalContraparte()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+    </div>
+    <div class="etiquetas-grid" id="contrapartesLista"></div>
+  </section>
+
   <!-- VISTA CATEGORÍAS -->
   <section class="vista" id="vista-categorias">
     <div class="fila-titulo">
@@ -292,19 +304,7 @@
     <div class="etiquetas-grid" id="etiquetasLista"></div>
   </section>
 
-  <!-- VISTA CONTRAPARTES (Antes Personas/Empresas) -->
-  <section class="vista" id="vista-contrapartes">
-    <div class="fila-titulo">
-      <div class="vista-titulo">Contrapartes</div>
-      <button class="btn-nuevo" onclick="abrirModalContraparte()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva
-      </button>
-    </div>
-    <div class="etiquetas-grid" id="contrapartesLista"></div>
-  </section>
-
-  <!-- NAVEGACIÓN INFERIOR -->
+  <!-- NAVEGACIÓN INFERIOR (REORGANIZADA) -->
   <nav class="bottom-nav">
     <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
@@ -314,17 +314,17 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor" stroke="none"/></svg>
       <span>Cuentas</span>
     </button>
+    <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Contr.</span>
+    </button>
     <button class="nav-item" data-vista="categorias" onclick="cambiarVista('categorias')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12 22l-9-9V4a1 1 0 011-1h9z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-      <span>Cat</span>
+      <span>Categ.</span>
     </button>
     <button class="nav-item" data-vista="etiquetas" onclick="cambiarVista('etiquetas')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
       <span>Tags</span>
-    </button>
-    <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      <span>Contr.</span>
     </button>
     <button class="nav-item" onclick="logout()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
@@ -586,7 +586,6 @@ function renderInicio() {
     let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
     if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
     
-    // Obtener el nombre de la contraparte (soporta ID de la tabla nueva o texto heredado de la vieja estructura)
     const cCon = contrapartes.find(c => c.id === m.contraparte_id);
     const conNombre = cCon ? cCon.nombre : m.contraparte;
     if (conNombre) subInfo += ` · De/Para: ${escapeHtml(conNombre)}`;
@@ -728,14 +727,13 @@ function poblarSelectsMov(selCta, selCat, selCon) {
   document.getElementById('inpCategoria').innerHTML = catHtml;
   document.getElementById('inpCategoria').value = catVal || '';
 
-  // Selector de Contrapartes
   document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + 
     contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
     '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CONTRAPARTE...</option>';
   document.getElementById('inpContraparteId').value = conVal || '';
 
   const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">+ Agregar Etiqueta al movimiento</option>' + 
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + 
     tagsDisp.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + 
     '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA ETIQUETA...</option>';
 }
@@ -802,7 +800,7 @@ async function _guardarMovimientoInterno() {
     user_id: user.id,
     tipo: tipoActual,
     concepto: document.getElementById('inpConcepto').value.trim() || null,
-    contraparte_id: document.getElementById('inpContraparteId').value || null, // Se guarda el UUID vinculado
+    contraparte_id: document.getElementById('inpContraparteId').value || null,
     notas: document.getElementById('inpNotas').value.trim() || null,
     monto: monto,
     moneda: moneda,
@@ -852,7 +850,7 @@ async function verDetalle(id) {
   if (m.archivo_path) {
     const { data, error: errArch } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
     if (errArch || !data?.signedUrl) {
-      arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><div class="detalle-valor" style="color:var(--text-3); font-size:13px;">No se pudo cargar el comprobante (revisá que el bucket "comprobantes" exista y tenga las políticas RLS aplicadas).</div></div>`;
+      arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><div class="detalle-valor" style="color:var(--text-3); font-size:13px;">No se pudo cargar el comprobante.</div></div>`;
     } else {
       arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
     }
@@ -867,7 +865,6 @@ async function verDetalle(id) {
       }).join('') + `</div></div>`;
   }
 
-  // Buscar nombre de contraparte para el modal detalle
   const cCon = contrapartes.find(c => c.id === m.contraparte_id);
   const conNombre = cCon ? cCon.nombre : m.contraparte;
 
@@ -880,7 +877,7 @@ async function verDetalle(id) {
     ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
     ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
     ${conNombre ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>` : ''}
-    ${m.notes || m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
+    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
     ${tagsHtml}
     ${arch}`;
 
@@ -972,7 +969,7 @@ function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta',
 function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
 function pickCon(c) { colorElegidoContraparte = c; renderColorPick('colorPickerContraparte', c, 'pickCon'); }
 
-/* === CRUD AUXILIAR (CUENTA, CATEGORÍA, ETIQUETA, CONTRAPARTE) === */
+/* === CRUD AUXILIAR === */
 function abrirModalCuenta(id, rapido = false) {
   cuentaEditandoId = id; modoRapido = rapido;
   const c = id ? cuentas.find(x => x.id === id) : null;
@@ -987,15 +984,12 @@ async function guardarCuenta() {
   const n = document.getElementById('inpCuentaNombre').value.trim();
   if(!n) { alert("Ponele un nombre a la cuenta."); return; }
   const p = { user_id: user.id, nombre: n, moneda: 'ARS', color: colorElegidoCuenta };
-  
   let res;
   if (cuentaEditandoId) res = await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select();
   else res = await _supabase.from('cuentas').insert([p]).select();
-  
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData();
   cerrarModal('modalCuentaOverlay');
-  
   if(modoRapido && res.data && res.data[0]) {
     poblarSelectsMov(res.data[0].id, undefined, undefined);
     modoRapido = false;
@@ -1021,14 +1015,11 @@ function abrirModalCategoria(id, rapido = false) {
   document.getElementById('categoriaModalTitulo').textContent = c ? 'Editar Categoría' : 'Nueva Categoría';
   document.getElementById('inpCategoriaNombre').value = c ? c.nombre : '';
   document.getElementById('btnEliminarCategoria').style.display = c ? 'block' : 'none';
-  
   setTipoCat(c ? c.tipo : (modoRapido ? tipoActual : 'egreso'));
-  
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
   document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + 
     padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
   document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
-  
   document.getElementById('modalCategoriaOverlay').classList.add('activo');
 }
 
@@ -1036,15 +1027,12 @@ async function guardarCategoria() {
   const n = document.getElementById('inpCategoriaNombre').value.trim();
   if(!n) { alert("Ponele un nombre a la categoría."); return; }
   const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorPorTipo(tipoCatForm) };
-  
   let res;
   if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
   else res = await _supabase.from('categorias').insert([p]).select();
-  
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData();
   cerrarModal('modalCategoriaOverlay');
-  
   if(modoRapido && res.data && res.data[0]) {
     poblarSelectsMov(undefined, res.data[0].id, undefined);
     modoRapido = false;
@@ -1073,15 +1061,12 @@ async function guardarEtiqueta() {
   const n = document.getElementById('inpEtiquetaNombre').value.trim();
   if(!n) { alert("Escribe un nombre para la etiqueta."); return; }
   const p = { user_id: user.id, nombre: n, color: colorElegidoEtiqueta };
-  
   let res;
   if (etiquetaEditandoId) res = await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select();
   else res = await _supabase.from('etiquetas').insert([p]).select();
-  
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData();
   cerrarModal('modalEtiquetaOverlay');
-  
   if(modoRapido && res.data && res.data[0]) {
     if(!etiquetasSeleccionadas.includes(res.data[0].id)) {
       etiquetasSeleccionadas.push(res.data[0].id);
@@ -1111,15 +1096,12 @@ async function guardarContraparte() {
   const n = document.getElementById('inpContraparteNombre').value.trim();
   if(!n) { alert("Escribe un nombre para la contraparte."); return; }
   const p = { user_id: user.id, nombre: n, color: colorElegidoContraparte };
-  
   let res;
   if (contraparteEditandoId) res = await _supabase.from('contrapartes').update(p).eq('id', contraparteEditandoId).select();
   else res = await _supabase.from('contrapartes').insert([p]).select();
-  
   if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData();
   cerrarModal('modalContraparteOverlay');
-  
   if(modoRapido && res.data && res.data[0]) {
     poblarSelectsMov(undefined, undefined, res.data[0].id);
     modoRapido = false;
@@ -1155,17 +1137,12 @@ function limpiarFiltros() {
   cerrarModal('filtroOverlay'); renderInicio();
 }
 
-// Inicializar la app al cargar
 checkUser();
-
-// Registro del Service Worker (necesario para poder instalar la app en Android)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').catch(err => console.log('SW no registrado:', err));
   });
 }
-
-// Cerrar cualquier modal al tocar fuera de la hoja (fuera del formulario)
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) cerrarModal(overlay.id);
