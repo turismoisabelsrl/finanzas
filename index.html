@@ -1156,6 +1156,7 @@ async function guardarEtiqueta() {
   await fetchData(); cerrarModal('modalEtiquetaOverlay');
   if(modoRapido && res.data && res.data[0]) { if(!etiquetasSeleccionadas.includes(res.data[0].id)) { etiquetasSeleccionadas.push(res.data[0].id); renderChipsEtiquetas(); } modoRapido = false; }
 }
+async function eliminarEtiqueta() { if(!confirm("¿Eliminar etiqueta?")) return; await _supabase.from('etiquetas').delete().eq('id', etiquetaEditandoId); cerrarModal('modalEtiquetaOverlay'); fetchData(); }
 
 function abrirModalContraparte(id, rapido = false) {
   contraparteEditandoId = id; modoRapido = rapido;
@@ -1178,6 +1179,7 @@ async function guardarContraparte() {
   await fetchData(); cerrarModal('modalContraparteOverlay');
   if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, res.data[0].id); modoRapido = false; }
 }
+async function eliminarContraparte() { if(!confirm("¿Eliminar contraparte?")) return; await _supabase.from('contrapartes').delete().eq('id', contraparteEditandoId); cerrarModal('modalContraparteOverlay'); fetchData(); }
 
 function abrirFiltro() {
   document.getElementById('filtroDesde').value = filtro.desde;
