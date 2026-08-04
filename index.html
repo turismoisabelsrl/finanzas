@@ -292,16 +292,16 @@
     <div class="etiquetas-grid" id="etiquetasLista"></div>
   </section>
 
-  <!-- VISTA PERSONAS/EMPRESAS -->
-  <section class="vista" id="vista-personas">
+  <!-- VISTA CONTRAPARTES (Antes Personas/Empresas) -->
+  <section class="vista" id="vista-contrapartes">
     <div class="fila-titulo">
-      <div class="vista-titulo">Personas / Empresas</div>
-      <button class="btn-nuevo" onclick="abrirModalPersona()">
+      <div class="vista-titulo">Contrapartes</div>
+      <button class="btn-nuevo" onclick="abrirModalContraparte()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nueva
       </button>
     </div>
-    <div class="etiquetas-grid" id="personasLista"></div>
+    <div class="etiquetas-grid" id="contrapartesLista"></div>
   </section>
 
   <!-- NAVEGACIÓN INFERIOR -->
@@ -322,9 +322,9 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
       <span>Tags</span>
     </button>
-    <button class="nav-item" data-vista="personas" onclick="cambiarVista('personas')">
+    <button class="nav-item" data-vista="contrapartes" onclick="cambiarVista('contrapartes')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      <span>Pers.</span>
+      <span>Contr.</span>
     </button>
     <button class="nav-item" onclick="logout()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
@@ -362,7 +362,7 @@
       </div>
       <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
-      <div class="lf-group"><label class="lf-label" id="labelContraparte">Persona / Empresa</label><input type="text" class="lf-input" id="inpContraparte" placeholder="Cliente, Proveedor o Negocio"></div>
+      <div class="lf-group"><label class="lf-label" id="labelContraparte">Contraparte</label><select class="lf-select" id="inpContraparteId" onchange="onCambioSelectContraparte()"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
       <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
       <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
@@ -453,6 +453,24 @@
   </div>
 </div>
 
+<!-- ===== MODAL: CONTRAPARTE ===== -->
+<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="contraparteModalTitulo">Contraparte</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre / Razón Social *</label><input type="text" id="inpContraparteNombre" class="lf-input" placeholder="Ej: Juan Pérez, Gas Natural..."></div>
+      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerContraparte"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalContraparteOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarContraparte" style="display:none;" onclick="eliminarContraparte()">Eliminar contraparte</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== MODAL: FILTROS ===== -->
 <div class="modal-overlay" id="filtroOverlay">
   <div class="modal-sheet">
@@ -482,10 +500,10 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6', '#e0679a', '#3fc7c0'];
 function colorPorTipo(t) { return t === 'ingreso' ? '#2cb87a' : t === 'egreso' ? '#e04444' : '#55b3f5'; }
-let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [];
+let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [], contrapartes = [];
 let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
-let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0];
-let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null;
+let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0], colorElegidoContraparte = COLORES[0];
+let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null, contraparteEditandoId = null;
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' };
 
@@ -513,15 +531,17 @@ async function logout() { await _supabase.auth.signOut(); window.location.reload
 
 /* === DATA === */
 async function fetchData() {
-  const [rC, rCat, rE, rM] = await Promise.all([
+  const [rC, rCat, rE, rM, rCon] = await Promise.all([
     _supabase.from('cuentas').select('*').order('nombre'),
     _supabase.from('categorias').select('*').order('nombre'),
     _supabase.from('etiquetas').select('*').order('nombre'),
-    _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false })
+    _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false }),
+    _supabase.from('contrapartes').select('*').order('nombre')
   ]);
   cuentas = rC.data || [];
   categorias = rCat.data || [];
   etiquetas = rE.data || [];
+  contrapartes = rCon.data || [];
   movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
   renderTodaLaApp();
 }
@@ -530,7 +550,7 @@ async function fetchData() {
 function fmtARS(n) { return '$ ' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
 function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
-function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); }
+function renderTodaLaApp() { renderInicio(); renderCuentas(); renderCategorias(); renderEtiquetas(); renderContrapartes(); }
 
 function renderInicio() {
   let lista = movements.slice();
@@ -559,14 +579,17 @@ function renderInicio() {
     const cat = categorias.find(c => c.id === m.categoria_id);
     const esIng = m.tipo === 'ingreso';
     
-    // Armado de meta y títulos claros
     const titulo = m.concepto && m.concepto.trim() !== '' ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
     const clip = m.archivo_path ? ' 📎' : '';
     const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
     
     let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
     if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
-    if (m.contraparte) subInfo += ` · De/Para: ${escapeHtml(m.contraparte)}`;
+    
+    // Obtener el nombre de la contraparte (soporta ID de la tabla nueva o texto heredado de la vieja estructura)
+    const cCon = contrapartes.find(c => c.id === m.contraparte_id);
+    const conNombre = cCon ? cCon.nombre : m.contraparte;
+    if (conNombre) subInfo += ` · De/Para: ${escapeHtml(conNombre)}`;
 
     return `
     <div class="item-fila" onclick="verDetalle('${m.id}')">
@@ -624,6 +647,16 @@ function renderEtiquetas() {
     </div>`).join('');
 }
 
+function renderContrapartes() {
+  const cont = document.getElementById('contrapartesLista');
+  if (!contrapartes.length) { cont.innerHTML = '<div class="vacio">No creaste contrapartes todavía.</div>'; return; }
+  cont.innerHTML = contrapartes.map(c => `
+    <div class="etiqueta-tarjeta" onclick="abrirModalContraparte('${c.id}')">
+      <div class="color-dot" style="background:${c.color}"></div>
+      <strong style="color:white;">${escapeHtml(c.nombre)}</strong>
+    </div>`).join('');
+}
+
 /* === MODALS LOGIC === */
 function cambiarVista(v) {
   document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
@@ -643,7 +676,7 @@ function abrirModalMovimiento(t) {
   document.getElementById('inpCotizacion').value = '';
   onCambioMoneda();
   document.getElementById('inpConcepto').value = '';
-  document.getElementById('inpContraparte').value = '';
+  document.getElementById('inpContraparteId').value = '';
   document.getElementById('inpNotas').value = '';
   document.getElementById('inpArchivo').value = '';
   
@@ -672,9 +705,10 @@ function actualizarPreviewARS() {
   preview.textContent = (monto && cot) ? ('Equivale a ' + fmtARS(monto * cot)) : '';
 }
 
-function poblarSelectsMov(selCta, selCat) {
+function poblarSelectsMov(selCta, selCat, selCon) {
   const ctaVal = selCta !== undefined ? selCta : document.getElementById('inpCuenta').value;
   const catVal = selCat !== undefined ? selCat : document.getElementById('inpCategoria').value;
+  const conVal = selCon !== undefined ? selCon : document.getElementById('inpContraparteId').value;
   
   document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + 
     cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
@@ -693,6 +727,12 @@ function poblarSelectsMov(selCta, selCat) {
   catHtml += '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CATEGORÍA...</option>';
   document.getElementById('inpCategoria').innerHTML = catHtml;
   document.getElementById('inpCategoria').value = catVal || '';
+
+  // Selector de Contrapartes
+  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + 
+    contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CONTRAPARTE...</option>';
+  document.getElementById('inpContraparteId').value = conVal || '';
 
   const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
   document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">+ Agregar Etiqueta al movimiento</option>' + 
@@ -727,7 +767,7 @@ function quitarEtiqueta(id) {
 /* === CRUD SUPABASE MOVIMIENTOS === */
 async function guardarMovimiento() {
   const btnGuardar = document.getElementById('btnGuardar');
-  if (btnGuardar.disabled) return; // evita doble-toque -> movimiento duplicado
+  if (btnGuardar.disabled) return; 
   btnGuardar.disabled = true;
   const textoOriginal = btnGuardar.textContent;
   btnGuardar.textContent = 'Guardando...';
@@ -762,7 +802,7 @@ async function _guardarMovimientoInterno() {
     user_id: user.id,
     tipo: tipoActual,
     concepto: document.getElementById('inpConcepto').value.trim() || null,
-    contraparte: document.getElementById('inpContraparte').value.trim() || null,
+    contraparte_id: document.getElementById('inpContraparteId').value || null, // Se guarda el UUID vinculado
     notas: document.getElementById('inpNotas').value.trim() || null,
     monto: monto,
     moneda: moneda,
@@ -827,6 +867,10 @@ async function verDetalle(id) {
       }).join('') + `</div></div>`;
   }
 
+  // Buscar nombre de contraparte para el modal detalle
+  const cCon = contrapartes.find(c => c.id === m.contraparte_id);
+  const conNombre = cCon ? cCon.nombre : m.contraparte;
+
   document.getElementById('detalleBody').innerHTML = `
     <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div>
       ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:12.5px; color:var(--text-3); margin-top:4px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})} · TC ${Number(m.cotizacion).toLocaleString('es-AR')}</div>` : ''}
@@ -835,8 +879,8 @@ async function verDetalle(id) {
     <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })}</div></div>
     ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
     ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
-    ${m.contraparte ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(m.contraparte)}</div></div>` : ''}
-    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
+    ${conNombre ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>` : ''}
+    ${m.notes || m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
     ${tagsHtml}
     ${arch}`;
 
@@ -867,12 +911,12 @@ function editarMovimiento(id) {
   document.getElementById('inpCotizacion').value = m.cotizacion && m.cotizacion !== 1 ? m.cotizacion : '';
   onCambioMoneda();
   document.getElementById('inpConcepto').value = m.concepto || '';
-  document.getElementById('inpContraparte').value = m.contraparte || '';
+  document.getElementById('inpContraparteId').value = m.contraparte_id || '';
   document.getElementById('inpNotas').value = m.notas || '';
   document.getElementById('inpArchivo').value = '';
   
   etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
-  poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '');
+  poblarSelectsMov(m.cuenta_id || '', m.categoria_id || '', m.contraparte_id || '');
   renderChipsEtiquetas();
   
   const btn = document.getElementById('btnGuardar');
@@ -913,6 +957,12 @@ function onCambioSelectCategoria() {
     document.getElementById('inpCategoria').value = ''; 
   } 
 }
+function onCambioSelectContraparte() { 
+  if (document.getElementById('inpContraparteId').value==='NUEVA') { 
+    abrirModalContraparte(null, true); 
+    document.getElementById('inpContraparteId').value = ''; 
+  } 
+}
 
 function renderColorPick(id, sel, f) {
   document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
@@ -920,8 +970,9 @@ function renderColorPick(id, sel, f) {
 
 function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
 function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
+function pickCon(c) { colorElegidoContraparte = c; renderColorPick('colorPickerContraparte', c, 'pickCon'); }
 
-/* === CRUD AUXILIAR (CUENTA, CATEGORÍA, ETIQUETA) === */
+/* === CRUD AUXILIAR (CUENTA, CATEGORÍA, ETIQUETA, CONTRAPARTE) === */
 function abrirModalCuenta(id, rapido = false) {
   cuentaEditandoId = id; modoRapido = rapido;
   const c = id ? cuentas.find(x => x.id === id) : null;
@@ -946,7 +997,7 @@ async function guardarCuenta() {
   cerrarModal('modalCuentaOverlay');
   
   if(modoRapido && res.data && res.data[0]) {
-    poblarSelectsMov(res.data[0].id, undefined);
+    poblarSelectsMov(res.data[0].id, undefined, undefined);
     modoRapido = false;
   }
 }
@@ -995,7 +1046,7 @@ async function guardarCategoria() {
   cerrarModal('modalCategoriaOverlay');
   
   if(modoRapido && res.data && res.data[0]) {
-    poblarSelectsMov(undefined, res.data[0].id);
+    poblarSelectsMov(undefined, res.data[0].id, undefined);
     modoRapido = false;
   }
 }
@@ -1044,6 +1095,41 @@ async function eliminarEtiqueta() {
   if(!confirm("¿Eliminar etiqueta?")) return;
   await _supabase.from('etiquetas').delete().eq('id', etiquetaEditandoId);
   cerrarModal('modalEtiquetaOverlay'); fetchData();
+}
+
+function abrirModalContraparte(id, rapido = false) {
+  contraparteEditandoId = id; modoRapido = rapido;
+  const c = id ? contrapartes.find(x => x.id === id) : null;
+  document.getElementById('contraparteModalTitulo').textContent = c ? 'Editar Contraparte' : 'Nueva Contraparte';
+  document.getElementById('inpContraparteNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarContraparte').style.display = c ? 'block' : 'none';
+  pickCon(c ? c.color : COLORES[0]);
+  document.getElementById('modalContraparteOverlay').classList.add('activo');
+}
+
+async function guardarContraparte() {
+  const n = document.getElementById('inpContraparteNombre').value.trim();
+  if(!n) { alert("Escribe un nombre para la contraparte."); return; }
+  const p = { user_id: user.id, nombre: n, color: colorElegidoContraparte };
+  
+  let res;
+  if (contraparteEditandoId) res = await _supabase.from('contrapartes').update(p).eq('id', contraparteEditandoId).select();
+  else res = await _supabase.from('contrapartes').insert([p]).select();
+  
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData();
+  cerrarModal('modalContraparteOverlay');
+  
+  if(modoRapido && res.data && res.data[0]) {
+    poblarSelectsMov(undefined, undefined, res.data[0].id);
+    modoRapido = false;
+  }
+}
+
+async function eliminarContraparte() {
+  if(!confirm("¿Eliminar contraparte? Sus movimientos quedarán desvinculados de ella.")) return;
+  await _supabase.from('contrapartes').delete().eq('id', contraparteEditandoId);
+  cerrarModal('modalContraparteOverlay'); fetchData();
 }
 
 function abrirFiltro() {
