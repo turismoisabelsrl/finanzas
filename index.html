@@ -764,7 +764,7 @@ function poblarSelectsMov(selCta, selCat, selCon) {
   document.getElementById('inpCategoria').innerHTML = catHtml;
   document.getElementById('inpCategoria').value = catVal || '';
 
-  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte asignada</option>' + 
+  document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + 
     contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
     '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CONTRAPARTE...</option>';
   document.getElementById('inpContraparteId').value = conVal || '';
