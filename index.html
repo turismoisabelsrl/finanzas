@@ -1,3 +1,4 @@
+--- START OF FILE text/plain ---
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -47,8 +48,11 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
-  /* FIJAR SCROLL EN MODALES */
-  body.modal-open { overflow: hidden; height: 100vh; }
+  /* CORRECCIÓN SCROLL: Evitar scroll de fondo al abrir modales */
+  body.modal-open {
+    overflow: hidden;
+    height: 100vh;
+  }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -66,6 +70,7 @@
       var(--navy);
   }
 
+  /* NUEVO: Splash Screen Styles */
   #splash-screen {
     position: fixed; inset: 0; z-index: 10000;
     background: var(--navy);
@@ -169,7 +174,7 @@
   .modal-sheet { width: 100%; max-width: 480px; max-height: 90vh; background: #0d1e38; border: 1px solid var(--border-hi); border-radius: var(--r-2xl) var(--r-2xl) 0 0; display: flex; flex-direction: column; overflow: hidden; }
   .modal-head { padding: 22px 20px 8px; flex-shrink: 0; }
   .modal-titulo { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text-0); }
-  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; }
+  .modal-body { padding: 14px 20px 4px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
   .modal-foot { padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
 
   .lf-group { margin-bottom: 14px; position: relative; }
@@ -211,7 +216,7 @@
 </head>
 <body>
 
-<!-- ===== SPLASH SCREEN ===== -->
+<!-- ===== SPLASH SCREEN (Pantalla de carga inicial) ===== -->
 <div id="splash-screen">
   <div class="brand-orb">
     <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Logo">
@@ -237,7 +242,7 @@
   </div>
 </div>
 
-<!-- ===== PANTALLA: CREAR CONTRASEÑA ===== -->
+<!-- ===== PANTALLA: CREAR CONTRASEÑA (invitación / recovery) ===== -->
 <div id="set-password-screen" style="display:none;">
   <div class="brand-orb">
     <img src="icons/icon-512.png" onerror="this.src='icons/icon-192.png'" alt="Turismo Isabel Logo">
@@ -272,6 +277,7 @@
     <div class="brand-sub">Ingresos y Egresos</div>
   </header>
 
+  <!-- VISTA INICIO -->
   <section class="vista activa" id="vista-inicio">
     <div class="card">
       <div class="saldo-label">Saldo actual</div>
@@ -304,6 +310,7 @@
     <div id="movLista"><div class="cargando"><div class="spinner"></div><p>Cargando</p></div></div>
   </section>
 
+  <!-- VISTA CUENTAS -->
   <section class="vista" id="vista-cuentas">
     <div class="fila-titulo">
       <div class="vista-titulo">Cuentas</div>
@@ -315,6 +322,7 @@
     <div class="lista" id="cuentasLista"></div>
   </section>
 
+  <!-- VISTA CONTRAPARTES (Antes Personas) -->
   <section class="vista" id="vista-contrapartes">
     <div class="fila-titulo">
       <div class="vista-titulo">Contrapartes</div>
@@ -326,6 +334,7 @@
     <div class="etiquetas-grid" id="contrapartesLista"></div>
   </section>
 
+  <!-- VISTA CATEGORÍAS -->
   <section class="vista" id="vista-categorias">
     <div class="fila-titulo">
       <div class="vista-titulo">Categorías</div>
@@ -341,6 +350,7 @@
     <div class="lista" id="categoriasLista"></div>
   </section>
 
+  <!-- VISTA ETIQUETAS -->
   <section class="vista" id="vista-etiquetas">
     <div class="fila-titulo">
       <div class="vista-titulo">Etiquetas</div>
@@ -352,6 +362,7 @@
     <div class="etiquetas-grid" id="etiquetasLista"></div>
   </section>
 
+  <!-- NAVEGACIÓN INFERIOR (REORGANIZADA) -->
   <nav class="bottom-nav">
     <button class="nav-item activo" data-vista="inicio" onclick="cambiarVista('inicio')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
@@ -409,13 +420,14 @@
       </div>
       <div class="lf-group"><label class="lf-label">Concepto (Opcional)</label><input type="text" class="lf-input" id="inpConcepto" placeholder="Ej: Venta, Alquiler, Pago..."></div>
       <div class="lf-group"><label class="lf-label">Cuenta</label><select class="lf-select" id="inpCuenta" onchange="onCambioSelectCuenta()"></select></div>
+      <!-- Selector de Contraparte -->
       <div class="lf-group"><label class="lf-label" id="labelContraparte">Contraparte</label><select class="lf-select" id="inpContraparteId" onchange="onCambioSelectContraparte()"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
       <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
       <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
       <div class="lf-group">
         <label class="lf-label">Comprobante</label>
-        <!-- Aviso de archivo existente -->
+        <!-- CORRECCIÓN COMPROBANTE: Espacio para indicar que ya hay un archivo -->
         <div id="infoArchivoExistente" style="display:none; margin-bottom:8px;"></div>
         <input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf">
       </div>
@@ -444,15 +456,110 @@
   </div>
 </div>
 
-<!-- MODALES AUXILIARES -->
-<div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Cuenta</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCuentaNombre" class="lf-input"></div><div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerCuenta"></div></div></div><div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar</button></div></div></div>
-<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Categoría</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpCategoriaNombre" class="lf-input"></div><div class="lf-group"><label class="lf-label">Tipo</label><div class="segmented"><button id="btnTipoEgreso" onclick="setTipoCat('egreso')">Egreso</button><button id="btnTipoIngreso" onclick="setTipoCat('ingreso')">Ingreso</button><button id="btnTipoAmbas" onclick="setTipoCat('ambas')">Ambas</button></div></div><div class="lf-group"><label class="lf-label">Padre</label><select id="inpCategoriaPadre" class="lf-select"></select></div></div><div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar</button></div></div></div>
-<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Etiqueta</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input"></div><div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerEtiqueta"></div></div></div><div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar</button></div></div></div>
-<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo" id="contraparteModalTitulo">Contraparte</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpContraparteNombre" class="lf-input"></div><div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerContraparte"></div></div></div><div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="cerrarModal('modalContraparteOverlay')">Cancelar</button><button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button></div><button class="btn-eliminar" id="btnEliminarContraparte" style="display:none;" onclick="eliminarContraparte()">Eliminar</button></div></div></div>
-<div class="modal-overlay" id="filtroOverlay"><div class="modal-sheet"><div class="modal-head"><div class="modal-titulo">Filtrar</div></div><div class="modal-body"><div class="lf-group"><label class="lf-label">Desde</label><input type="datetime-local" class="lf-input" id="filtroDesde"></div><div class="lf-group"><label class="lf-label">Hasta</label><input type="datetime-local" class="lf-input" id="filtroHasta"></div><div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div><div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div><div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div><div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div></div><div class="modal-foot"><div class="modal-botones"><button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button><button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button></div><button class="btn-cancelar" style="width:100%;" onclick="cerrarModal('filtroOverlay')">Cerrar</button></div></div></div>
+<!-- ===== MODAL: CUENTA ===== -->
+<div class="modal-overlay" id="modalCuentaOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="cuentaModalTitulo">Cuenta</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre de la Cuenta *</label><input type="text" id="inpCuentaNombre" class="lf-input" placeholder="Ej: Efectivo, Banco Nación..."></div>
+      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerCuenta"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCuentaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarCuenta()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarCuenta" style="display:none;" onclick="eliminarCuenta()">Eliminar cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: CATEGORÍA ===== -->
+<div class="modal-overlay" id="modalCategoriaOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="categoriaModalTitulo">Categoría</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre de Categoría *</label><input type="text" id="inpCategoriaNombre" class="lf-input" placeholder="Ej: Sueldos, Alquiler, Mercadería..."></div>
+      <div class="lf-group"><label class="lf-label">Tipo de Categoría</label>
+        <div class="segmented">
+          <button id="btnTipoEgreso" onclick="setTipoCat('egreso')">Egreso</button>
+          <button id="btnTipoIngreso" onclick="setTipoCat('ingreso')">Ingreso</button>
+          <button id="btnTipoAmbas" onclick="setTipoCat('ambas')">Ambas</button>
+        </div>
+      </div>
+      <div class="lf-group"><label class="lf-label">Categoría Padre (Opcional)</label><select id="inpCategoriaPadre" class="lf-select"></select></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalCategoriaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarCategoria()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarCategoria" style="display:none;" onclick="eliminarCategoria()">Eliminar categoría</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ETIQUETA ===== -->
+<div class="modal-overlay" id="modalEtiquetaOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="etiquetaModalTitulo">Etiqueta</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre *</label><input type="text" id="inpEtiquetaNombre" class="lf-input" placeholder="Ej: Urgente, Pagado, Facturado..."></div>
+      <div class="lf-group"><label class="lf-label">Color</label><div class="color-picker" id="colorPickerEtiqueta"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalEtiquetaOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarEtiqueta()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarEtiqueta" style="display:none;" onclick="eliminarEtiqueta()">Eliminar etiqueta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: CONTRAPARTE ===== -->
+<div class="modal-overlay" id="modalContraparteOverlay" style="z-index: 150;">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo" id="contraparteModalTitulo">Contraparte</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Nombre / Razón Social *</label><input type="text" id="inpContraparteNombre" class="lf-input" placeholder="Ej: Juan Pérez, Gas Natural..."></div>
+      <div class="lf-group"><label class="lf-label">Color de Identificación</label><div class="color-picker" id="colorPickerContraparte"></div></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="cerrarModal('modalContraparteOverlay')">Cancelar</button>
+        <button class="btn-guardar neutro" onclick="guardarContraparte()">Guardar</button>
+      </div>
+      <button class="btn-eliminar" id="btnEliminarContraparte" style="display:none;" onclick="eliminarContraparte()">Eliminar contraparte</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: FILTROS ===== -->
+<div class="modal-overlay" id="filtroOverlay">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-titulo">Filtrar Movimientos</div></div>
+    <div class="modal-body">
+      <div class="lf-group"><label class="lf-label">Desde</label><input type="datetime-local" class="lf-input" id="filtroDesde"></div>
+      <div class="lf-group"><label class="lf-label">Hasta</label><input type="datetime-local" class="lf-input" id="filtroHasta"></div>
+      <div class="lf-group"><label class="lf-label">Cuenta</label><select id="filtroCuenta" class="lf-select"></select></div>
+      <!-- Filtro de Contraparte -->
+      <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
+      <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-botones">
+        <button class="btn-cancelar" onclick="limpiarFiltros()">Limpiar</button>
+        <button class="btn-guardar neutro" onclick="aplicarFiltros()">Aplicar</button>
+      </div>
+      <button class="btn-cancelar" style="width:100%; flex:none;" onclick="cerrarModal('filtroOverlay')">Cerrar</button>
+    </div>
+  </div>
+</div>
 
 <script>
-/* === CONFIG === */
+/* === CREDENCIALES SUPABASE === */
 const SUPABASE_URL = 'https://lnbioecdbxkhjwmezwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_W9BRolWbAnNqP2giJQMvOQ_LsFV8fmd';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -467,16 +574,25 @@ let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
 let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
 
 /* === AUTH === */
+
+// NUEVO: bandera que indica que la sesión activa viene de un link de invitación/recuperación
+// y todavía necesita que el usuario cree su contraseña.
 let modoCrearPassword = false;
 
+// NUEVO: revisa el hash de la URL (#access_token=...&type=invite / type=recovery)
+// para detectar tempranamente que estamos ante un link de Supabase de este tipo.
 function detectarLinkAuth() {
   const hash = window.location.hash;
   if (!hash) return;
   const params = new URLSearchParams(hash.replace('#', '?'));
   const type = params.get('type');
-  if (type === 'invite' || type === 'recovery') modoCrearPassword = true;
+  if (type === 'invite' || type === 'recovery') {
+    modoCrearPassword = true;
+  }
 }
 
+// NUEVO: Supabase dispara el evento PASSWORD_RECOVERY específicamente cuando
+// detecta y consume un link de recuperación/invitación en la URL.
 _supabase.auth.onAuthStateChange((event, session) => {
   if (event === 'PASSWORD_RECOVERY') {
     modoCrearPassword = true;
@@ -487,9 +603,12 @@ _supabase.auth.onAuthStateChange((event, session) => {
 async function checkUser() {
   detectarLinkAuth();
   const { data: { session } } = await _supabase.auth.getSession();
+  
+  // Ocultar Splash Screen una vez verificado el usuario
   setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 800);
 
   if (session && modoCrearPassword) {
+    // NUEVO: hay sesión (creada por el token del link) pero todavía falta setear contraseña
     mostrarPantallaCrearPassword();
   } else if (session) {
     user = session.user;
@@ -499,31 +618,53 @@ async function checkUser() {
     fetchData();
   } else {
     document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('set-password-screen').style.display = 'none';
     document.getElementById('app').style.display = 'none';
   }
 }
 
+// NUEVO: muestra la pantalla de creación de contraseña y oculta el resto
 function mostrarPantallaCrearPassword() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'none';
   document.getElementById('set-password-screen').style.display = 'flex';
 }
 
+// NUEVO: valida y guarda la nueva contraseña usando la sesión temporal del link
 async function guardarNuevaPassword() {
   const btn = document.getElementById('btnSetPassword');
-  const p1 = document.getElementById('setPassword1').value, p2 = document.getElementById('setPassword2').value;
+  const p1 = document.getElementById('setPassword1').value;
+  const p2 = document.getElementById('setPassword2').value;
   const err = document.getElementById('set-password-error');
   err.style.display = 'none';
 
-  if (!p1 || p1.length < 6) { err.innerText = "Mínimo 6 caracteres."; err.style.display = 'block'; return; }
-  if (p1 !== p2) { err.innerText = "No coinciden."; err.style.display = 'block'; return; }
+  if (!p1 || p1.length < 6) {
+    err.innerText = "La contraseña debe tener al menos 6 caracteres.";
+    err.style.display = 'block';
+    return;
+  }
+  if (p1 !== p2) {
+    err.innerText = "Las contraseñas no coinciden.";
+    err.style.display = 'block';
+    return;
+  }
 
-  btn.disabled = true; btn.textContent = 'Guardando...';
+  btn.disabled = true;
+  const textoOriginal = btn.textContent;
+  btn.textContent = 'Guardando...';
+
   const { error } = await _supabase.auth.updateUser({ password: p1 });
-  btn.disabled = false; btn.textContent = 'Crear Contraseña y Entrar';
 
-  if (error) { err.innerText = error.message; err.style.display = 'block'; return; }
+  btn.disabled = false;
+  btn.textContent = textoOriginal;
 
+  if (error) {
+    err.innerText = "Error: " + error.message;
+    err.style.display = 'block';
+    return;
+  }
+
+  // Limpia el token de la URL para no volver a detectar el link, y entra a la app
   modoCrearPassword = false;
   window.history.replaceState({}, document.title, window.location.pathname);
   checkUser();
@@ -547,7 +688,10 @@ async function fetchData() {
     _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').order('fecha', { ascending: false }),
     _supabase.from('contrapartes').select('*').order('nombre')
   ]);
-  cuentas = rC.data || []; categorias = rCat.data || []; etiquetas = rE.data || []; contrapartes = rCon.data || [];
+  cuentas = rC.data || [];
+  categorias = rCat.data || [];
+  etiquetas = rE.data || [];
+  contrapartes = rCon.data || [];
   movements = (rM.data || []).map(m => ({ ...m, etiquetaIds: m.movimiento_etiquetas.map(x => x.etiqueta_id) }));
   renderTodaLaApp();
 }
@@ -580,66 +724,97 @@ function renderInicio() {
   document.getElementById('totalEgresos').textContent = fmtARS(egr);
 
   const cont = document.getElementById('movLista');
-  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos.</div>'; return; }
+  if (!lista.length) { cont.innerHTML = '<div class="vacio">No hay movimientos registrados.</div>'; return; }
   
   cont.innerHTML = lista.map(m => {
     const cta = cuentas.find(c => c.id === m.cuenta_id);
     const cat = categorias.find(c => c.id === m.categoria_id);
     const esIng = m.tipo === 'ingreso';
+    
     const titulo = m.concepto && m.concepto.trim() !== '' ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
     const clip = m.archivo_path ? ' 📎' : '';
     const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
     
     let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
     if (cta) subInfo += ` · <strong>${escapeHtml(cta.nombre)}</strong>`;
+    
+    // Buscar nombre contraparte por ID o usar texto antiguo
     const cCon = contrapartes.find(c => c.id === m.contraparte_id);
     const conNombre = cCon ? cCon.nombre : m.contraparte;
-    if (conNombre) subInfo += ` · ${escapeHtml(conNombre)}`;
+    if (conNombre) subInfo += ` · De/Para: ${escapeHtml(conNombre)}`;
 
     return `
     <div class="item-fila" onclick="verDetalle('${m.id}')">
       <div class="mov-dot ${esIng?'ing':'egr'}">
         ${esIng ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>'}
       </div>
-      <div class="mov-body"><div class="mov-concepto">${titulo}${clip} ${catBadge}</div><div class="mov-meta">${subInfo}</div></div>
-      <div class="mov-right"><div class="mov-monto ${esIng?'ing':'egr'}">${esIng?'+':'−'}${fmtARS(m.monto_ars || m.monto)}</div></div>
+      <div class="mov-body">
+        <div class="mov-concepto">${titulo}${clip} ${catBadge}</div>
+        <div class="mov-meta">${subInfo}</div>
+      </div>
+      <div class="mov-right">
+        <div class="mov-monto ${esIng?'ing':'egr'}">${esIng?'+':'−'}${fmtARS(m.monto_ars || m.monto)}</div>
+        ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:10.5px; color:var(--text-3); margin-top:2px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})}</div>` : ''}
+      </div>
     </div>`;
   }).join('');
 }
 
 function renderCuentas() {
   const cont = document.getElementById('cuentasLista');
-  cont.innerHTML = cuentas.map(c => `<div class="item-fila" onclick="abrirModalCuenta('${c.id}')"><div class="color-dot" style="background:${c.color}"></div><div class="mov-body">${escapeHtml(c.nombre)}</div><div style="font-size:10px; opacity:0.5;">EDITAR</div></div>`).join('');
+  if (!cuentas.length) { cont.innerHTML = '<div class="vacio">No creaste cuentas todavía.</div>'; return; }
+  cont.innerHTML = cuentas.map(c => `
+    <div class="item-fila" onclick="abrirModalCuenta('${c.id}')">
+      <div class="color-dot" style="background:${c.color}"></div>
+      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(c.nombre)}</div></div>
+      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
+    </div>`).join('');
 }
 
 function renderCategorias() {
   const padres = categorias.filter(c => !c.padre_id && (c.tipo === segmentoCategoria || c.tipo === 'ambas'));
   const cont = document.getElementById('categoriasLista');
+  if (!padres.length) { cont.innerHTML = '<div class="vacio">No hay categorías para este tipo.</div>'; return; }
   cont.innerHTML = padres.map(p => `
-    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')"><div class="color-dot" style="background:${p.color}"></div><div class="mov-body">${escapeHtml(p.nombre)}</div></div>
-    ${categorias.filter(c => c.padre_id === p.id).map(s => `<div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')"><div class="color-dot" style="background:${s.color}"></div><div class="mov-body">— ${escapeHtml(s.nombre)}</div></div>`).join('')}
+    <div class="item-fila" onclick="abrirModalCategoria('${p.id}')">
+      <div class="color-dot" style="background:${p.color}"></div>
+      <div class="mov-body"><div style="font-weight:600; font-size:15px; color:#fff;">${escapeHtml(p.nombre)}</div></div>
+      <div style="font-size:12px; color:var(--text-3); font-family:'Syne'; font-weight:600;">EDITAR</div>
+    </div>
+    ${categorias.filter(c => c.padre_id === p.id).map(s => `
+      <div class="item-fila sub" onclick="abrirModalCategoria('${s.id}')">
+        <div class="color-dot" style="background:${s.color}"></div>
+        <div class="mov-body"><div style="font-size:14px; color:var(--text-2);">— ${escapeHtml(s.nombre)}</div></div>
+      </div>`).join('')}
   `).join('');
 }
 
 function renderEtiquetas() {
-  document.getElementById('etiquetasLista').innerHTML = etiquetas.map(e => `<div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')"><div class="color-dot" style="background:${e.color}"></div>${escapeHtml(e.nombre)}</div>`).join('');
+  const cont = document.getElementById('etiquetasLista');
+  if (!etiquetas.length) { cont.innerHTML = '<div class="vacio">No creaste etiquetas todavía.</div>'; return; }
+  cont.innerHTML = etiquetas.map(e => `
+    <div class="etiqueta-tarjeta" onclick="abrirModalEtiqueta('${e.id}')">
+      <div class="color-dot" style="background:${e.color}"></div>
+      <strong style="color:white;">${escapeHtml(e.nombre)}</strong>
+    </div>`).join('');
 }
 
 function renderContrapartes() {
-  document.getElementById('contrapartesLista').innerHTML = contrapartes.map(c => `<div class="etiqueta-tarjeta" onclick="abrirModalContraparte('${c.id}')"><div class="color-dot" style="background:${c.color}"></div>${escapeHtml(c.nombre)}</div>`).join('');
+  const cont = document.getElementById('contrapartesLista');
+  if (!contrapartes.length) { cont.innerHTML = '<div class="vacio">No creaste contrapartes todavía.</div>'; return; }
+  cont.innerHTML = contrapartes.map(c => `
+    <div class="etiqueta-tarjeta" onclick="abrirModalContraparte('${c.id}')">
+      <div class="color-dot" style="background:${c.color}"></div>
+      <strong style="color:white;">${escapeHtml(c.nombre)}</strong>
+    </div>`).join('');
 }
 
-/* === MODALS === */
+/* === MODALS LOGIC === */
 function cambiarVista(v) {
   document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
   document.getElementById('vista-'+v).classList.add('activa');
   document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('activo', x.dataset.vista === v));
   vistaActual = v;
-}
-
-function cerrarModal(id) { 
-  document.getElementById(id).classList.remove('activo');
-  if (!document.querySelector('.modal-overlay.activo')) document.body.classList.remove('modal-open');
 }
 
 function abrirModalMovimiento(t) {
@@ -649,18 +824,26 @@ function abrirModalMovimiento(t) {
   document.getElementById('inpHora').value = new Date().toTimeString().slice(0,5);
   document.getElementById('inpMonto').value = ''; 
   document.getElementById('inpMoneda').value = 'ARS';
+  document.getElementById('inpMonedaOtra').value = '';
+  document.getElementById('inpCotizacion').value = '';
   onCambioMoneda();
   document.getElementById('inpConcepto').value = '';
   document.getElementById('inpNotas').value = '';
   document.getElementById('inpArchivo').value = '';
+
+  // CORRECCIÓN RESET: Limpiar indicadores de archivo y forzar reset de selects
   document.getElementById('infoArchivoExistente').style.display = 'none';
+  document.getElementById('infoArchivoExistente').innerHTML = '';
 
   const btn = document.getElementById('btnGuardar');
   btn.textContent = "Guardar";
   btn.className = "btn-guardar " + (t === 'ingreso' ? 'ing' : 'egr');
 
+  // CORRECCIÓN RESET: Pasar strings vacíos para que no mantenga la selección anterior
   poblarSelectsMov('', '', ''); 
+  
   renderChipsEtiquetas();
+  // CORRECCIÓN SCROLL: Bloquear scroll de fondo
   document.body.classList.add('modal-open');
   document.getElementById('modalOverlay').classList.add('activo');
 }
@@ -669,237 +852,325 @@ function onCambioMoneda() {
   const m = document.getElementById('inpMoneda').value;
   document.getElementById('grupoMonedaOtra').style.display = (m === 'OTRA') ? 'block' : 'none';
   document.getElementById('grupoCotizacion').style.display = (m === 'ARS') ? 'none' : 'block';
+  if (m === 'ARS') document.getElementById('inpCotizacion').value = '';
   actualizarPreviewARS();
 }
-
 function actualizarPreviewARS() {
-  const m = document.getElementById('inpMoneda').value, monto = parseFloat(document.getElementById('inpMonto').value) || 0;
+  const m = document.getElementById('inpMoneda').value;
+  const monto = parseFloat(document.getElementById('inpMonto').value) || 0;
+  const preview = document.getElementById('previewARS');
+  if (m === 'ARS') { preview.textContent = ''; return; }
   const cot = parseFloat(document.getElementById('inpCotizacion').value) || 0;
-  document.getElementById('previewARS').textContent = (m !== 'ARS' && monto && cot) ? ('Equivale a ' + fmtARS(monto * cot)) : '';
+  preview.textContent = (monto && cot) ? ('Equivale a ' + fmtARS(monto * cot)) : '';
 }
 
 function poblarSelectsMov(selCta, selCat, selCon) {
-  const ctaVal = selCta || '', catVal = selCat || '', conVal = selCon || '';
+  // Aseguramos que si vienen undefined o null, se trate como vacío para el reset
+  const ctaVal = (selCta !== undefined && selCta !== null) ? selCta : '';
+  const catVal = (selCat !== undefined && selCat !== null) ? selCat : '';
+  const conVal = (selCon !== undefined && selCon !== null) ? selCon : '';
   
-  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta</option>' + 
+  document.getElementById('inpCuenta').innerHTML = '<option value="">Sin cuenta asignada</option>' + 
     cuentas.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
-    '<option value="NUEVA">+ CREAR NUEVA CUENTA...</option>';
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CUENTA...</option>';
   document.getElementById('inpCuenta').value = ctaVal;
 
-  let catHtml = '<option value="">Sin categoría</option>';
-  categorias.filter(c => !c.padre_id).forEach(p => {
+  const cats = categorias.slice();
+  let catHtml = '<option value="">Sin categoría asignada</option>';
+  const padres = cats.filter(c => !c.padre_id);
+  padres.forEach(p => {
     catHtml += `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`;
-    categorias.filter(c => c.padre_id === p.id).forEach(sub => { catHtml += `<option value="${sub.id}">&nbsp;&nbsp;— ${escapeHtml(sub.nombre)}</option>`; });
+    cats.filter(c => c.padre_id === p.id).forEach(sub => {
+      catHtml += `<option value="${sub.id}">&nbsp;&nbsp;&nbsp;— ${escapeHtml(sub.nombre)}</option>`;
+    });
   });
-  catHtml += '<option value="NUEVA">+ CREAR NUEVA CATEGORÍA...</option>';
+  catHtml += '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CATEGORÍA...</option>';
   document.getElementById('inpCategoria').innerHTML = catHtml;
   document.getElementById('inpCategoria').value = catVal;
 
   document.getElementById('inpContraparteId').innerHTML = '<option value="">Sin contraparte</option>' + 
     contrapartes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('') + 
-    '<option value="NUEVA">+ CREAR NUEVA CONTRAPARTE...</option>';
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA CONTRAPARTE...</option>';
   document.getElementById('inpContraparteId').value = conVal;
 
   const tagsDisp = etiquetas.filter(e => !etiquetasSeleccionadas.includes(e.id));
-  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Añadir etiqueta</option>' + tagsDisp.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + '<option value="NUEVA">+ CREAR NUEVA...</option>';
+  document.getElementById('inpEtiquetaSelect').innerHTML = '<option value="">Sin etiqueta asignada</option>' + 
+    tagsDisp.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)}</option>`).join('') + 
+    '<option value="NUEVA" style="color:var(--sky-bright); font-weight:bold;">+ CREAR NUEVA ETIQUETA...</option>';
 }
 
 function renderChipsEtiquetas() {
   document.getElementById('chipsEtiquetas').innerHTML = etiquetasSeleccionadas.map(id => {
-    const e = etiquetas.find(x => x.id === id); if(!e) return '';
-    return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px;">×</strong></span>`;
+    const e = etiquetas.find(x => x.id === id);
+    if(!e) return '';
+    return `<span class="chip" style="border-color:${e.color}66;"><div class="color-dot" style="background:${e.color}; width:8px; height:8px;"></div>${escapeHtml(e.nombre)} <strong onclick="quitarEtiqueta('${e.id}')" style="margin-left:4px; cursor:pointer;">×</strong></span>`;
   }).join('');
+  // Re-poblamos para actualizar disponibilidad de tags, pero manteniendo los valores de los otros selects
   poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, document.getElementById('inpContraparteId').value);
 }
 
 function onAddEtiqueta() {
   const s = document.getElementById('inpEtiquetaSelect');
   if (s.value === 'NUEVA') { abrirModalEtiqueta(null, true); s.value = ''; return; }
-  if (s.value && !etiquetasSeleccionadas.includes(s.value)) { etiquetasSeleccionadas.push(s.value); renderChipsEtiquetas(); }
+  if (s.value && !etiquetasSeleccionadas.includes(s.value)) {
+    etiquetasSeleccionadas.push(s.value);
+    renderChipsEtiquetas();
+  }
   s.value = '';
 }
 
-function quitarEtiqueta(id) { etiquetasSeleccionadas = etiquetasSeleccionadas.filter(x => x !== id); renderChipsEtiquetas(); }
+function quitarEtiqueta(id) {
+  etiquetasSeleccionadas = etiquetasSeleccionadas.filter(x => x !== id);
+  renderChipsEtiquetas();
+}
 
+/* === CRUD SUPABASE MOVIMIENTOS === */
 async function guardarMovimiento() {
-  const btn = document.getElementById('btnGuardar'); if (btn.disabled) return;
-  const monto = parseFloat(document.getElementById('inpMonto').value), fecha = document.getElementById('inpFecha').value;
-  if (!monto || !fecha) { alert("Monto y fecha requeridos"); return; }
-  
-  btn.disabled = true; btn.textContent = 'Guardando...';
+  const btnGuardar = document.getElementById('btnGuardar');
+  if (btnGuardar.disabled) return; 
+  btnGuardar.disabled = true;
+  const textoOriginal = btnGuardar.textContent;
+  btnGuardar.textContent = 'Guardando...';
+  try { await _guardarMovimientoInterno(); } finally { btnGuardar.disabled = false; btnGuardar.textContent = textoOriginal; }
+}
+
+async function _guardarMovimientoInterno() {
+  const monto = parseFloat(document.getElementById('inpMonto').value);
+  const fecha = document.getElementById('inpFecha').value;
+  const hora = document.getElementById('inpHora').value || '00:00';
+  if (!monto || monto <= 0 || !fecha) { alert("Por favor completa al menos el Monto y la Fecha."); return; }
   const fileInput = document.getElementById('inpArchivo');
   let moneda = document.getElementById('inpMoneda').value;
   if (moneda === 'OTRA') moneda = document.getElementById('inpMonedaOtra').value.trim().toUpperCase() || 'OTRA';
-  const cot = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 0);
-
-  const p = {
-    user_id: user.id, tipo: tipoActual, monto, moneda, cotizacion: cot,
+  const cotizacion = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 0);
+  const payload = {
+    user_id: user.id, tipo: tipoActual, monto: monto, moneda: moneda, cotizacion: cotizacion,
     concepto: document.getElementById('inpConcepto').value.trim() || null,
     contraparte_id: document.getElementById('inpContraparteId').value || null,
     notas: document.getElementById('inpNotas').value.trim() || null,
     cuenta_id: document.getElementById('inpCuenta').value || null,
     categoria_id: document.getElementById('inpCategoria').value || null,
-    fecha: new Date(`${fecha}T${document.getElementById('inpHora').value || '00:00'}`).toISOString()
+    fecha: new Date(`${fecha}T${hora}`).toISOString()
   };
-
   let movId = movEditandoId;
   if (movEditandoId) {
-    await _supabase.from('movimientos').update(p).eq('id', movEditandoId);
+    const { error } = await _supabase.from('movimientos').update(payload).eq('id', movEditandoId);
+    if (error) { alert(error.message); return; }
     await _supabase.from('movimiento_etiquetas').delete().eq('movimiento_id', movEditandoId);
   } else {
-    const { data } = await _supabase.from('movimientos').insert([p]).select().single(); movId = data.id;
+    const { data: mov, error } = await _supabase.from('movimientos').insert([payload]).select().single();
+    if (error) { alert(error.message); return; }
+    movId = mov.id;
   }
-  if (etiquetasSeleccionadas.length) await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
-  if (fileInput.files[0]) {
+  if (etiquetasSeleccionadas.length && movId) {
+    await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
+  }
+  if (fileInput.files[0] && movId) {
     const file = fileInput.files[0], path = `${user.id}/${movId}/${Date.now()}_${file.name}`;
     const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
-    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path }).eq('id', movId);
+    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
   }
   cerrarModal('modalOverlay'); fetchData();
 }
 
 async function verDetalle(id) {
-  const m = movements.find(x => x.id === id); if (!m) return;
-  const cta = cuentas.find(c => c.id === m.cuenta_id), cat = categorias.find(c => c.id === m.categoria_id);
-  const cCon = contrapartes.find(c => c.id === m.contraparte_id), conNombre = cCon ? cCon.nombre : (m.contraparte || '-');
+  const m = movements.find(x => x.id === id);
+  if (!m) return;
+  const cta = cuentas.find(c => c.id === m.cuenta_id);
+  const cat = categorias.find(c => c.id === m.categoria_id);
   let arch = '';
   if (m.archivo_path) {
     const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
-    if (data?.signedUrl) arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link">Abrir Comprobante</a></div>`;
+    if (data?.signedUrl) arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
   }
+  const cCon = contrapartes.find(c => c.id === m.contraparte_id);
+  const conNombre = cCon ? cCon.nombre : (m.contraparte || '-');
   document.getElementById('detalleBody').innerHTML = `
-    <div class="detalle-row"><div class="detalle-label">Monto</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}">${fmtARS(m.monto_ars || m.monto)}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor">${escapeHtml(m.concepto || 'Sin concepto')}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Fecha</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString()}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Cuenta</div><div class="detalle-valor">${escapeHtml(cta ? cta.nombre : '-')}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat ? cat.nombre : '-')}</div></div>
-    <div class="detalle-row"><div class="detalle-label">Contraparte</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div>
+      ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:12.5px; color:var(--text-3); margin-top:4px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})} · TC ${Number(m.cotizacion).toLocaleString('es-AR')}</div>` : ''}
+    </div>
+    <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor" style="font-weight:600;">${m.concepto ? escapeHtml(m.concepto) : '<i>Sin concepto</i>'}</div></div>
+    <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })}</div></div>
+    ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
+    ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
+    ${conNombre ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>` : ''}
+    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
     ${arch}`;
   document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
   document.getElementById('btnEliminarMov').onclick = () => borrarMov(id);
+  // CORRECCIÓN SCROLL: Bloquear scroll de fondo
   document.body.classList.add('modal-open');
   document.getElementById('detalleOverlay').classList.add('activo');
 }
 
 async function editarMovimiento(id) {
-  const m = movements.find(x => x.id === id); if (!m) return;
+  const m = movements.find(x => x.id === id);
+  if (!m) return;
   cerrarModal('detalleOverlay');
-  movEditandoId = m.id; tipoActual = m.tipo;
-
-  const btn = document.getElementById('btnGuardar');
+  movEditandoId = m.id;
+  tipoActual = m.tipo;
   document.getElementById('modalTitulo').textContent = m.tipo === 'ingreso' ? 'Editar Ingreso' : 'Editar Egreso';
-  btn.textContent = "Guardar";
-  btn.className = "btn-guardar " + (m.tipo === 'ingreso' ? 'ing' : 'egr');
-
   const fObj = new Date(m.fecha);
-  document.getElementById('inpFecha').value = fObj.toISOString().split('T')[0];
+  const yyyy = fObj.getFullYear(), mm = String(fObj.getMonth() + 1).padStart(2, '0'), dd = String(fObj.getDate()).padStart(2, '0');
+  document.getElementById('inpFecha').value = `${yyyy}-${mm}-${dd}`;
   document.getElementById('inpHora').value = fObj.toTimeString().slice(0, 5);
-  document.getElementById('inpMonto').value = m.monto;
+  document.getElementById('inpMonto').value = m.monto || '';
   document.getElementById('inpMoneda').value = ['ARS','USD','EUR','BRL'].includes(m.moneda) ? m.moneda : 'OTRA';
-  document.getElementById('inpCotizacion').value = m.cotizacion || '';
+  document.getElementById('inpMonedaOtra').value = (!['ARS','USD','EUR','BRL'].includes(m.moneda)) ? (m.moneda || '') : '';
+  document.getElementById('inpCotizacion').value = m.cotizacion && m.cotizacion !== 1 ? m.cotizacion : '';
   onCambioMoneda();
   document.getElementById('inpConcepto').value = m.concepto || '';
   document.getElementById('inpNotas').value = m.notas || '';
   etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
-
+  
+  // CORRECCIÓN COMPROBANTE: Mostrar indicador si ya tiene archivo
   const infoArch = document.getElementById('infoArchivoExistente');
   if (m.archivo_path) {
     const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
-    infoArch.innerHTML = `<div style="font-size:12px; color:#5de09a; background:rgba(44,184,122,0.1); padding:8px; border-radius:8px; border:1px solid rgba(44,184,122,0.2);">✓ Ya existe un comprobante. <a href="${data.signedUrl}" target="_blank" style="color:#fff;">Ver</a></div>`;
+    infoArch.innerHTML = `<div style="font-size:12px; color:#5de09a; background:rgba(44,184,122,0.1); padding:8px; border-radius:8px; border:1px solid rgba(44,184,122,0.2);">
+      ✓ Ya existe un comprobante cargado. <a href="${data.signedUrl}" target="_blank" style="color:#fff; text-decoration:underline;">Ver actual</a><br>
+      <span style="opacity:0.7; font-size:10px;">Subí uno nuevo solo si querés reemplazarlo.</span>
+    </div>`;
     infoArch.style.display = 'block';
-  } else infoArch.style.display = 'none';
+  } else {
+    infoArch.style.display = 'none';
+  }
 
   poblarSelectsMov(m.cuenta_id, m.categoria_id, m.contraparte_id);
   renderChipsEtiquetas();
+  // CORRECCIÓN SCROLL: Bloquear scroll de fondo
   document.body.classList.add('modal-open');
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
-async function borrarMov(id) { if(confirm("¿Eliminar?")) { await _supabase.from('movimientos').delete().eq('id', id); cerrarModal('detalleOverlay'); fetchData(); } }
+async function borrarMov(id) {
+  if(!confirm("¿Seguro de eliminar este movimiento?")) return;
+  await _supabase.from('movimientos').delete().eq('id', id);
+  cerrarModal('detalleOverlay'); fetchData();
+}
 
-/* === AUX CRUD === */
-function abrirModalCuenta(id, rapido=false) {
-  cuentaEditandoId = id; modoRapido = rapido; const c = id ? cuentas.find(x => x.id === id) : null;
-  document.getElementById('cuentaModalTitulo').textContent = c ? 'Editar' : 'Nueva';
+/* === HELPERS UI & FILTROS === */
+function cerrarModal(id) { 
+  document.getElementById(id).classList.remove('activo');
+  // CORRECCIÓN SCROLL: Habilitar scroll si no hay otros modales activos
+  if (!document.querySelector('.modal-overlay.activo')) {
+    document.body.classList.remove('modal-open');
+  }
+}
+function cambiarSegmentoCategoria(s) { segmentoCategoria = s; document.getElementById('segEgreso').classList.toggle('activo', s==='egreso'); document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso'); renderCategorias(); }
+function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
+function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(null, true); }
+function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(null, true); }
+
+function renderColorPick(id, sel, f) {
+  document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
+}
+function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
+function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
+function pickCon(c) { colorElegidoContraparte = c; renderColorPick('colorPickerContraparte', c, 'pickCon'); }
+
+/* === CRUD AUXILIAR === */
+function abrirModalCuenta(id, rapido = false) {
+  cuentaEditandoId = id; modoRapido = rapido;
+  const c = id ? cuentas.find(x => x.id === id) : null;
+  document.getElementById('cuentaModalTitulo').textContent = c ? 'Editar Cuenta' : 'Nueva Cuenta';
   document.getElementById('inpCuentaNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarCuenta').style.display = c ? 'block' : 'none';
   pickC(c ? c.color : COLORES[0]);
   document.body.classList.add('modal-open');
   document.getElementById('modalCuentaOverlay').classList.add('activo');
 }
 async function guardarCuenta() {
-  const n = document.getElementById('inpCuentaNombre').value.trim(); if(!n) return;
-  const p = { user_id: user.id, nombre: n, color: colorElegidoCuenta };
-  let res; if (cuentaEditandoId) res = await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select();
+  const n = document.getElementById('inpCuentaNombre').value.trim();
+  if(!n) { alert("Ponele un nombre a la cuenta."); return; }
+  const p = { user_id: user.id, nombre: n, moneda: 'ARS', color: colorElegidoCuenta };
+  let res;
+  if (cuentaEditandoId) res = await _supabase.from('cuentas').update(p).eq('id', cuentaEditandoId).select();
   else res = await _supabase.from('cuentas').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData(); cerrarModal('modalCuentaOverlay');
-  if(modoRapido && res.data) poblarSelectsMov(res.data[0].id, document.getElementById('inpCategoria').value, document.getElementById('inpContraparteId').value);
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(res.data[0].id, document.getElementById('inpCategoria').value, document.getElementById('inpContraparteId').value); modoRapido = false; }
 }
-function pickC(c) { colorElegidoCuenta = c; renderColorPick('colorPickerCuenta', c, 'pickC'); }
+async function eliminarCuenta() { if(!confirm("¿Eliminar cuenta?")) return; await _supabase.from('cuentas').delete().eq('id', cuentaEditandoId); cerrarModal('modalCuentaOverlay'); fetchData(); }
 
-function abrirModalCategoria(id, rapido=false) {
-  categoriaEditandoId = id; modoRapido = rapido; const c = id ? categorias.find(x => x.id === id) : null;
+function abrirModalCategoria(id, rapido = false) {
+  categoriaEditandoId = id; modoRapido = rapido;
+  const c = id ? categorias.find(x => x.id === id) : null;
+  document.getElementById('categoriaModalTitulo').textContent = c ? 'Editar Categoría' : 'Nueva Categoría';
   document.getElementById('inpCategoriaNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarCategoria').style.display = c ? 'block' : 'none';
   setTipoCat(c ? c.tipo : (modoRapido ? tipoActual : 'egreso'));
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
-  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Principal</option>' + padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
+  document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
   document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
   document.body.classList.add('modal-open');
   document.getElementById('modalCategoriaOverlay').classList.add('activo');
 }
 async function guardarCategoria() {
-  const n = document.getElementById('inpCategoriaNombre').value.trim(); if(!n) return;
+  const n = document.getElementById('inpCategoriaNombre').value.trim();
+  if(!n) { alert("Ponele un nombre a la categoría."); return; }
   const p = { user_id: user.id, nombre: n, tipo: tipoCatForm, padre_id: document.getElementById('inpCategoriaPadre').value || null, color: colorPorTipo(tipoCatForm) };
-  let res; if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
+  let res;
+  if (categoriaEditandoId) res = await _supabase.from('categorias').update(p).eq('id', categoriaEditandoId).select();
   else res = await _supabase.from('categorias').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData(); cerrarModal('modalCategoriaOverlay');
-  if(modoRapido && res.data) poblarSelectsMov(document.getElementById('inpCuenta').value, res.data[0].id, document.getElementById('inpContraparteId').value);
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(document.getElementById('inpCuenta').value, res.data[0].id, document.getElementById('inpContraparteId').value); modoRapido = false; }
 }
 function setTipoCat(t) { tipoCatForm = t; document.getElementById('btnTipoEgreso').classList.toggle('activo', t==='egreso'); document.getElementById('btnTipoIngreso').classList.toggle('activo', t==='ingreso'); document.getElementById('btnTipoAmbas').classList.toggle('activo', t==='ambas'); }
+async function eliminarCategoria() { if(!confirm("¿Eliminar categoría?")) return; await _supabase.from('categorias').delete().eq('id', categoriaEditandoId); cerrarModal('modalCategoriaOverlay'); fetchData(); }
 
-function abrirModalContraparte(id, rapido=false) {
-  contraparteEditandoId = id; modoRapido = rapido; const c = id ? contrapartes.find(x => x.id === id) : null;
-  document.getElementById('inpContraparteNombre').value = c ? c.nombre : '';
-  pickCon(c ? c.color : COLORES[0]);
-  document.body.classList.add('modal-open');
-  document.getElementById('modalContraparteOverlay').classList.add('activo');
-}
-async function guardarContraparte() {
-  const n = document.getElementById('inpContraparteNombre').value.trim(); if(!n) return;
-  const p = { user_id: user.id, nombre: n, color: colorElegidoContraparte };
-  let res; if (contraparteEditandoId) res = await _supabase.from('contrapartes').update(p).eq('id', contraparteEditandoId).select();
-  else res = await _supabase.from('contrapartes').insert([p]).select();
-  await fetchData(); cerrarModal('modalContraparteOverlay');
-  if(modoRapido && res.data) poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, res.data[0].id);
-}
-function pickCon(c) { colorElegidoContraparte = c; renderColorPick('colorPickerContraparte', c, 'pickCon'); }
-
-function abrirModalEtiqueta(id, rapido=false) {
-  etiquetaEditandoId = id; modoRapido = rapido; const e = id ? etiquetas.find(x => x.id === id) : null;
+function abrirModalEtiqueta(id, rapido = false) {
+  etiquetaEditandoId = id; modoRapido = rapido;
+  const e = id ? etiquetas.find(x => x.id === id) : null;
+  document.getElementById('etiquetaModalTitulo').textContent = e ? 'Editar Etiqueta' : 'Nueva Etiqueta';
   document.getElementById('inpEtiquetaNombre').value = e ? e.nombre : '';
+  document.getElementById('btnEliminarEtiqueta').style.display = e ? 'block' : 'none';
   pickEt(e ? e.color : COLORES[0]);
   document.body.classList.add('modal-open');
   document.getElementById('modalEtiquetaOverlay').classList.add('activo');
 }
 async function guardarEtiqueta() {
-  const n = document.getElementById('inpEtiquetaNombre').value.trim(); if(!n) return;
+  const n = document.getElementById('inpEtiquetaNombre').value.trim();
+  if(!n) { alert("Escribe un nombre para la etiqueta."); return; }
   const p = { user_id: user.id, nombre: n, color: colorElegidoEtiqueta };
-  let res; if (etiquetaEditandoId) res = await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select();
+  let res;
+  if (etiquetaEditandoId) res = await _supabase.from('etiquetas').update(p).eq('id', etiquetaEditandoId).select();
   else res = await _supabase.from('etiquetas').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
   await fetchData(); cerrarModal('modalEtiquetaOverlay');
-  if(modoRapido && res.data) { etiquetasSeleccionadas.push(res.data[0].id); renderChipsEtiquetas(); }
+  if(modoRapido && res.data && res.data[0]) { if(!etiquetasSeleccionadas.includes(res.data[0].id)) { etiquetasSeleccionadas.push(res.data[0].id); renderChipsEtiquetas(); } modoRapido = false; }
 }
-function pickEt(c) { colorElegidoEtiqueta = c; renderColorPick('colorPickerEtiqueta', c, 'pickEt'); }
 
-function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
-function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(null, true); }
-function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(null, true); }
-function renderColorPick(id, sel, f) { document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join(''); }
+function abrirModalContraparte(id, rapido = false) {
+  contraparteEditandoId = id; modoRapido = rapido;
+  const c = id ? contrapartes.find(x => x.id === id) : null;
+  document.getElementById('contraparteModalTitulo').textContent = c ? 'Editar Contraparte' : 'Nueva Contraparte';
+  document.getElementById('inpContraparteNombre').value = c ? c.nombre : '';
+  document.getElementById('btnEliminarContraparte').style.display = c ? 'block' : 'none';
+  pickCon(c ? c.color : COLORES[0]);
+  document.body.classList.add('modal-open');
+  document.getElementById('modalContraparteOverlay').classList.add('activo');
+}
+async function guardarContraparte() {
+  const n = document.getElementById('inpContraparteNombre').value.trim();
+  if(!n) { alert("Escribe un nombre para la contraparte."); return; }
+  const p = { user_id: user.id, nombre: n, color: colorElegidoContraparte };
+  let res;
+  if (contraparteEditandoId) res = await _supabase.from('contrapartes').update(p).eq('id', contraparteEditandoId).select();
+  else res = await _supabase.from('contrapartes').insert([p]).select();
+  if (res.error) { alert("Error: " + res.error.message); return; }
+  await fetchData(); cerrarModal('modalContraparteOverlay');
+  if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, res.data[0].id); modoRapido = false; }
+}
 
 function abrirFiltro() {
-  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas</option>' + cuentas.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas</option>' + contrapartes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas</option>' + categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas</option>' + etiquetas.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+  document.getElementById('filtroDesde').value = filtro.desde;
+  document.getElementById('filtroHasta').value = filtro.hasta;
+  document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}" ${filtro.contraparte_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
+  document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
   document.body.classList.add('modal-open');
   document.getElementById('filtroOverlay').classList.add('activo');
 }
@@ -915,6 +1186,7 @@ function aplicarFiltros() {
 function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' }; cerrarModal('filtroOverlay'); renderInicio(); }
 
 checkUser();
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.log('SW no registrado:', err)); }); }
 document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrarModal(overlay.id); }); });
 </script>
 </body>
