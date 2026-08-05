@@ -47,10 +47,15 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
-  /* CORRECCIÓN SCROLL: Evitar scroll de fondo al abrir modales */
+  /* CORRECCIÓN SCROLL: Evitar scroll de fondo al abrir modales.
+     position:fixed (además de overflow:hidden) es necesario porque en iOS Safari
+     overflow:hidden solo no alcanza y el fondo se sigue "rebotando". */
   body.modal-open {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
     overflow: hidden;
-    height: 100vh;
   }
 
   body {
@@ -826,6 +831,22 @@ function cambiarVista(v) {
   vistaActual = v;
 }
 
+/* CORRECCIÓN SCROLL: guarda la posición de scroll antes de bloquear el fondo, y la
+   restaura al cerrar. Contempla el caso de "modal sobre modal" (ej: crear cuenta
+   nueva desde el formulario de movimiento) sin perder la posición original. */
+let scrollYGuardado = 0;
+function bloquearScrollFondo() {
+  if (document.body.classList.contains('modal-open')) return;
+  scrollYGuardado = window.scrollY || window.pageYOffset || 0;
+  document.body.style.top = `-${scrollYGuardado}px`;
+  document.body.classList.add('modal-open');
+}
+function desbloquearScrollFondo() {
+  document.body.classList.remove('modal-open');
+  document.body.style.top = '';
+  window.scrollTo(0, scrollYGuardado);
+}
+
 function abrirModalMovimiento(t) {
   tipoActual = t; etiquetasSeleccionadas = []; movEditandoId = null;
   document.getElementById('modalTitulo').textContent = t === 'ingreso'?'Nuevo Ingreso':'Nuevo Egreso';
@@ -853,7 +874,7 @@ function abrirModalMovimiento(t) {
   
   renderChipsEtiquetas();
   // CORRECCIÓN SCROLL: Bloquear scroll de fondo
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
@@ -1008,7 +1029,7 @@ async function verDetalle(id) {
   document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
   document.getElementById('btnEliminarMov').onclick = () => borrarMov(id);
   // CORRECCIÓN SCROLL: Bloquear scroll de fondo
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('detalleOverlay').classList.add('activo');
 }
 
@@ -1054,7 +1075,7 @@ async function editarMovimiento(id) {
   poblarSelectsMov(m.cuenta_id, m.categoria_id, m.contraparte_id);
   renderChipsEtiquetas();
   // CORRECCIÓN SCROLL: Bloquear scroll de fondo
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('modalOverlay').classList.add('activo');
 }
 
@@ -1069,7 +1090,7 @@ function cerrarModal(id) {
   document.getElementById(id).classList.remove('activo');
   // CORRECCIÓN SCROLL: Habilitar scroll si no hay otros modales activos
   if (!document.querySelector('.modal-overlay.activo')) {
-    document.body.classList.remove('modal-open');
+    desbloquearScrollFondo();
   }
 }
 function cambiarSegmentoCategoria(s) { segmentoCategoria = s; document.getElementById('segEgreso').classList.toggle('activo', s==='egreso'); document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso'); renderCategorias(); }
@@ -1092,7 +1113,7 @@ function abrirModalCuenta(id, rapido = false) {
   document.getElementById('inpCuentaNombre').value = c ? c.nombre : '';
   document.getElementById('btnEliminarCuenta').style.display = c ? 'block' : 'none';
   pickC(c ? c.color : COLORES[0]);
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('modalCuentaOverlay').classList.add('activo');
 }
 async function guardarCuenta() {
@@ -1118,7 +1139,7 @@ function abrirModalCategoria(id, rapido = false) {
   const padres = categorias.filter(x => !x.padre_id && x.id !== id);
   document.getElementById('inpCategoriaPadre').innerHTML = '<option value="">Es una categoría principal (Sin padre)</option>' + padres.map(p => `<option value="${p.id}">${escapeHtml(p.nombre)}</option>`).join('');
   document.getElementById('inpCategoriaPadre').value = c ? (c.padre_id || '') : '';
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('modalCategoriaOverlay').classList.add('activo');
 }
 async function guardarCategoria() {
@@ -1142,7 +1163,7 @@ function abrirModalEtiqueta(id, rapido = false) {
   document.getElementById('inpEtiquetaNombre').value = e ? e.nombre : '';
   document.getElementById('btnEliminarEtiqueta').style.display = e ? 'block' : 'none';
   pickEt(e ? e.color : COLORES[0]);
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('modalEtiquetaOverlay').classList.add('activo');
 }
 async function guardarEtiqueta() {
@@ -1156,7 +1177,6 @@ async function guardarEtiqueta() {
   await fetchData(); cerrarModal('modalEtiquetaOverlay');
   if(modoRapido && res.data && res.data[0]) { if(!etiquetasSeleccionadas.includes(res.data[0].id)) { etiquetasSeleccionadas.push(res.data[0].id); renderChipsEtiquetas(); } modoRapido = false; }
 }
-async function eliminarEtiqueta() { if(!confirm("¿Eliminar etiqueta?")) return; await _supabase.from('etiquetas').delete().eq('id', etiquetaEditandoId); cerrarModal('modalEtiquetaOverlay'); fetchData(); }
 
 function abrirModalContraparte(id, rapido = false) {
   contraparteEditandoId = id; modoRapido = rapido;
@@ -1165,7 +1185,7 @@ function abrirModalContraparte(id, rapido = false) {
   document.getElementById('inpContraparteNombre').value = c ? c.nombre : '';
   document.getElementById('btnEliminarContraparte').style.display = c ? 'block' : 'none';
   pickCon(c ? c.color : COLORES[0]);
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('modalContraparteOverlay').classList.add('activo');
 }
 async function guardarContraparte() {
@@ -1179,7 +1199,6 @@ async function guardarContraparte() {
   await fetchData(); cerrarModal('modalContraparteOverlay');
   if(modoRapido && res.data && res.data[0]) { poblarSelectsMov(document.getElementById('inpCuenta').value, document.getElementById('inpCategoria').value, res.data[0].id); modoRapido = false; }
 }
-async function eliminarContraparte() { if(!confirm("¿Eliminar contraparte?")) return; await _supabase.from('contrapartes').delete().eq('id', contraparteEditandoId); cerrarModal('modalContraparteOverlay'); fetchData(); }
 
 function abrirFiltro() {
   document.getElementById('filtroDesde').value = filtro.desde;
@@ -1188,7 +1207,7 @@ function abrirFiltro() {
   document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}" ${filtro.contraparte_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
-  document.body.classList.add('modal-open');
+  bloquearScrollFondo();
   document.getElementById('filtroOverlay').classList.add('activo');
 }
 function aplicarFiltros() {
@@ -1203,7 +1222,27 @@ function aplicarFiltros() {
 function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' }; cerrarModal('filtroOverlay'); renderInicio(); }
 
 checkUser();
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.log('SW no registrado:', err)); }); }
+// CORRECCIÓN ACTUALIZACIÓN: registra el service worker, fuerza revisar si hay una
+// versión nueva apenas se abre la app (y cada vez que vuelve a primer plano, que es
+// lo que fallaba en iPhone), y recarga la página una sola vez cuando la nueva
+// versión toma el control, para no depender de borrar el historial a mano.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').then((reg) => {
+      reg.update();
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') reg.update();
+      });
+    }).catch(err => console.log('SW no registrado:', err));
+
+    let recargandoPorActualizacion = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (recargandoPorActualizacion) return;
+      recargandoPorActualizacion = true;
+      window.location.reload();
+    });
+  });
+}
 document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrarModal(overlay.id); }); });
 </script>
 </body>
