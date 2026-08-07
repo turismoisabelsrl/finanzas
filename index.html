@@ -570,6 +570,8 @@
       <div class="lf-group"><label class="lf-label">Contraparte</label><select id="filtroContraparte" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Categoría</label><select id="filtroCategoria" class="lf-select"></select></div>
       <div class="lf-group"><label class="lf-label">Etiqueta</label><select id="filtroEtiqueta" class="lf-select"></select></div>
+      <!-- Filtro Creado por -->
+      <div class="lf-group"><label class="lf-label">Creado por</label><select id="filtroCreadoPor" class="lf-select"></select></div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
@@ -601,7 +603,7 @@ let canalEmpresa = null; // canal de Supabase Realtime, activo solo en modo empr
 let colorElegidoCuenta = COLORES[0], colorElegidoEtiqueta = COLORES[0], colorElegidoContraparte = COLORES[0];
 let cuentaEditandoId = null, categoriaEditandoId = null, etiquetaEditandoId = null, movEditandoId = null, contraparteEditandoId = null;
 let modoRapido = false, etiquetasSeleccionadas = [], tipoCatForm = 'egreso';
-let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', desde: '', hasta: '' };
+let filtro = { cuenta_id: '', categoria_id: '', etiqueta_id: '', contraparte_id: '', creado_por_id: '', desde: '', hasta: '' };
 
 /* === AUTH === */
 
@@ -760,14 +762,25 @@ document.addEventListener('visibilitychange', () => {
 });
 
 /* === DATA === */
+// CORRECCIÓN BUG SWITCH: si el usuario cambia de contexto rápido (o llega un evento
+// realtime) puede haber más de un fetchData() en vuelo a la vez. Como las respuestas
+// no siempre llegan en el mismo orden en que se pidieron, una respuesta vieja de
+// "personal" podía llegar después de la de "empresa" y pisar los datos en pantalla
+// con los del contexto equivocado. Con este token+scope descartamos cualquier
+// respuesta que no sea la más reciente o que corresponda a un scope que ya cambió.
+let fetchDataToken = 0;
 async function fetchData() {
+  const miToken = ++fetchDataToken;
+  const scopeAlPedir = scope;
   const [rC, rCat, rE, rM, rCon] = await Promise.all([
-    _supabase.from('cuentas').select('*').eq('scope', scope).order('nombre'),
-    _supabase.from('categorias').select('*').eq('scope', scope).order('nombre'),
-    _supabase.from('etiquetas').select('*').eq('scope', scope).order('nombre'),
-    _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').eq('scope', scope).order('fecha', { ascending: false }),
-    _supabase.from('contrapartes').select('*').eq('scope', scope).order('nombre')
+    _supabase.from('cuentas').select('*').eq('scope', scopeAlPedir).order('nombre'),
+    _supabase.from('categorias').select('*').eq('scope', scopeAlPedir).order('nombre'),
+    _supabase.from('etiquetas').select('*').eq('scope', scopeAlPedir).order('nombre'),
+    _supabase.from('movimientos').select('*, movimiento_etiquetas(etiqueta_id)').eq('scope', scopeAlPedir).order('fecha', { ascending: false }),
+    _supabase.from('contrapartes').select('*').eq('scope', scopeAlPedir).order('nombre')
   ]);
+  // Descartar si ya salió un fetchData más nuevo, o si el contexto cambió mientras esperábamos.
+  if (miToken !== fetchDataToken || scopeAlPedir !== scope) return;
   cuentas = rC.data || [];
   categorias = rCat.data || [];
   etiquetas = rE.data || [];
@@ -798,10 +811,11 @@ function renderInicio() {
   if (filtro.contraparte_id) lista = lista.filter(m => m.contraparte_id === filtro.contraparte_id);
   if (filtro.categoria_id) lista = lista.filter(m => m.categoria_id === filtro.categoria_id);
   if (filtro.etiqueta_id) lista = lista.filter(m => (m.etiquetaIds || []).includes(filtro.etiqueta_id));
+  if (filtro.creado_por_id) lista = lista.filter(m => m.user_id === filtro.creado_por_id);
   if (filtro.desde) lista = lista.filter(m => new Date(m.fecha) >= new Date(filtro.desde));
   if (filtro.hasta) lista = lista.filter(m => new Date(m.fecha) <= new Date(filtro.hasta));
   
-  document.getElementById('btnFiltro').classList.toggle('activo', !!(filtro.cuenta_id || filtro.contraparte_id || filtro.categoria_id || filtro.etiqueta_id || filtro.desde || filtro.hasta));
+  document.getElementById('btnFiltro').classList.toggle('activo', !!(filtro.cuenta_id || filtro.contraparte_id || filtro.categoria_id || filtro.etiqueta_id || filtro.creado_por_id || filtro.desde || filtro.hasta));
 
   const ing = lista.filter(m => m.tipo === 'ingreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
   const egr = lista.filter(m => m.tipo === 'egreso').reduce((a, m) => a + Number(m.monto_ars || m.monto), 0);
@@ -1288,6 +1302,11 @@ function abrirModalContraparte(id, rapido = false) {
 async function guardarContraparte() {
   const n = document.getElementById('inpContraparteNombre').value.trim();
   if(!n) { alert("Escribe un nombre para la contraparte."); return; }
+  // Validación de duplicados: no permitir el mismo nombre dentro del mismo contexto (scope).
+  // El array "contrapartes" ya viene filtrado por scope desde fetchData(), por lo que
+  // el mismo nombre en el otro contexto no entra en esta comparación y sí se permite.
+  const yaExiste = contrapartes.some(c => c.id !== contraparteEditandoId && c.nombre.trim().toLowerCase() === n.toLowerCase());
+  if (yaExiste) { alert("Ya existe una contraparte con ese nombre en este contexto."); return; }
   const p = { user_id: user.id, scope: scope, nombre: n, color: colorElegidoContraparte };
   let res;
   if (contraparteEditandoId) res = await _supabase.from('contrapartes').update(p).eq('id', contraparteEditandoId).select();
@@ -1298,13 +1317,26 @@ async function guardarContraparte() {
 }
 async function eliminarContraparte() { if(!confirm("¿Eliminar contraparte?")) return; const res = await _supabase.from('contrapartes').delete().eq('id', contraparteEditandoId); if (res.error) { alert("Error: " + res.error.message); return; } cerrarModal('modalContraparteOverlay'); fetchData(); }
 
-function abrirFiltro() {
+// NUEVO: arma las opciones del filtro "Creado por" a partir de los user_id
+// presentes en los movimientos ya cargados, resolviendo el email de cada uno
+// (reutiliza obtenerEmailCreador/perfilesCache, así no repite consultas).
+async function poblarFiltroCreadoPor() {
+  const ids = [...new Set(movements.map(m => m.user_id).filter(Boolean))];
+  await Promise.all(ids.map(id => obtenerEmailCreador(id)));
+  const sel = document.getElementById('filtroCreadoPor');
+  sel.innerHTML = '<option value="">Todos</option>' + ids.map(id => {
+    const label = id === user.id ? `Yo (${user.email})` : (perfilesCache[id] || id);
+    return `<option value="${id}" ${filtro.creado_por_id === id ? 'selected':''}>${escapeHtml(label)}</option>`;
+  }).join('');
+}
+async function abrirFiltro() {
   document.getElementById('filtroDesde').value = filtro.desde;
   document.getElementById('filtroHasta').value = filtro.hasta;
   document.getElementById('filtroCuenta').innerHTML = '<option value="">Todas las cuentas</option>' + cuentas.map(c => `<option value="${c.id}" ${filtro.cuenta_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroContraparte').innerHTML = '<option value="">Todas las contrapartes</option>' + contrapartes.map(c => `<option value="${c.id}" ${filtro.contraparte_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroCategoria').innerHTML = '<option value="">Todas las categorías</option>' + categorias.map(c => `<option value="${c.id}" ${filtro.categoria_id === c.id ? 'selected':''}>${escapeHtml(c.nombre)}</option>`).join('');
   document.getElementById('filtroEtiqueta').innerHTML = '<option value="">Todas las etiquetas</option>' + etiquetas.map(e => `<option value="${e.id}" ${filtro.etiqueta_id === e.id ? 'selected':''}>${escapeHtml(e.nombre)}</option>`).join('');
+  await poblarFiltroCreadoPor();
   bloquearScrollFondo();
   document.getElementById('filtroOverlay').classList.add('activo');
 }
@@ -1313,11 +1345,12 @@ function aplicarFiltros() {
   filtro.contraparte_id = document.getElementById('filtroContraparte').value;
   filtro.categoria_id = document.getElementById('filtroCategoria').value;
   filtro.etiqueta_id = document.getElementById('filtroEtiqueta').value;
+  filtro.creado_por_id = document.getElementById('filtroCreadoPor').value;
   filtro.desde = document.getElementById('filtroDesde').value;
   filtro.hasta = document.getElementById('filtroHasta').value;
   cerrarModal('filtroOverlay'); renderInicio();
 }
-function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', categoria_id: '', etiqueta_id: '', desde: '', hasta: '' }; cerrarModal('filtroOverlay'); renderInicio(); }
+function limpiarFiltros() { filtro = { cuenta_id: '', contraparte_id: '', categoria_id: '', etiqueta_id: '', creado_por_id: '', desde: '', hasta: '' }; cerrarModal('filtroOverlay'); renderInicio(); }
 
 checkUser();
 // CORRECCIÓN ACTUALIZACIÓN: registra el service worker, fuerza revisar si hay una
