@@ -220,7 +220,6 @@
   .detalle-row { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
   .detalle-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
   .detalle-valor { font-size: 15px; color: var(--text-1); }
-  .detalle-archivo-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--sky-bright); text-decoration: none; background: rgba(85,179,245,0.12); border: 1px solid rgba(85,179,245,0.3); border-radius: var(--r-md); padding: 9px 14px; font-weight: 600; font-size: 13px; }
 
   .vacio { text-align: center; padding: 40px 10px; color: var(--text-3); font-size: 13px; }
   .cargando { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; color: var(--text-3); font-family: 'Syne', sans-serif; font-size: 12px; text-transform: uppercase; }
@@ -448,12 +447,6 @@
       <div class="lf-group"><label class="lf-label">Categoría</label><select class="lf-select" id="inpCategoria" onchange="onCambioSelectCategoria()"></select></div>
       <div class="lf-group"><label class="lf-label">Etiquetas</label><select class="lf-select" id="inpEtiquetaSelect" onchange="onAddEtiqueta()"></select><div class="chips-wrap" id="chipsEtiquetas"></div></div>
       <div class="lf-group"><label class="lf-label">Notas</label><textarea class="lf-textarea" id="inpNotas" placeholder="Detalles o aclaraciones..."></textarea></div>
-      <div class="lf-group">
-        <label class="lf-label">Comprobante</label>
-        <!-- CORRECCIÓN COMPROBANTE: Espacio para indicar que ya hay un archivo -->
-        <div id="infoArchivoExistente" style="display:none; margin-bottom:8px;"></div>
-        <input type="file" id="inpArchivo" class="lf-input" accept="image/*,application/pdf">
-      </div>
     </div>
     <div class="modal-foot">
       <div class="modal-botones">
@@ -836,7 +829,6 @@ function renderInicio() {
     const esIng = m.tipo === 'ingreso';
     
     const titulo = m.concepto && m.concepto.trim() !== '' ? escapeHtml(m.concepto) : '<span style="opacity:0.5; font-style:italic;">Sin concepto</span>';
-    const clip = m.archivo_path ? ' 📎' : '';
     const catBadge = cat ? `<span class="mov-cat" style="background:${cat.color}22; color:${cat.color}; border:1px solid ${cat.color}44;">${escapeHtml(cat.nombre)}</span>` : '';
     
     let subInfo = new Date(m.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
@@ -853,7 +845,7 @@ function renderInicio() {
         ${esIng ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>'}
       </div>
       <div class="mov-body">
-        <div class="mov-concepto">${titulo}${clip} ${catBadge}</div>
+        <div class="mov-concepto">${titulo} ${catBadge}</div>
         <div class="mov-meta">${subInfo}</div>
       </div>
       <div class="mov-right">
@@ -949,11 +941,6 @@ function abrirModalMovimiento(t) {
   onCambioMoneda();
   document.getElementById('inpConcepto').value = '';
   document.getElementById('inpNotas').value = '';
-  document.getElementById('inpArchivo').value = '';
-
-  // CORRECCIÓN RESET: Limpiar indicadores de archivo y forzar reset de selects
-  document.getElementById('infoArchivoExistente').style.display = 'none';
-  document.getElementById('infoArchivoExistente').innerHTML = '';
 
   const btn = document.getElementById('btnGuardar');
   btn.textContent = "Guardar";
@@ -1059,7 +1046,6 @@ async function _guardarMovimientoInterno() {
   const fecha = document.getElementById('inpFecha').value;
   const hora = document.getElementById('inpHora').value || '00:00';
   if (!monto || monto <= 0 || !fecha) { alert("Por favor completa al menos el Monto y la Fecha."); return; }
-  const fileInput = document.getElementById('inpArchivo');
   let moneda = document.getElementById('inpMoneda').value;
   if (moneda === 'OTRA') moneda = document.getElementById('inpMonedaOtra').value.trim().toUpperCase() || 'OTRA';
   const cotizacion = moneda === 'ARS' ? 1 : (parseFloat(document.getElementById('inpCotizacion').value) || 0);
@@ -1085,11 +1071,6 @@ async function _guardarMovimientoInterno() {
   if (etiquetasSeleccionadas.length && movId) {
     await _supabase.from('movimiento_etiquetas').insert(etiquetasSeleccionadas.map(id => ({ movimiento_id: movId, etiqueta_id: id })));
   }
-  if (fileInput.files[0] && movId) {
-    const file = fileInput.files[0], path = `${user.id}/${movId}/${Date.now()}_${file.name}`;
-    const { error: upErr } = await _supabase.storage.from('comprobantes').upload(path, file);
-    if (!upErr) await _supabase.from('movimientos').update({ archivo_path: path, archivo_tipo: file.type }).eq('id', movId);
-  }
   cerrarModal('modalOverlay'); fetchData();
 }
 
@@ -1111,11 +1092,6 @@ async function verDetalle(id) {
   if (!m) return;
   const cta = cuentas.find(c => c.id === m.cuenta_id);
   const cat = categorias.find(c => c.id === m.categoria_id);
-  let arch = '';
-  if (m.archivo_path) {
-    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
-    if (data?.signedUrl) arch = `<div class="detalle-row"><div class="detalle-label">Adjunto</div><a href="${data.signedUrl}" target="_blank" class="detalle-archivo-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg> Abrir Comprobante</a></div>`;
-  }
   const cCon = contrapartes.find(c => c.id === m.contraparte_id);
   const conNombre = cCon ? cCon.nombre : (m.contraparte || '-');
   // NUEVO: en modo empresa, mostramos quién cargó el movimiento
@@ -1134,8 +1110,7 @@ async function verDetalle(id) {
     ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
     ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
     ${conNombre ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>` : ''}
-    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}
-    ${arch}`;
+    ${m.notas ? `<div class="detalle-row"><div class="detalle-label">Notas / Aclaraciones</div><div class="detalle-valor">${escapeHtml(m.notas)}</div></div>` : ''}`;
   document.getElementById('btnEditarMov').onclick = () => editarMovimiento(id);
   document.getElementById('btnEliminarMov').onclick = () => borrarMov(id);
   // CORRECCIÓN SCROLL: Bloquear scroll de fondo
@@ -1168,19 +1143,6 @@ async function editarMovimiento(id) {
   document.getElementById('inpConcepto').value = m.concepto || '';
   document.getElementById('inpNotas').value = m.notas || '';
   etiquetasSeleccionadas = m.etiquetaIds ? [...m.etiquetaIds] : [];
-  
-  // CORRECCIÓN COMPROBANTE: Mostrar indicador si ya tiene archivo
-  const infoArch = document.getElementById('infoArchivoExistente');
-  if (m.archivo_path) {
-    const { data } = await _supabase.storage.from('comprobantes').createSignedUrl(m.archivo_path, 300);
-    infoArch.innerHTML = `<div style="font-size:12px; color:#5de09a; background:rgba(44,184,122,0.1); padding:8px; border-radius:8px; border:1px solid rgba(44,184,122,0.2);">
-      ✓ Ya existe un comprobante cargado. <a href="${data.signedUrl}" target="_blank" style="color:#fff; text-decoration:underline;">Ver actual</a><br>
-      <span style="opacity:0.7; font-size:10px;">Subí uno nuevo solo si querés reemplazarlo.</span>
-    </div>`;
-    infoArch.style.display = 'block';
-  } else {
-    infoArch.style.display = 'none';
-  }
 
   poblarSelectsMov(m.cuenta_id, m.categoria_id, m.contraparte_id);
   renderChipsEtiquetas();
@@ -1204,9 +1166,9 @@ function cerrarModal(id) {
   }
 }
 function cambiarSegmentoCategoria(s) { segmentoCategoria = s; document.getElementById('segEgreso').classList.toggle('activo', s==='egreso'); document.getElementById('segIngreso').classList.toggle('activo', s==='ingreso'); renderCategorias(); }
-function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') abrirModalCuenta(null, true); }
-function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') abrirModalContraparte(null, true); }
-function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') abrirModalCategoria(null, true); }
+function onCambioSelectCuenta() { if (document.getElementById('inpCuenta').value==='NUEVA') { abrirModalCuenta(null, true); document.getElementById('inpCuenta').value = ''; } }
+function onCambioSelectContraparte() { if (document.getElementById('inpContraparteId').value==='NUEVA') { abrirModalContraparte(null, true); document.getElementById('inpContraparteId').value = ''; } }
+function onCambioSelectCategoria() { if (document.getElementById('inpCategoria').value==='NUEVA') { abrirModalCategoria(null, true); document.getElementById('inpCategoria').value = ''; } }
 
 function renderColorPick(id, sel, f) {
   document.getElementById(id).innerHTML = COLORES.map(c => `<div class="color-dot-pick ${c===sel?'selected':''}" style="background:${c}" onclick="${f}('${c}')"></div>`).join('');
