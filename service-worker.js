@@ -29,6 +29,14 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Permite forzar la activación de la nueva versión desde la página
+// (por ejemplo, con un botón "Actualizar" que le mande este mensaje al SW).
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 // Estrategia: Network First (busca la versión más nueva en internet primero;
 // si no hay conexión, usa lo que quedó guardado en el teléfono).
 // CORRECCIÓN ACTUALIZACIÓN: antes era "Cache First" y por eso nunca traía cambios nuevos.
