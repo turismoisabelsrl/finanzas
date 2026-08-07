@@ -591,6 +591,9 @@ const COLORES = ['#55b3f5', '#2cb87a', '#e04444', '#d9a63e', '#c8a85a', '#9b6fd6
 function colorPorTipo(t) { return t === 'ingreso' ? '#2cb87a' : t === 'egreso' ? '#e04444' : '#55b3f5'; }
 let user = null, cuentas = [], categorias = [], etiquetas = [], movements = [], contrapartes = [];
 let vistaActual = 'inicio', tipoActual = 'ingreso', segmentoCategoria = 'egreso';
+// NUEVO: caché en memoria de user_id -> email, para no repetir la consulta a "perfiles"
+// cada vez que se abre el detalle de un movimiento ya visto.
+let perfilesCache = {};
 
 /* === ENTORNO: PROPIA (personal) / EMPRESA === */
 let scope = localStorage.getItem('ti_scope') === 'empresa' ? 'empresa' : 'personal';
@@ -734,11 +737,27 @@ function suscribirRealtimeEmpresa() {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'etiquetas', filter: 'scope=eq.empresa' }, () => { if (scope === 'empresa') fetchData(); })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'contrapartes', filter: 'scope=eq.empresa' }, () => { if (scope === 'empresa') fetchData(); })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'movimiento_etiquetas' }, () => { if (scope === 'empresa') fetchData(); })
-    .subscribe();
+    .subscribe((status) => {
+      // CORRECCIÓN iOS: Safari corta el WebSocket cuando la PWA pasa a segundo plano.
+      // Si el canal se cae, lo soltamos acá para poder re-suscribirnos limpio al volver
+      // a foreground (ver el listener de visibilitychange más abajo).
+      if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+        canalEmpresa = null;
+      }
+    });
 }
 function desuscribirRealtimeEmpresa() {
   if (canalEmpresa) { _supabase.removeChannel(canalEmpresa); canalEmpresa = null; }
 }
+// NUEVO: al volver a primer plano (típico en iPhone al cambiar de app o desbloquear),
+// nos aseguramos de que el canal siga vivo y refrescamos por si se perdió algún evento
+// mientras la app estaba en segundo plano.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && scope === 'empresa') {
+    if (!canalEmpresa) suscribirRealtimeEmpresa();
+    fetchData();
+  }
+});
 
 /* === DATA === */
 async function fetchData() {
@@ -1060,6 +1079,19 @@ async function _guardarMovimientoInterno() {
   cerrarModal('modalOverlay'); fetchData();
 }
 
+// NUEVO: resuelve el email del usuario que creó un movimiento de empresa.
+// Si el movimiento es propio, usamos el email que ya tenemos en la sesión (sin consulta).
+// Si es de otro miembro del equipo, lo buscamos en "perfiles" (ver nota SQL) y lo cacheamos.
+async function obtenerEmailCreador(userId) {
+  if (!userId) return null;
+  if (userId === user.id) return user.email;
+  if (perfilesCache[userId]) return perfilesCache[userId];
+  const { data, error } = await _supabase.from('perfiles').select('email').eq('id', userId).maybeSingle();
+  if (error || !data) return null;
+  perfilesCache[userId] = data.email;
+  return data.email;
+}
+
 async function verDetalle(id) {
   const m = movements.find(x => x.id === id);
   if (!m) return;
@@ -1072,12 +1104,19 @@ async function verDetalle(id) {
   }
   const cCon = contrapartes.find(c => c.id === m.contraparte_id);
   const conNombre = cCon ? cCon.nombre : (m.contraparte || '-');
+  // NUEVO: en modo empresa, mostramos quién cargó el movimiento
+  let creadorHtml = '';
+  if (scope === 'empresa' && m.user_id) {
+    const emailCreador = await obtenerEmailCreador(m.user_id);
+    if (emailCreador) creadorHtml = `<div class="detalle-row"><div class="detalle-label">Creado por</div><div class="detalle-valor">${escapeHtml(emailCreador)}</div></div>`;
+  }
   document.getElementById('detalleBody').innerHTML = `
     <div class="detalle-row"><div class="detalle-label">Monto Registrado</div><div class="detalle-valor" style="font-size:24px; font-weight:800; color:${m.tipo==='ingreso'?'#5de09a':'#ff9090'}; font-family:var(--font-num);">${fmtARS(m.monto_ars || m.monto)}</div>
       ${m.moneda && m.moneda !== 'ARS' ? `<div style="font-family:var(--font-num); font-size:12.5px; color:var(--text-3); margin-top:4px;">${m.moneda} ${Number(m.monto).toLocaleString('es-AR',{minimumFractionDigits:2})} · TC ${Number(m.cotizacion).toLocaleString('es-AR')}</div>` : ''}
     </div>
     <div class="detalle-row"><div class="detalle-label">Concepto</div><div class="detalle-valor" style="font-weight:600;">${m.concepto ? escapeHtml(m.concepto) : '<i>Sin concepto</i>'}</div></div>
     <div class="detalle-row"><div class="detalle-label">Fecha y Hora</div><div class="detalle-valor">${new Date(m.fecha).toLocaleString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })}</div></div>
+    ${creadorHtml}
     ${cta ? `<div class="detalle-row"><div class="detalle-label">Cuenta Asociada</div><div class="detalle-valor">${escapeHtml(cta.nombre)}</div></div>` : ''}
     ${cat ? `<div class="detalle-row"><div class="detalle-label">Categoría</div><div class="detalle-valor">${escapeHtml(cat.nombre)}</div></div>` : ''}
     ${conNombre ? `<div class="detalle-row"><div class="detalle-label">De / Para (Contraparte)</div><div class="detalle-valor">${escapeHtml(conNombre)}</div></div>` : ''}
@@ -1286,6 +1325,24 @@ checkUser();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').then((reg) => {
+      // CORRECCIÓN iPhone: una PWA instalada en el home de iOS nunca "cierra todas las
+      // pestañas", que es la condición normal para que un service worker nuevo pase de
+      // "esperando" a "activo". Sin esto, el worker viejo se queda serviendo la versión
+      // vieja para siempre. Le pedimos explícitamente que tome el control apenas está listo.
+      function activarSiHayNuevo(worker) {
+        if (!worker) return;
+        worker.postMessage({ type: 'SKIP_WAITING' });
+      }
+      activarSiHayNuevo(reg.waiting); // ya había uno instalado esperando de una visita anterior
+      reg.addEventListener('updatefound', () => {
+        const nuevoWorker = reg.installing;
+        if (!nuevoWorker) return;
+        nuevoWorker.addEventListener('statechange', () => {
+          if (nuevoWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            activarSiHayNuevo(nuevoWorker);
+          }
+        });
+      });
       reg.update();
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') reg.update();
